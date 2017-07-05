@@ -329,13 +329,13 @@ func handleClient(conn net.Conn) {
 	// create a new session object for the connection
 	// and record it's IP address
 	var sess Session
-	host, port, err := net.SplitHostPort(conn.RemoteAddr().String())
-	if err != nil {
-		log.Error("cannot get remote address:", err)
-		return
-	}
-	sess.IP = net.ParseIP(host)
-	log.Infof("new connection from:%v port:%v", host, port)
+	//host, port, err := net.SplitHostPort(conn.RemoteAddr().String())
+	//if err != nil {
+	//	log.Error("cannot get remote address:", err)
+	//	return
+	//}
+	//sess.IP = net.ParseIP(host)
+	//log.Infof("new connection from:%v port:%v", host, port)
 
 	// session die signal, will be triggered by agent()
 	sess.Die = make(chan struct{})

@@ -1,0 +1,177 @@
+{
+	"comment": "",
+	"ignore": "",
+	"package": [
+		{
+			"checksumSHA1": "yUc84k7cfnRi9AlPFuRo77Y18Og=",
+			"path": "github.com/golang/glog",
+			"revision": "23def4e6c14b4da8ac2ed8007337bc5eb5007998",
+			"revisionTime": "2016-01-25T20:49:56Z"
+		},
+		{
+			"path": "github.com/golang/mock/gomock",
+			"revision": ""
+		},
+		{
+			"checksumSHA1": "5SusLlYpervGPhrlkj+GmJrie6o=",
+			"path": "github.com/golang/protobuf/proto",
+			"revision": "6a1fa9404c0aebf36c879bc50152edcc953910d2",
+			"revisionTime": "2017-06-22T20:25:51Z"
+		},
+		{
+			"checksumSHA1": "qyalT+838zrkZMjOA62VGus0VcI=",
+			"path": "github.com/golang/protobuf/proto/proto3_proto",
+			"revision": "6a1fa9404c0aebf36c879bc50152edcc953910d2",
+			"revisionTime": "2017-06-22T20:25:51Z"
+		},
+		{
+			"checksumSHA1": "ykKFnDOqloGM/pABMjTWkSrXmrw=",
+			"path": "github.com/golang/protobuf/proto/testdata",
+			"revision": "6a1fa9404c0aebf36c879bc50152edcc953910d2",
+			"revisionTime": "2017-06-22T20:25:51Z"
+		},
+		{
+			"checksumSHA1": "Z1gJ3PKzwBpOoPnTSEM5yd0zHYA=",
+			"path": "github.com/golang/protobuf/protoc-gen-go/descriptor",
+			"revision": "6a1fa9404c0aebf36c879bc50152edcc953910d2",
+			"revisionTime": "2017-06-22T20:25:51Z"
+		},
+		{
+			"checksumSHA1": "zUvHWODaiXjtg/WEfzCWpE3Jxx0=",
+			"path": "github.com/golang/protobuf/ptypes",
+			"revision": "6a1fa9404c0aebf36c879bc50152edcc953910d2",
+			"revisionTime": "2017-06-22T20:25:51Z"
+		},
+		{
+			"checksumSHA1": "Z4RIWIXH05QItZqVbmbONO9mWig=",
+			"path": "github.com/golang/protobuf/ptypes/any",
+			"revision": "6a1fa9404c0aebf36c879bc50152edcc953910d2",
+			"revisionTime": "2017-06-22T20:25:51Z"
+		},
+		{
+			"checksumSHA1": "Lx2JRhnmO66Lhj6p7UXnsPb+IQs=",
+			"path": "github.com/golang/protobuf/ptypes/duration",
+			"revision": "6a1fa9404c0aebf36c879bc50152edcc953910d2",
+			"revisionTime": "2017-06-22T20:25:51Z"
+		},
+		{
+			"checksumSHA1": "+nsb2jDuP/5l2DO78dtU/jYB3G8=",
+			"path": "github.com/golang/protobuf/ptypes/timestamp",
+			"revision": "6a1fa9404c0aebf36c879bc50152edcc953910d2",
+			"revisionTime": "2017-06-22T20:25:51Z"
+		},
+		{
+			"path": "golang.org/x/net/context",
+			"revision": ""
+		},
+		{
+			"path": "golang.org/x/net/context/ctxhttp",
+			"revision": ""
+		},
+		{
+			"path": "golang.org/x/net/http2",
+			"revision": ""
+		},
+		{
+			"path": "golang.org/x/net/http2/hpack",
+			"revision": ""
+		},
+		{
+			"path": "golang.org/x/net/idna",
+			"revision": ""
+		},
+		{
+			"path": "golang.org/x/net/internal/timeseries",
+			"revision": ""
+		},
+		{
+			"path": "golang.org/x/net/lex/httplex",
+			"revision": ""
+		},
+		{
+			"path": "golang.org/x/net/trace",
+			"revision": ""
+		},
+		{
+			"path": "golang.org/x/oauth2",
+			"revision": ""
+		},
+		{
+			"path": "golang.org/x/oauth2/google",
+			"revision": ""
+		},
+		{
+			"path": "golang.org/x/oauth2/internal",
+			"revision": ""
+		},
+		{
+			"path": "golang.org/x/oauth2/jws",
+			"revision": ""
+		},
+		{
+			"path": "golang.org/x/oauth2/jwt",
+			"revision": ""
+		},
+		{
+			"path": "golang.org/x/sync/errgroup",
+			"revision": ""
+		},
+		{
+			"path": "golang.org/x/text/internal/gen",
+			"revision": ""
+		},
+		{
+			"path": "golang.org/x/text/internal/testtext",
+			"revision": ""
+		},
+		{
+			"path": "golang.org/x/text/internal/ucd",
+			"revision": ""
+		},
+		{
+			"path": "golang.org/x/text/secure/bidirule",
+			"revision": ""
+		},
+		{
+			"path": "golang.org/x/text/transform",
+			"revision": ""
+		},
+		{
+			"path": "golang.org/x/text/unicode/bidi",
+			"revision": ""
+		},
+		{
+			"path": "golang.org/x/text/unicode/cldr",
+			"revision": ""
+		},
+		{
+			"path": "golang.org/x/text/unicode/norm",
+			"revision": ""
+		},
+		{
+			"path": "golang.org/x/text/unicode/rangetable",
+			"revision": ""
+		},
+		{
+			"path": "google.golang.org/appengine",
+			"revision": ""
+		},
+		{
+			"path": "google.golang.org/appengine/urlfetch",
+			"revision": ""
+		},
+		{
+			"path": "google.golang.org/cloud/compute/metadata",
+			"revision": ""
+		},
+		{
+			"path": "google.golang.org/cloud/internal",
+			"revision": ""
+		},
+		{
+			"path": "google.golang.org/genproto/googleapis/rpc/status",
+			"revision": ""
+		}
+	],
+	"rootPath": "google.golang.org/grpc"
+}

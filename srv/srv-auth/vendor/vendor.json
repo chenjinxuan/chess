@@ -1,0 +1,46 @@
+{
+	"comment": "",
+	"ignore": "",
+	"package": [
+		{
+			"checksumSHA1": "omM6LI0Xym1uotfmmNUfIQzRtZw=",
+			"path": "github.com/BurntSushi/toml",
+			"revision": "a368813c5e648fee92e5f6c30e3944ff9d5e8895",
+			"revisionTime": "2017-06-26T11:06:00Z"
+		},
+		{
+			"checksumSHA1": "R+hAAPfla7spoia4mrzgNvxjFxI=",
+			"path": "golang.org/x/net/context",
+			"revision": "1f9224279e98554b6a6432d4dd998a739f8b2b7c",
+			"revisionTime": "2017-06-29T16:46:45Z",
+			"tree": true
+		},
+		{
+			"checksumSHA1": "AZ/Rk2CwrF9gjurJgY/RCiLWZgA=",
+			"path": "google.golang.org/grpc",
+			"revision": "3c33c26290b747350f8650c7d38bcc51b42dc785",
+			"revisionTime": "2017-06-27T16:54:34Z",
+			"tree": true
+		},
+		{
+			"checksumSHA1": "538I8ghUdvZa25NxgMUDpq14Qic=",
+			"path": "gopkg.in/check.v1",
+			"revision": "20d25e2804050c1cd24a7eea1e7a6447dd0e74ec",
+			"revisionTime": "2016-12-08T18:13:25Z"
+		},
+		{
+			"checksumSHA1": "nj3vYDPIRqJKZiD/rDUS94p2Yoc=",
+			"path": "gopkg.in/urfave/cli.v2",
+			"revision": "61c3eb6ba1da1df17cd50f1456a9252d92bf5edd",
+			"revisionTime": "2017-04-24T21:45:55Z",
+			"tree": true
+		},
+		{
+			"checksumSHA1": "QX69hdf0wsAInBxC21QNkmXXD4o=",
+			"path": "gopkg.in/yaml.v2",
+			"revision": "cd8b52f8269e0feb286dfeef29f8fe4d5b397e0b",
+			"revisionTime": "2017-04-07T17:21:22Z"
+		}
+	],
+	"rootPath": "chess/srv/srv-auth"
+}
