@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package proto;
+
+service CentreService {
+    // 获取游戏列表
+    rpc GameList(GameListArgs) returns (GameListRes){}
+
+    // 获取游戏场，对应房间信息
+    rpc GamePlayground(GamePlaygroundArgs) returns (GamePlaygroundRes){}
+}
+
+message GameListArgs{
+
+}
+
+message GameListRes{
+
+}
+
+message GamePlaygroundArgs{
+
+}
+
+message GamePlaygroundRes{
+
+}

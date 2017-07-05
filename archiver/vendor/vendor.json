@@ -1,0 +1,67 @@
+{
+	"comment": "",
+	"ignore": "test",
+	"package": [
+		{
+			"checksumSHA1": "htjvdG/znrHmFYRQBqA2vHrJsF4=",
+			"path": "github.com/Sirupsen/logrus",
+			"revision": "f3cfb454f4c209e6668c95216c4744b8fddb2356",
+			"revisionTime": "2016-06-01T11:32:10Z"
+		},
+		{
+			"checksumSHA1": "W86OoK9BQU2SMUHTmhoZMXECSf4=",
+			"path": "github.com/bitly/go-nsq",
+			"revision": "d71fb89c9e0263aaed89645b0b168e11ccf597b1",
+			"revisionTime": "2016-06-04T20:00:49Z"
+		},
+		{
+			"checksumSHA1": "QztRTESYrMbbGofkfaR5980DYLc=",
+			"path": "github.com/boltdb/bolt",
+			"revision": "acc803f0ced151102ed51bf824f8709ebd6602bc",
+			"revisionTime": "2016-07-07T16:56:50Z"
+		},
+		{
+			"checksumSHA1": "KC0enzi3DgzHLd6VQy+tdOXr7Kw=",
+			"path": "github.com/gonet2/libs/nsq-redo",
+			"revision": "1b61d919b824e1fd54a32e370058cf43ba82469d",
+			"revisionTime": "2016-07-12T15:56:50Z"
+		},
+		{
+			"checksumSHA1": "C8c4QZJS099ZNBIQsrLMFHkNjxk=",
+			"path": "github.com/gonet2/libs/statsd-pprof",
+			"revision": "1b61d919b824e1fd54a32e370058cf43ba82469d",
+			"revisionTime": "2016-07-12T15:56:50Z"
+		},
+		{
+			"checksumSHA1": "IwuaGWkq9sh9hzmmgkyHvCEMGzM=",
+			"path": "github.com/mreiferson/go-snappystream",
+			"revision": "028eae7ab5c4c9e2d1cb4c4ca1e53259bbe7e504",
+			"revisionTime": "2015-04-16T23:44:20Z"
+		},
+		{
+			"checksumSHA1": "5mGTJWVBk+2KdbBQoJWMtGoJJgU=",
+			"path": "github.com/mreiferson/go-snappystream/snappy-go",
+			"revision": "028eae7ab5c4c9e2d1cb4c4ca1e53259bbe7e504",
+			"revisionTime": "2015-04-16T23:44:20Z"
+		},
+		{
+			"checksumSHA1": "98pC93jy7+oik3tlde3hVAoh3SE=",
+			"path": "github.com/peterbourgon/g2s",
+			"revision": "ec76db4c1ac16400ac0e17ca9c4840e1d23da5dc",
+			"revisionTime": "2014-09-25T15:41:42Z"
+		},
+		{
+			"checksumSHA1": "8fD/im5Kwvy3JgmxulDTambmE8w=",
+			"path": "golang.org/x/sys/unix",
+			"revision": "a408501be4d17ee978c04a618e7a1b22af058c0e",
+			"revisionTime": "2016-07-03T23:56:20Z"
+		},
+		{
+			"checksumSHA1": "zTjQOFGy4XTv4L33Kd2FhrV+mbM=",
+			"path": "gopkg.in/mgo.v2/bson",
+			"revision": "29cc868a5ca65f401ff318143f9408d02f4799cc",
+			"revisionTime": "2016-06-09T18:00:28Z"
+		}
+	],
+	"rootPath": "archiver"
+}

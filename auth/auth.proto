@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package proto;
+
+// 认证服务
+service AuthService {
+	rpc Auth(Auth.Certificate) returns (Auth.Result){} // 验证token有效性
+	rpc RefreshToekn(Auth.Certificate) returns (Auth.Result){} // 验证token有效性
+}
+
+message Auth{
+	enum CertificateType {
+		UUID = 0;
+		PLAIN = 1;	
+		TOKEN = 2;
+		FACEBOOK = 3;
+	}
+
+	message Certificate{
+		CertificateType Type = 1;
+		bytes Proof=2;
+	}
+
+	message Result {
+		bool OK=1;
+		int32 UserId=2;
+		bytes Body=3;
+	}
+}

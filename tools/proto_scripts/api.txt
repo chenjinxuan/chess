@@ -1,0 +1,67 @@
+# 格式说明=
+# 客户端请求名_req结束.
+# 服务端回复包_ack结束.
+# 服务端通知包_notify结束.
+
+#1000以下为agent自己处理的协议
+packet_type:0
+name:heart_beat_req
+payload:auto_id
+desc:心跳包..
+
+packet_type:1
+name:heart_beat_ack
+payload:auto_id
+desc:心跳包回复
+
+packet_type:10
+name:user_login_req
+payload:user_login_info
+desc:登陆
+
+packet_type:11
+name:user_login_succeed_ack
+payload:user_snapshot
+desc:登陆成功
+
+packet_type:12
+name:user_login_faild_ack
+payload:error_info
+desc:登陆失败
+
+packet_type:13
+name:client_error_ack
+payload:error_info
+desc:客户端错误
+
+packet_type:30
+name:get_seed_req
+payload:seed_info
+desc:socket通信加密使用
+
+packet_type:31
+name:get_seed_ack
+payload:seed_info
+desc:socket通信加密使用
+
+#100X centre处理
+packet_type:1001
+name:centre_ping_req
+payload:auto_id
+desc: ping
+
+packet_type:1002
+name:centre_ping_ack
+payload:auto_id
+desc: pong
+
+#200X room处理
+packet_type:2001
+name:room_ping_req
+payload:auto_id
+desc: ping
+
+packet_type:2002
+name:room_ping_ack
+payload:auto_id
+desc: ping回复

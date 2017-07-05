@@ -1,0 +1,4 @@
+bin
+.godeps
+pkg
+proto_scripts/proto_code/*

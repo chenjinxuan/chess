@@ -1,0 +1,242 @@
+{
+    "byte": {
+        "go": {
+            "t": "byte",
+            "r": "ReadByte",
+            "w": "WriteByte"
+        },
+        "cs": {
+            "t": "byte",
+            "r": "ReadByte",
+            "w": "WriteByte"
+        }
+    },
+    "bytes": {
+        "go": {
+            "t": "[]byte",
+            "r": "ReadBytes",
+            "w": "WriteBytes"
+        },
+        "cs": {
+            "t": "byte[]",
+            "r": "ReadBytes",
+            "w": "WriteBytes"
+        }
+    },
+    "short": {
+        "go": {
+            "t": "int16",
+            "r": "ReadS16",
+            "w": "WriteS16"
+        },
+        "cs": {
+            "t": "Int16",
+            "r": "ReadInt16",
+            "w": "WriteInt16"
+        }
+    },
+    "int8": {
+        "go": {
+            "t": "int8",
+            "r": "ReadS8",
+            "w": "WriteS8"
+        },
+        "cs": {
+            "t": "sbyte",
+            "r": "ReadInt8",
+            "w": "WriteInt8"
+        }
+    },
+    "uint8": {
+        "go": {
+            "t": "uint8",
+            "r": "ReadByte",
+            "w": "WriteByte"
+        },
+        "cs": {
+            "t": "byte",
+            "r": "ReadUnsignedInt8",
+            "w": "WriteUnsignedInt8"
+        }
+    },
+    "int16": {
+        "go": {
+            "t": "int16",
+            "r": "ReadS16",
+            "w": "WriteS16"
+        },
+        "cs": {
+            "t": "Int16",
+            "r": "ReadInt16",
+            "w": "WriteInt16"
+        }
+    },
+    "uint16": {
+        "go": {
+            "t": "uint16",
+            "r": "ReadU16",
+            "w": "WriteU16"
+        },
+        "cs": {
+            "t": "UInt16",
+            "r": "ReadUnsignedInt16",
+            "w": "WriteUnsignedInt16"
+        }
+    },
+    "string": {
+        "go": {
+            "t": "string",
+            "r": "ReadString",
+            "w": "WriteString"
+        },
+        "cs": {
+            "t": "string",
+            "r": "ReadUTFBytes",
+            "w": "WriteUTF"
+        }
+    },
+    "integer": {
+        "go": {
+            "t": "int32",
+            "r": "ReadS32",
+            "w": "WriteS32"
+        },
+        "cs": {
+            "t": "Int32",
+            "r": "ReadInt32",
+            "w": "WriteInt32"
+        }
+    },
+    "int32": {
+        "go": {
+            "t": "int32",
+            "r": "ReadS32",
+            "w": "WriteS32"
+        },
+        "cs": {
+            "t": "Int32",
+            "r": "ReadInt32",
+            "w": "WriteInt32"
+        }
+    },
+    "uint32": {
+        "go": {
+            "t": "uint32",
+            "r": "ReadU32",
+            "w": "WriteU32"
+        },
+        "cs": {
+            "t": "UInt32",
+            "r": "ReadUnsignedInt32",
+            "w": "WriteUnsignedInt"
+        }
+    },
+    "long": {
+        "go": {
+            "t": "int64",
+            "r": "ReadS64",
+            "w": "WriteS64"
+        },
+        "cs": {
+            "t": "Int64",
+            "r": "ReadInt64",
+            "w": "WriteInt64"
+        }
+    },
+    "int64": {
+        "go": {
+            "t": "int64",
+            "r": "ReadS64",
+            "w": "WriteS64"
+        },
+        "cs": {
+            "t": "Int64",
+            "r": "ReadInt64",
+            "w": "WriteInt64"
+        }
+    },
+    "uint64": {
+        "go": {
+            "t": "uint64",
+            "r": "ReadU64",
+            "w": "WriteU64"
+        },
+        "cs": {
+            "t": "UInt64",
+            "r": "ReadUnsignedInt64",
+            "w": "WriteUnsignedInt64"
+        }
+    },
+    "bool": {
+        "go": {
+            "t": "bool",
+            "r": "ReadBool",
+            "w": "WriteBool"
+        },
+        "cs": {
+            "t": "bool",
+            "r": "ReadBoolean",
+            "w": "WriteBoolean"
+        }
+    },
+    "boolean": {
+        "go": {
+            "t": "bool",
+            "r": "ReadBool",
+            "w": "WriteBool"
+        },
+        "cs": {
+            "t": "bool",
+            "r": "ReadBoolean",
+            "w": "WriteBoolean"
+        }
+    },
+    "float": {
+        "go": {
+            "t": "float32",
+            "r": "ReadFloat32",
+            "w": "WriteFloat32"
+        },
+        "cs": {
+            "t": "float",
+            "r": "ReadFloat",
+            "w": "WriteFloat"
+        }
+    },
+    "float32": {
+        "go": {
+            "t": "float32",
+            "r": "ReadFloat32",
+            "w": "WriteFloat32"
+        },
+        "cs": {
+            "t": "float",
+            "r": "ReadFloat",
+            "w": "WriteFloat"
+        }
+    },
+    "double": {
+        "go": {
+            "t": "float64",
+            "r": "ReadFloat64",
+            "w": "WriteFloat64"
+        },
+        "cs": {
+            "t": "double",
+            "r": "ReadDouble",
+            "w": "WriteDouble"
+        }
+    },
+    "float64": {
+        "go": {
+            "t": "float64",
+            "r": "ReadFloat64",
+            "w": "WriteFloat64"
+        },
+        "cs": {
+            "t": "double",
+            "r": "ReadDouble",
+            "w": "WriteDouble"
+        }
+    }
+}

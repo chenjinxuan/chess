@@ -1,0 +1,793 @@
+swagger: "2.0"
+info:
+  title: API
+  version: "1.0"
+host: wstapi.jfb39.com
+schemes:
+- http
+paths:
+  /client/upgrade:
+    get:
+      tags:
+      - '/client - 客户端配置相关 '
+      summary: 获取客户端升级信息
+      description: 获取客户端升级信息
+      operationId: .获取客户端升级信息
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: query
+        name: from
+        description: 应用来源
+        required: true
+        type: string
+      - in: query
+        name: ver
+        description: 应用版本号
+        required: true
+        type: integer
+        format: int64
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/c_client.UpgradeResult'
+  /qrcode/detail/{id}:
+    get:
+      tags:
+      - '/qrcode - 图片二维码相关 '
+      summary: 获取图片二维码模板信息
+      description: 获取图片二维码模板信息
+      operationId: .获取图片二维码模板信息
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: id
+        description: 模板id
+        required: true
+        type: integer
+        format: int64
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/c_qrcode.DetailResult'
+  /qrcode/list:
+    get:
+      tags:
+      - '/qrcode - 图片二维码相关 '
+      summary: 获取图片二维码列表
+      description: 获取图片二维码列表
+      operationId: .获取图片二维码列表
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: query
+        name: page_num
+        description: 页数（默认1）
+        type: integer
+        format: int64
+      - in: query
+        name: page_size
+        description: 每页显示个数（默认25）
+        type: integer
+        format: int64
+      - in: query
+        name: category_id
+        description: 分类id（默认-1代表全部）
+        type: integer
+        format: int64
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/c_qrcode.ListResult'
+  /sticker/categories:
+    get:
+      tags:
+      - '/sticker - 图片贴纸相关 '
+      summary: 获取图片贴纸分类列表
+      description: 获取图片贴纸分类列表
+      operationId: .获取图片贴纸分类列表
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/c_sticker.CategoriesResult'
+  /sticker/list:
+    get:
+      tags:
+      - '/sticker - 图片贴纸相关 '
+      summary: 获取图片贴纸列表
+      description: 获取图片贴纸列表
+      operationId: .获取图片贴纸列表
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: query
+        name: page_num
+        description: 页数（默认1）
+        type: integer
+        format: int64
+      - in: query
+        name: page_size
+        description: 每页显示个数（默认25）
+        type: integer
+        format: int64
+      - in: query
+        name: category_id
+        description: 分类id（默认-1代表全部）
+        type: integer
+        format: int64
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/c_sticker.ListResult'
+  /tag/detail/{id}:
+    get:
+      tags:
+      - '/tag - 图片标签相关 '
+      summary: 获取图片标签模板信息
+      description: 获取图片标签模板信息
+      operationId: .获取图片标签模板信息
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: id
+        description: 模板id
+        required: true
+        type: integer
+        format: int64
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/c_tag.DetailResult'
+  /tag/list:
+    get:
+      tags:
+      - '/tag - 图片标签相关 '
+      summary: 获取图片标签列表
+      description: 获取图片标签列表
+      operationId: .获取图片标签列表
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: query
+        name: page_num
+        description: 页数（默认1）
+        type: integer
+        format: int64
+      - in: query
+        name: page_size
+        description: 每页显示个数（默认25）
+        type: integer
+        format: int64
+      - in: query
+        name: category_id
+        description: 分类id（默认-1代表全部）
+        type: integer
+        format: int64
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/c_tag.ListResult'
+  /watermark/categories:
+    get:
+      tags:
+      - '/watermark - 图片水印相关 '
+      summary: 获取图片水印分类列表
+      description: 获取图片水印分类列表
+      operationId: .获取图片水印分类列表
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/c_watermark.CategoriesResult'
+  /watermark/common:
+    get:
+      tags:
+      - '/watermark - 图片水印相关 '
+      summary: 获取字体列表和联系列表
+      description: 获取字体列表和联系列表
+      operationId: .获取字体列表和联系列表
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/c_watermark.CommonResult'
+  /watermark/detail/{id}:
+    get:
+      tags:
+      - '/watermark - 图片水印相关 '
+      summary: 获取图片水印模板信息
+      description: 获取图片水印模板信息
+      operationId: .获取图片水印模板信息
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: id
+        description: 模板id
+        required: true
+        type: integer
+        format: int64
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/c_watermark.DetailResult'
+  /watermark/list:
+    get:
+      tags:
+      - '/watermark - 图片水印相关 '
+      summary: 获取图片水印列表
+      description: 获取图片水印列表
+      operationId: .获取图片水印列表
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: query
+        name: page_num
+        description: 页数（默认1）
+        type: integer
+        format: int64
+      - in: query
+        name: page_size
+        description: 每页显示个数（默认25）
+        type: integer
+        format: int64
+      - in: query
+        name: category_id
+        description: 分类id（默认-1代表全部）
+        type: integer
+        format: int64
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/c_watermark.ListResult'
+definitions:
+  c_client.UpgradeResult:
+    title: UpgradeResult
+    type: object
+    properties:
+      data:
+        $ref: '#/definitions/c_client.UpgradeResultData'
+      msg:
+        type: string
+      ret:
+        description: 1成功 0失败
+        type: integer
+        format: int64
+  c_client.UpgradeResultData:
+    title: UpgradeResultData
+    type: object
+    properties:
+      app_from:
+        description: 应用来源
+        type: string
+      is_update:
+        description: 是否提示升级：0不提示 1提示
+        type: boolean
+      msg:
+        description: 升级信息
+        type: string
+      publish_date:
+        description: 升级更新时间
+        type: string
+      url:
+        description: 升级包地址
+        type: string
+      ver:
+        description: 应用版本号
+        type: integer
+        format: int64
+  c_qrcode.DetailResult:
+    title: DetailResult
+    type: object
+    properties:
+      data:
+        $ref: '#/definitions/models.QrcodeTplModel'
+      msg:
+        type: string
+      ret:
+        description: 0失败 1成功
+        type: integer
+        format: int64
+  c_qrcode.ListResult:
+    title: ListResult
+    type: object
+    properties:
+      count:
+        type: integer
+        format: int64
+      list:
+        type: array
+        items:
+          $ref: '#/definitions/models.QrcodesModel'
+      msg:
+        type: string
+      ret:
+        description: 0失败 1成功
+        type: integer
+        format: int64
+  c_sticker.CategoriesResult:
+    title: CategoriesResult
+    type: object
+    properties:
+      list:
+        type: array
+        items:
+          $ref: '#/definitions/models.StickerCategoriesModel'
+      msg:
+        type: string
+      ret:
+        description: 0失败 1成功
+        type: integer
+        format: int64
+  c_sticker.ListResult:
+    title: ListResult
+    type: object
+    properties:
+      count:
+        type: integer
+        format: int64
+      list:
+        type: array
+        items:
+          $ref: '#/definitions/models.StickersModel'
+      msg:
+        type: string
+      ret:
+        description: 0失败 1成功
+        type: integer
+        format: int64
+  c_tag.DetailResult:
+    title: DetailResult
+    type: object
+    properties:
+      data:
+        $ref: '#/definitions/models.TagTplModel'
+      msg:
+        type: string
+      ret:
+        description: 0失败 1成功
+        type: integer
+        format: int64
+  c_tag.ListResult:
+    title: ListResult
+    type: object
+    properties:
+      count:
+        type: integer
+        format: int64
+      list:
+        type: array
+        items:
+          $ref: '#/definitions/models.TagsModel'
+      msg:
+        type: string
+      ret:
+        description: 0失败 1成功
+        type: integer
+        format: int64
+  c_watermark.CategoriesResult:
+    title: CategoriesResult
+    type: object
+    properties:
+      list:
+        type: array
+        items:
+          $ref: '#/definitions/models.WatermarkCategoriesModel'
+      msg:
+        type: string
+      ret:
+        description: 0失败 1成功
+        type: integer
+        format: int64
+  c_watermark.CommonResult:
+    title: CommonResult
+    type: object
+    properties:
+      contacts:
+        description: 联系方式列表
+        type: array
+        items:
+          $ref: '#/definitions/c_watermark.Contact'
+      fonts:
+        description: 字体列表
+        type: array
+        items:
+          $ref: '#/definitions/models.FontsModel'
+      msg:
+        type: string
+      ret:
+        description: 1成功 0失败
+        type: integer
+        format: int64
+  c_watermark.Contact:
+    title: Contact
+    type: object
+    properties:
+      icon:
+        type: string
+      place_holder:
+        type: string
+      type:
+        type: string
+  c_watermark.DetailResult:
+    title: DetailResult
+    type: object
+    properties:
+      data:
+        $ref: '#/definitions/models.WatermarkTplModel'
+      msg:
+        type: string
+      ret:
+        description: 0失败 1成功
+        type: integer
+        format: int64
+  c_watermark.ListResult:
+    title: ListResult
+    type: object
+    properties:
+      count:
+        description: 总记录数
+        type: integer
+        format: int64
+      list:
+        type: array
+        items:
+          $ref: '#/definitions/models.WatermarkModel'
+      msg:
+        type: string
+      ret:
+        description: 0失败 1成功
+        type: integer
+        format: int64
+  define.BaseResult:
+    title: BaseResult
+    type: object
+    properties:
+      msg:
+        type: string
+      ret:
+        description: 1成功 0失败
+        type: integer
+        format: int64
+  models.AppUpgradeModel:
+    title: AppUpgradeModel
+    type: object
+    properties:
+      app_from:
+        description: 应用来源
+        type: string
+      msg:
+        description: 升级信息
+        type: string
+      url:
+        description: 升级包地址
+        type: string
+      ver:
+        description: 应用版本号
+        type: integer
+        format: int64
+  models.FontsModel:
+    title: FontsModel
+    type: object
+    properties:
+      file:
+        description: 字体下载地址
+        type: string
+      icon:
+        description: 字体图标地址
+        type: string
+      id:
+        type: integer
+        format: int64
+      name:
+        description: 字体名称
+        type: string
+  models.QrcodeTplLayout:
+    title: QrcodeTplLayout
+    type: object
+    properties:
+      frame:
+        type: string
+      image:
+        type: string
+      image_frame:
+        type: string
+      num:
+        type: integer
+        format: int64
+      qrcode_frame:
+        type: string
+      qrcode_url:
+        type: string
+      texts:
+        type: array
+        items:
+          $ref: '#/definitions/models.QrcodeTplLayoutText'
+  models.QrcodeTplLayoutText:
+    title: QrcodeTplLayoutText
+    type: object
+    properties:
+      count:
+        type: integer
+        format: int64
+      font_color:
+        type: string
+      font_size:
+        type: integer
+        format: int64
+      frame:
+        type: string
+      place_holder:
+        type: string
+      text_align:
+        type: string
+  models.QrcodeTplModel:
+    title: QrcodeTplModel
+    type: object
+    properties:
+      backgroundchange:
+        type: integer
+        format: int64
+      effect:
+        type: string
+      layout:
+        type: array
+        items:
+          $ref: '#/definitions/models.QrcodeTplLayout'
+      parseType:
+        type: string
+      qrcode_id:
+        type: integer
+        format: int64
+  models.QrcodesModel:
+    title: QrcodesModel
+    type: object
+    properties:
+      category_id:
+        type: integer
+        format: int64
+      id:
+        type: integer
+        format: int64
+      url:
+        type: string
+      vip:
+        description: VIP使用
+        type: integer
+        format: int64
+  models.StickerCategoriesModel:
+    title: StickerCategoriesModel
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      name:
+        type: string
+  models.StickersModel:
+    title: StickersModel
+    type: object
+    properties:
+      category_id:
+        type: integer
+        format: int64
+      id:
+        type: integer
+        format: int64
+      url:
+        type: string
+      vip:
+        description: VIP使用
+        type: integer
+        format: int64
+  models.TagTplLayout:
+    title: TagTplLayout
+    type: object
+    properties:
+      frame:
+        type: string
+      image:
+        type: string
+      image_frame:
+        type: string
+      num:
+        type: integer
+        format: int64
+      texts:
+        type: array
+        items:
+          $ref: '#/definitions/models.TagTplLayoutText'
+  models.TagTplLayoutText:
+    title: TagTplLayoutText
+    type: object
+    properties:
+      count:
+        type: integer
+        format: int64
+      font_color:
+        type: string
+      font_size:
+        type: integer
+        format: int64
+      frame:
+        type: string
+      place_holder:
+        type: string
+      text_align:
+        type: string
+  models.TagTplModel:
+    title: TagTplModel
+    type: object
+    properties:
+      backgroundchange:
+        type: integer
+        format: int64
+      effect:
+        type: string
+      layout:
+        type: array
+        items:
+          $ref: '#/definitions/models.TagTplLayout'
+      parseType:
+        type: string
+      tag_id:
+        type: integer
+        format: int64
+  models.TagsModel:
+    title: TagsModel
+    type: object
+    properties:
+      category_id:
+        type: integer
+        format: int64
+      id:
+        type: integer
+        format: int64
+      url:
+        type: string
+      vip:
+        description: VIP使用
+        type: integer
+        format: int64
+  models.WatermarkCategoriesModel:
+    title: WatermarkCategoriesModel
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+      name:
+        type: string
+  models.WatermarkModel:
+    title: WatermarkModel
+    type: object
+    properties:
+      category_id:
+        description: 分类id
+        type: integer
+        format: int64
+      id:
+        type: integer
+        format: int64
+      need_coins:
+        description: 使用所需金币
+        type: integer
+        format: int64
+      status:
+        type: integer
+        format: int64
+      url:
+        description: 预览图url
+        type: string
+      vip:
+        description: VIP使用
+        type: integer
+        format: int64
+  models.WatermarkTplContact:
+    title: WatermarkTplContact
+    type: object
+    properties:
+      icon:
+        type: string
+      place_holder:
+        type: string
+      type:
+        type: string
+  models.WatermarkTplLayout:
+    title: WatermarkTplLayout
+    type: object
+    properties:
+      frame:
+        type: string
+      image:
+        type: string
+      image_frame:
+        type: string
+      num:
+        type: integer
+        format: int64
+      texts:
+        type: array
+        items:
+          $ref: '#/definitions/models.WatermarkTplLayoutText'
+  models.WatermarkTplLayoutText:
+    title: WatermarkTplLayoutText
+    type: object
+    properties:
+      count:
+        type: integer
+        format: int64
+      font_color:
+        type: string
+      font_size:
+        type: integer
+        format: int64
+      frame:
+        type: string
+      place_holder:
+        type: string
+      text_align:
+        type: string
+  models.WatermarkTplModel:
+    title: WatermarkTplModel
+    type: object
+    properties:
+      backgroundchange:
+        type: integer
+        format: int64
+      contacts:
+        type: array
+        items:
+          $ref: '#/definitions/models.WatermarkTplContact'
+      effect:
+        type: string
+      layout:
+        type: array
+        items:
+          $ref: '#/definitions/models.WatermarkTplLayout'
+      parseType:
+        type: string
+      watermark_id:
+        type: integer
+        format: int64
+  time.Time:
+    type: object

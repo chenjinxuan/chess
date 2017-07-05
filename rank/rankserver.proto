@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+package proto;
+
+// rank service definition
+service RankingService {
+	rpc RankChange(Ranking.Change) returns (Ranking.Nil); // 排名变动
+	rpc DeleteSet(Ranking.SetId) returns (Ranking.Nil);	// 删除排名集合
+	rpc DeleteUser(Ranking.DeleteUserRequest) returns (Ranking.Nil); // 删除某个玩家排名
+	rpc QueryRankRange(Ranking.Range) returns (Ranking.RankList); // 范围查询
+	rpc QueryUsers(Ranking.Users) returns (Ranking.UserList); // 查询某些ID的排名
+}
+
+message Ranking {
+	message Nil { }
+	message SetId {
+		uint64 SetId=1;
+	}
+	message DeleteUserRequest {
+		uint64 SetId=1;
+		int32 UserId=2;
+	}
+	message Change{
+		int32 UserId=1;
+		int32 Score=2;
+		uint64 SetId=3;
+	}
+
+	message Range {
+		int32 A=1;
+		int32 B=2;
+		uint64 SetId=3;
+	}
+
+	message RankList {
+		repeated int32 UserIds=1 [packed=true];
+		repeated int32 Scores=2 [packed=true];
+	}
+
+	message Users{
+		repeated int32 UserIds=1 [packed=true];
+		uint64 SetId=2;
+	}
+
+	message UserList {
+		repeated int32 Ranks=1 [packed=true];
+		repeated int32 Scores=2 [packed=true];
+	}
+}

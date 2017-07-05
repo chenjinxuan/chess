@@ -1,0 +1,2 @@
+# logrushooks
+hooks for logrus

@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package proto;
+
+service RoomService {
+    // 获取房间信息
+    rpc RoomInfo(RoomInfoArgs) returns (RoomInfoRes){}
+
+    // 进入房间/游戏指令...
+}
+
+message RoomInfoArgs{
+
+}
+
+message RoomInfoRes{
+
+}

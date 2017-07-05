@@ -1,0 +1,95 @@
+{
+	"comment": "",
+	"ignore": "test",
+	"package": [
+		{
+			"path": "\n****************************************************************************\n                         requires Go 1.5 or later.\n****************************************************************************\n",
+			"revision": ""
+		},
+		{
+			"path": "appengine",
+			"revision": ""
+		},
+		{
+			"path": "appengine_internal",
+			"revision": ""
+		},
+		{
+			"path": "appengine_internal/base",
+			"revision": ""
+		},
+		{
+			"checksumSHA1": "QztRTESYrMbbGofkfaR5980DYLc=",
+			"path": "github.com/boltdb/bolt",
+			"revision": "acc803f0ced151102ed51bf824f8709ebd6602bc",
+			"revisionTime": "2016-07-07T16:56:50Z"
+		},
+		{
+			"checksumSHA1": "2uCkOxIfsvJjvTx7iuA4vP1p4kQ=",
+			"path": "github.com/yuin/gopher-lua",
+			"revision": "bf3808abd44b1e55143a2d7f08571aaa80db1808",
+			"revisionTime": "2016-06-30T01:48:51Z"
+		},
+		{
+			"checksumSHA1": "yNGEI9BMDbGwabUnaHvV9ZZm/a0=",
+			"path": "github.com/yuin/gopher-lua/ast",
+			"revision": "bf3808abd44b1e55143a2d7f08571aaa80db1808",
+			"revisionTime": "2016-06-30T01:48:51Z"
+		},
+		{
+			"checksumSHA1": "RzAFlqrwEE/ybIrUhDQeIE8+7pM=",
+			"path": "github.com/yuin/gopher-lua/parse",
+			"revision": "bf3808abd44b1e55143a2d7f08571aaa80db1808",
+			"revisionTime": "2016-06-30T01:48:51Z"
+		},
+		{
+			"checksumSHA1": "lsdmE0I6R+1KjYPLM+Y9crLDyHw=",
+			"path": "github.com/yuin/gopher-lua/pm",
+			"revision": "bf3808abd44b1e55143a2d7f08571aaa80db1808",
+			"revisionTime": "2016-06-30T01:48:51Z"
+		},
+		{
+			"checksumSHA1": "N5fb5y92DFIP+wUhi1rSwPp9vyk=",
+			"path": "golang.org/x/crypto/ssh/terminal",
+			"revision": "2c99acdd1e9b90d779ca23f632aad86af9909c62",
+			"revisionTime": "2016-07-10T22:38:34Z"
+		},
+		{
+			"checksumSHA1": "8fD/im5Kwvy3JgmxulDTambmE8w=",
+			"path": "golang.org/x/sys/unix",
+			"revision": "a408501be4d17ee978c04a618e7a1b22af058c0e",
+			"revisionTime": "2016-07-03T23:56:20Z"
+		},
+		{
+			"checksumSHA1": "o+ZqT87RLprKCGKMboo5vCxdAvA=",
+			"path": "gopkg.in/mgo.v2",
+			"revision": "29cc868a5ca65f401ff318143f9408d02f4799cc",
+			"revisionTime": "2016-06-09T18:00:28Z"
+		},
+		{
+			"checksumSHA1": "zTjQOFGy4XTv4L33Kd2FhrV+mbM=",
+			"path": "gopkg.in/mgo.v2/bson",
+			"revision": "29cc868a5ca65f401ff318143f9408d02f4799cc",
+			"revisionTime": "2016-06-09T18:00:28Z"
+		},
+		{
+			"checksumSHA1": "CkCDTsyN2Lbj1cL8+oaYKoPpI9w=",
+			"path": "gopkg.in/mgo.v2/internal/sasl",
+			"revision": "29cc868a5ca65f401ff318143f9408d02f4799cc",
+			"revisionTime": "2016-06-09T18:00:28Z"
+		},
+		{
+			"checksumSHA1": "+1WDRPaOphSCmRMxVPIPBV4aubc=",
+			"path": "gopkg.in/mgo.v2/internal/scram",
+			"revision": "29cc868a5ca65f401ff318143f9408d02f4799cc",
+			"revisionTime": "2016-06-09T18:00:28Z"
+		},
+		{
+			"checksumSHA1": "A+wG4TiCmEO31WUSHowbXZeTkAY=",
+			"path": "gopkg.in/readline.v1",
+			"revision": "64a71f22be412fa183322657872f81a757eb8665",
+			"revisionTime": "2016-05-09T13:28:16Z"
+		}
+	],
+	"rootPath": "replay"
+}

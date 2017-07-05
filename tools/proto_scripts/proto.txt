@@ -1,0 +1,38 @@
+#公共结构， 用于只传id,或一个数字的结构
+auto_id=
+id integer
+===
+
+#一般性回复payload,0代表成功
+error_info=
+code integer
+msg string
+===
+
+#用户登陆发包 1代表使用uuid登陆 2代表使用客户端证书登陆
+user_login_info=
+login_way integer
+open_udid string
+client_certificate string
+client_version integer
+user_lang string
+app_id string
+os_version string
+device_name string
+device_id string
+device_id_type integer
+login_ip string
+===
+
+#通信加密种子
+seed_info=
+client_send_seed integer
+client_receive_seed integer
+===
+
+#用户信息包
+user_snapshot=
+uid integer
+===
+
+

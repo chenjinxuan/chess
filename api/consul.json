@@ -1,0 +1,14 @@
+{
+	"service": {
+		"name": "api1",
+		"tags": ["master"],
+		"address": "127.0.0.1",
+		"port": 10000,
+		"checks": [
+			{
+				"http": "http://localhost:10000/health",
+				"interval": "10s"
+			}
+		]
+	}
+}
