@@ -7,7 +7,7 @@ import (
 )
 
 import (
-	pb "chess/agent/pb"
+	pb "chess/agent/proto"
 	. "chess/agent/types"
 )
 
@@ -35,3 +35,8 @@ func forward(sess *Session, p []byte) error {
 	}
 	return nil
 }
+
+//// forward messages to game server
+//func forward2Room(sess *Session, p []byte) error {
+//
+//}

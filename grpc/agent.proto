@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+package proto;
+
+// 心跳包
+message AutoId{
+    int32 Id = 1;
+}
+
+// 通信加密种子
+message SeedInfo{
+    int32 ClientSendSeed = 1;
+    int32 ClientReceiveSeed = 2;
+}
+
+// 一般性回复payload,1代表成功
+message BaseAck{
+    int32 Ret = 1;
+    string Msg = 2;
+}
+
+message UserLoginReq{
+    int32 UserId = 1;
+    string AppFrom = 2;
+    string AppChannel = 3;
+    int32 AppVer = 4;
+    string UniqueId = 5;
+    string Token = 6;
+}
+
+

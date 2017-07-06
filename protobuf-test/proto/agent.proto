@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package proto;
+
+import "google/protobuf/any.proto";
+
+message User {
+    int32 Id = 1;
+    string Name = 2;
+}
+
+message SearchResponse {
+    message Result {
+        string url = 1;
+        string title = 2;
+        repeated string snippets = 3;
+    }
+    repeated Result results = 1;
+}
+
+message SomeOtherMessage {
+    SearchResponse.Result result = 1;
+}
+
+message ErrorStatus {
+    string message = 1;
+    repeated google.protobuf.Any details = 2;
+}

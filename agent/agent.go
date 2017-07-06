@@ -5,7 +5,7 @@ import (
 )
 
 import (
-	pb "chess/agent/pb"
+	pb "chess/agent/proto"
 	. "chess/agent/types"
 	"chess/agent/utils"
 )

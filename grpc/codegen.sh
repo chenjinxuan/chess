@@ -13,5 +13,4 @@
 # If this is not what you need, feel free to make your own scripts. Again, this
 # script is for demonstration purpose.
 #
-proto=$1
-protoc --go_out=plugins=grpc:. $proto
+protoc --go_out=plugins=grpc:. *.proto

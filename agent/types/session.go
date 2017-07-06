@@ -7,7 +7,7 @@ import (
 )
 
 import (
-	pb "chess/agent/pb"
+	pb "chess/agent/proto"
 )
 
 const (

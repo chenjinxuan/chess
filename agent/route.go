@@ -4,11 +4,11 @@ import (
 	"time"
 
 	log "github.com/Sirupsen/logrus"
+	"encoding/binary"
 )
 
 import (
 	"chess/agent/client_handler"
-	"chess/agent/misc/packet"
 	. "chess/agent/types"
 	"chess/agent/utils"
 )
@@ -21,18 +21,17 @@ func route(sess *Session, p []byte) []byte {
 	if sess.Flag&SESS_ENCRYPT != 0 {
 		sess.Decoder.XORKeyStream(p, p)
 	}
-	// 封装为reader
-	reader := packet.Reader(p)
+
+	if len(p) < 6 {
+		log.Error("packet length error")
+		sess.Flag |= SESS_KICKED_OUT
+		return nil
+	}
 
 	// 读客户端数据包序列号(1,2,3...)
 	// 客户端发送的数据包必须包含一个自增的序号，必须严格递增
 	// 加密后，可避免重放攻击-REPLAY-ATTACK
-	seq_id, err := reader.ReadU32()
-	if err != nil {
-		log.Error("read client timestamp failed:", err)
-		sess.Flag |= SESS_KICKED_OUT
-		return nil
-	}
+	seq_id := binary.BigEndian.Uint32(p[:4])
 
 	// 数据包序列号验证
 	if seq_id != sess.PacketCount {
@@ -42,14 +41,12 @@ func route(sess *Session, p []byte) []byte {
 	}
 
 	// 读协议号
-	b, err := reader.ReadS16()
-	if err != nil {
-		log.Error("read protocol number failed.")
+	b := int16(binary.BigEndian.Uint16(p[4:6]))
+	if _, ok := client_handler.RCode[b]; !ok {
+		log.Error("protocol number not defined.")
 		sess.Flag |= SESS_KICKED_OUT
 		return nil
 	}
-
-	log.Debug(p)
 
 	// 根据协议号断做服务划分
 	// 协议号的划分采用分割协议区间, 用户可以自定义多个区间，用于转发到不同的后端服务
@@ -62,7 +59,7 @@ func route(sess *Session, p []byte) []byte {
 		}
 	} else {
 		if h := client_handler.Handlers[b]; h != nil {
-			ret = h(sess, reader)
+			ret = h(sess, p[4:])
 		} else {
 			log.Errorf("service id:%v not bind", b)
 			sess.Flag |= SESS_KICKED_OUT

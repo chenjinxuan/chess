@@ -1,6 +1,6 @@
 package client_handler
 
 const (
-	SALT         = "DH"
+	SALT         = "CHESS_DH"
 	DEFAULT_GSID = "game1"
 )
