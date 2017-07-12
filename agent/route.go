@@ -17,10 +17,12 @@ import (
 func route(sess *Session, p []byte) []byte {
 	start := time.Now()
 	defer utils.PrintPanicStack(sess, p)
+
+	log.Debug("binary.BigEndian.Uint32 before", p[:4])
 	// 解密
-	if sess.Flag&SESS_ENCRYPT != 0 {
-		sess.Decoder.XORKeyStream(p, p)
-	}
+	//if sess.Flag&SESS_ENCRYPT != 0 {
+	//	sess.Decoder.XORKeyStream(p, p)
+	//}
 
 	if len(p) < 6 {
 		log.Error("packet length error")
@@ -31,6 +33,7 @@ func route(sess *Session, p []byte) []byte {
 	// 读客户端数据包序列号(1,2,3...)
 	// 客户端发送的数据包必须包含一个自增的序号，必须严格递增
 	// 加密后，可避免重放攻击-REPLAY-ATTACK
+	log.Debug("binary.BigEndian.Uint32", p[:4])
 	seq_id := binary.BigEndian.Uint32(p[:4])
 
 	// 数据包序列号验证

@@ -9,7 +9,7 @@ import (
 
 	//	cli "gopkg.in/urfave/cli.v2"
 
-	"chess/game/etcdclient"
+	"chess/srv/srv-game/etcdclient"
 
 	log "github.com/Sirupsen/logrus"
 	"github.com/tealeg/xlsx"

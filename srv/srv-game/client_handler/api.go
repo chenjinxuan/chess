@@ -1,7 +1,7 @@
 package client_handler
 
-import "chess/game/misc/packet"
-import . "chess/game/types"
+import "chess/srv/srv-game/misc/packet"
+import . "chess/srv/srv-game/types"
 
 var Code = map[string]int16{
 	"heart_beat_req":         0,    // 心跳包..

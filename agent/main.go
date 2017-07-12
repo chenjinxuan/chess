@@ -226,6 +226,7 @@ func wsServer() {
 }
 
 func wsHandler(ws *websocket.Conn) {
+	ws.PayloadType = websocket.BinaryFrame
 	handleClient(ws)
 	//var err error
 	//
@@ -363,7 +364,7 @@ func handleClient(conn net.Conn) {
 		}
 		size := binary.BigEndian.Uint16(header)
 
-		fmt.Print(size)
+		fmt.Print(header)
 
 		// alloc a byte slice of the size defined in the header for reading data
 		payload := make([]byte, size)
@@ -372,6 +373,7 @@ func handleClient(conn net.Conn) {
 			log.Warningf("read payload failed, ip:%v reason:%v size:%v", sess.IP, err, n)
 			return
 		}
+		fmt.Print(payload)
 
 		// deliver the data to the input queue of agent()
 		select {

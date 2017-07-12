@@ -4,28 +4,36 @@ package proto;
 
 // 心跳包
 message AutoId{
-    int32 Id = 1;
+    int32 id = 1;
+    repeated int32 short_key = 2;
+    float score = 3;
+    Nested nested = 4;
+    map<string, Nested> terrain = 5;
+}
+
+message Nested {
+    string bunny = 1;
+    bool cute = 2;
 }
 
 // 通信加密种子
 message SeedInfo{
-    int32 ClientSendSeed = 1;
-    int32 ClientReceiveSeed = 2;
+    int32 client_send_seed = 1;
+    int32 client_receive_seed = 2;
 }
 
 // 一般性回复payload,1代表成功
 message BaseAck{
-    int32 Ret = 1;
-    string Msg = 2;
+    int32 ret = 1;
+    string msg = 2;
 }
 
 message UserLoginReq{
-    int32 UserId = 1;
-    string AppFrom = 2;
-    string AppChannel = 3;
-    int32 AppVer = 4;
-    string UniqueId = 5;
-    string Token = 6;
+    int32 user_id = 1;
+    string app_from = 2;
+    string app_channel = 3;
+    int32 app_ver = 4;
+    string unique_id = 5;
+    string token = 6;
 }
-
 

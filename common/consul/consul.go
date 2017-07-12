@@ -13,7 +13,7 @@ import (
 )
 
 var (
-	Consul       ConsulConfig
+	ConsulCfg       ConsulConfig
 	ConsulClient *ConsulCliWrap
 )
 
@@ -37,39 +37,39 @@ type ConsulConfig struct {
 }
 
 func SetConsulCfg(addr, dc, token, proxy string) {
-	Consul.Address = addr
-	Consul.Datacenter = dc
-	Consul.Token = token
-	Consul.Proxy = proxy
+	ConsulCfg.Address = addr
+	ConsulCfg.Datacenter = dc
+	ConsulCfg.Token = token
+	ConsulCfg.Proxy = proxy
 }
 
 func SetConsulCfgViaEnv() {
-	Consul.Address = os.Getenv("CONSUL_ADDRESS")
-	Consul.Datacenter = os.Getenv("CONSUL_DATACENTER")
-	Consul.Token = os.Getenv("CONSUL_TOKEN")
-	Consul.Proxy = os.Getenv("CONSUL_PROXY")
+	ConsulCfg.Address = os.Getenv("CONSUL_ADDRESS")
+	ConsulCfg.Datacenter = os.Getenv("CONSUL_DATACENTER")
+	ConsulCfg.Token = os.Getenv("CONSUL_TOKEN")
+	ConsulCfg.Proxy = os.Getenv("CONSUL_PROXY")
 }
 
 func InitConsulClient(addr, dc, token, proxy string) (err error) {
 	SetConsulCfg(addr, dc, token, proxy)
-	ConsulClient, err = NewConsulClient(Consul)
+	ConsulClient, err = NewConsulClient(ConsulCfg)
 	return
 }
 
 func InitConsulClientViaEnv() (err error) {
 	SetConsulCfgViaEnv()
-	ConsulClient, err = NewConsulClient(Consul)
+	ConsulClient, err = NewConsulClient(ConsulCfg)
 	return
 }
 
 func NewConsulClient(cfg ConsulConfig) (*ConsulCliWrap, error) {
-	if Consul.Address == "" || Consul.Datacenter == "" {
+	if cfg.Address == "" || cfg.Datacenter == "" {
 		return nil, ErrAddrOrDatacenterMiss
 	}
 
 	var proxyClient *http.Client
-	if Consul.Proxy != "" {
-		proxyUrl, err := url.Parse(Consul.Proxy)
+	if cfg.Proxy != "" {
+		proxyUrl, err := url.Parse(cfg.Proxy)
 		if err != nil {
 			proxyClient = &http.Client{}
 		} else {
@@ -80,9 +80,9 @@ func NewConsulClient(cfg ConsulConfig) (*ConsulCliWrap, error) {
 	}
 
 	c := &api.Config{}
-	c.Address = Consul.Address
-	c.Datacenter = Consul.Datacenter
-	c.Token = Consul.Token
+	c.Address = cfg.Address
+	c.Datacenter = cfg.Datacenter
+	c.Token = cfg.Token
 	c.HttpClient = proxyClient
 	cli, err := api.NewClient(c)
 
@@ -90,7 +90,7 @@ func NewConsulClient(cfg ConsulConfig) (*ConsulCliWrap, error) {
 		return nil, err
 	}
 
-	wrap := ConsulCliWrap{cli: cli, address: Consul.Address, datacenter: Consul.Datacenter, token: Consul.Token}
+	wrap := ConsulCliWrap{cli: cli, address: cfg.Address, datacenter: cfg.Datacenter, token: cfg.Token}
 
 	return &wrap, nil
 }
@@ -297,7 +297,7 @@ func (c *ConsulCliWrap) WatchFuncFactory(key string, handler func(raw interface{
 	}
 }
 
-func (c *ConsulCliWrap) WatchKeyPlanFactory(key string) *watch.WatchPlan {
+func (c *ConsulCliWrap) WatchKeyPlanFactory(key string) *watch.Plan {
 	plan, _ := watch.Parse(map[string]interface{}{
 		"datacenter": c.datacenter,
 		"type":       "key",
@@ -305,4 +305,16 @@ func (c *ConsulCliWrap) WatchKeyPlanFactory(key string) *watch.WatchPlan {
 		"key":        key,
 	})
 	return plan
+}
+
+func (c *ConsulCliWrap) RegisterService(registration *api.AgentServiceRegistration) error {
+	return c.cli.Agent().ServiceRegister(registration)
+}
+
+func (c *ConsulCliWrap) Services() (map[string]*api.AgentService, error) {
+	return c.cli.Agent().Services()
+}
+
+func (c *ConsulCliWrap) ServiceWatch() error {
+
 }

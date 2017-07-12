@@ -1,7 +1,7 @@
 package client_handler
 
 import (
-	"chess/game/db"
+	"chess/srv/srv-game/db"
 	"time"
 )
 

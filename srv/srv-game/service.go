@@ -11,11 +11,11 @@ import (
 )
 
 import (
-	"chess/game/client_handler"
-	"chess/game/misc/packet"
-	. "chess/game/proto"
-	"chess/game/registry"
-	. "chess/game/types"
+	"chess/srv/srv-game/client_handler"
+	"chess/srv/srv-game/misc/packet"
+	. "chess/srv/srv-game/proto"
+	"chess/srv/srv-game/registry"
+	. "chess/srv/srv-game/types"
 )
 
 var (

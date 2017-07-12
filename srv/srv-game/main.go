@@ -1,12 +1,12 @@
 package main
 
 import (
-	"chess/game/client_handler"
-	"chess/game/etcdclient"
-	"chess/game/kafka"
-	"chess/game/numbers"
-	pb "chess/game/proto"
-	"chess/game/services"
+	"chess/srv/srv-game/client_handler"
+	"chess/srv/srv-game/etcdclient"
+	"chess/srv/srv-game/kafka"
+	"chess/srv/srv-game/numbers"
+	pb "chess/srv/srv-game/proto"
+	"chess/srv/srv-game/services"
 	"net"
 	"net/http"
 	"os"

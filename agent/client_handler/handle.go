@@ -24,8 +24,18 @@ import (
 
 // 心跳包 直接把数据包发回去
 func P_heart_beat_req(sess *Session, data []byte) []byte {
+	log.Debug("heart_beat_req", data)
 	tbl := &pb.AutoId{}
-	proto.Unmarshal(data[2:], tbl)
+	err := proto.Unmarshal(data[2:], tbl)
+	if err != nil {
+		log.Error("P_heart_beat_req Unmarshal ERROR", err)
+	}
+
+	log.Debugf("heart_beat_req Unmarshal %+v", *tbl)
+
+	tbl.Id += 1
+	//tbl.Score = 10
+
 	return packet.Pack(Code["heart_beat_ack"], tbl)
 }
 
@@ -37,8 +47,13 @@ func P_heart_beat_req(sess *Session, data []byte) []byte {
 // 3. RC4用于流加密
 func P_get_seed_req(sess *Session, data []byte) []byte {
 	tbl := &pb.SeedInfo{}
-	proto.Unmarshal(data[2:], tbl)
+	err := proto.Unmarshal(data[2:], tbl)
+	if err != nil {
+		log.Error("P_get_seed_req Unmarshal ERROR", err)
+	}
 
+	log.Debug("P_get_seed_req", data)
+	log.Debugf("P_get_seed_req Unmarshal %+v", *tbl)
 	// KEY1
 	X1, E1 := dh.DHExchange()
 	KEY1 := dh.DHKey(X1, big.NewInt(int64(tbl.ClientSendSeed)))

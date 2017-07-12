@@ -3,6 +3,7 @@ package config
 import (
 	"encoding/json"
 	"chess/common/log"
+	. "chess/common/consul"
 )
 
 var Api = new(ApiConfig)

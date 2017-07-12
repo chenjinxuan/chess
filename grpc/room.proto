@@ -3,11 +3,28 @@ syntax = "proto3";
 package proto;
 
 service RoomService {
+    // 透传消息, 双向流
+    rpc Stream(stream Room.Frame) returns (stream Room.Frame);
+
     // 获取房间信息
     rpc RoomInfo(RoomInfoArgs) returns (RoomInfoRes){}
 
     // 进入房间/游戏指令...
 }
+
+
+message Room {
+    enum FrameType {
+        Ping = 0;	// for testing
+        Message = 1;
+        Kick = 2;
+    }
+    message Frame {
+        FrameType Type=1;
+        bytes Message=2;
+    }
+}
+
 
 message RoomInfoArgs{
 

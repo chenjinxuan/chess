@@ -1,5 +1,9 @@
 package config
 
+import (
+	. "chess/common/consul"
+)
+
 var Public = new(PublicConfig)
 
 type PublicConfig struct {

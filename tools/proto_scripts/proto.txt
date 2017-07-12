@@ -1,6 +1,7 @@
 #公共结构， 用于只传id,或一个数字的结构
 auto_id=
 id integer
+info seed_info
 ===
 
 #一般性回复payload,0代表成功

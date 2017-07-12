@@ -2,6 +2,7 @@ package config
 
 import (
 	"chess/common/log"
+	. "chess/common/consul"
 )
 
 var SrvUser = new(SrvUserConfig)

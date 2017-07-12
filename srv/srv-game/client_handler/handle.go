@@ -1,8 +1,8 @@
 package client_handler
 
 import (
-	"chess/game/misc/packet"
-	. "chess/game/types"
+	"chess/srv/srv-game/misc/packet"
+	. "chess/srv/srv-game/types"
 )
 
 //----------------------------------- ping

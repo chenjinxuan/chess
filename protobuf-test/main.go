@@ -30,7 +30,7 @@ func read(data []byte) {
 	fmt.Println(p)
 
 	// 读消息体
-	stReceive := &pb.User{}
+	stReceive := &pb.AutoId{}
 	pData := data[8:sz+2]
 	//protobuf解码
 	err := proto.Unmarshal(pData, stReceive)
@@ -53,9 +53,12 @@ func write() []byte {
 	fmt.Println(pBuf)
 
 	// 写消息体
-	bBuf, _ := proto.Marshal(&pb.User{
+	bBuf, _ := proto.Marshal(&pb.AutoId{
 		Id: 1,
-		Name: "test",
+		ShortKey: []int32{1,2,3,4},
+		Score: 3.2,
+		Nested:   &pb.Nested{Bunny: "123", Cute: true},
+		Terrain: map[string]*pb.Nested{"key1": &pb.Nested{Bunny: "123", Cute: true}},
 	})
 	fmt.Println(bBuf)
 
@@ -68,11 +71,4 @@ func write() []byte {
 	copy(data[8:], bBuf)
 
 	return data[:sz+2]
-}
-
-type Packet struct {
-	Sz uint16
-	T uint32
-	Proto uint16
-	Payload proto.Message
 }

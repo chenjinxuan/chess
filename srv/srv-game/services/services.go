@@ -1,8 +1,6 @@
 package services
 
 import (
-	"log"
-	"os"
 	"path/filepath"
 	"strings"
 	"sync"
@@ -11,6 +9,9 @@ import (
 	etcdclient "github.com/coreos/etcd/client"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
+	. "chess/common/consul"
+	"chess/common/log"
+	"fmt"
 )
 
 // a single connection
@@ -46,18 +47,6 @@ func Init(root string, hosts, services []string) {
 }
 
 func (p *service_pool) init(root string, hosts, services []string) {
-	// init etcd client
-	cfg := etcdclient.Config{
-		Endpoints: hosts, // c.StringSlice("etcd-hosts"),
-		Transport: etcdclient.DefaultTransport,
-	}
-	etcdcli, err := etcdclient.New(cfg)
-	if err != nil {
-		log.Panic(err)
-		os.Exit(-1)
-	}
-	p.client = etcdcli
-	p.root = root //c.String("etcd-root")
 
 	// init
 	p.services = make(map[string]*service)
@@ -69,9 +58,9 @@ func (p *service_pool) init(root string, hosts, services []string) {
 		p.names_provided = true
 	}
 
-	log.Println("all service names:", names)
+	log.Info("all service names:", names)
 	for _, v := range names {
-		p.names[p.root+"/"+strings.TrimSpace(v)] = true
+		p.names[strings.TrimSpace(v)] = true
 	}
 
 	// start connection
@@ -80,29 +69,17 @@ func (p *service_pool) init(root string, hosts, services []string) {
 
 // connect to all services
 func (p *service_pool) connect_all(directory string) {
-	kAPI := etcdclient.NewKeysAPI(p.client)
-	// get the keys under directory
-	log.Println("connecting services under:", directory)
-	resp, err := kAPI.Get(context.Background(), directory, &etcdclient.GetOptions{Recursive: true})
+	// get services
+	consulServices, err := ConsulClient.Services()
 	if err != nil {
-		log.Println(err)
+		log.Error(err)
 		return
 	}
 
-	// validation check
-	if !resp.Node.Dir {
-		log.Println("not a directory")
-		return
+	for _, consulService := range consulServices {
+		p.add_service(consulService.ID, consulService.Service, consulService.Address, consulService.Port)
 	}
-
-	for _, node := range resp.Node.Nodes {
-		if node.Dir { // service directory
-			for _, service := range node.Nodes {
-				p.add_service(service.Key, service.Value)
-			}
-		}
-	}
-	log.Println("services add complete")
+	log.Info("services add complete")
 
 	go p.watcher()
 }
@@ -114,7 +91,7 @@ func (p *service_pool) watcher() {
 	for {
 		resp, err := w.Next(context.Background())
 		if err != nil {
-			log.Println(err)
+			log.Error(err)
 			continue
 		}
 		if resp.Node.Dir {
@@ -131,11 +108,11 @@ func (p *service_pool) watcher() {
 }
 
 // add a service
-func (p *service_pool) add_service(key, value string) {
+func (p *service_pool) add_service(id, name, address, port string) {
 	p.mu.Lock()
 	defer p.mu.Unlock()
 	// name check
-	service_name := filepath.Dir(key)
+	service_name := name
 	if p.names_provided && !p.names[service_name] {
 		return
 	}
@@ -147,17 +124,18 @@ func (p *service_pool) add_service(key, value string) {
 
 	// create service connection
 	service := p.services[service_name]
-	if conn, err := grpc.Dial(value, grpc.WithBlock(), grpc.WithInsecure()); err == nil {
-		service.clients = append(service.clients, client{key, conn})
-		log.Println("service added:", key, "-->", value)
+	target := fmt.Sprintf("%s:%s", address, port)
+	if conn, err := grpc.Dial(target, grpc.WithBlock(), grpc.WithInsecure()); err == nil {
+		service.clients = append(service.clients, client{id, conn})
+		log.Info("service added:", id, "-->", target)
 		for k := range p.callbacks[service_name] {
 			select {
-			case p.callbacks[service_name][k] <- key:
+			case p.callbacks[service_name][k] <- id:
 			default:
 			}
 		}
 	} else {
-		log.Println("did not connect:", key, "-->", value, "error:", err)
+		log.Info("did not connect:", id, "-->", target, "error:", err)
 	}
 }
 
