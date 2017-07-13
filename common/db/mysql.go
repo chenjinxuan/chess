@@ -1,10 +1,10 @@
 package db
 
 import (
+	"chess/common/config"
 	"database/sql"
 	"fmt"
 	_ "github.com/go-sql-driver/mysql"
-	"chess/common/config"
 )
 
 func InitMySQL() {

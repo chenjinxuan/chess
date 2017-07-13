@@ -1,9 +1,9 @@
 package config
 
 import (
-	"encoding/json"
-	"chess/common/log"
 	. "chess/common/consul"
+	"chess/common/log"
+	"encoding/json"
 )
 
 var SrvNotifier = new(SrvNotifierConfig)

@@ -1,9 +1,9 @@
 package models
 
 import (
-	"database/sql"
 	"chess/common/db"
 	"chess/common/log"
+	"database/sql"
 )
 
 var (

@@ -7,11 +7,10 @@ import (
 	"chess/common/log"
 	//"chess/common/config"
 	//"chess/common/db"
-	cli "gopkg.in/urfave/cli.v2"
-	"google.golang.org/grpc"
 	pb "chess/srv/srv-auth/proto"
+	"google.golang.org/grpc"
+	cli "gopkg.in/urfave/cli.v2"
 )
-
 
 func main() {
 	app := &cli.App{
@@ -40,7 +39,6 @@ func main() {
 			//db.InitMySQL()
 			//db.InitMongo()
 			//models.Init()
-
 
 			// 监听
 			lis, err := net.Listen("tcp", c.String("port"))

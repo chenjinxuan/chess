@@ -1,10 +1,10 @@
 package db
 
 import (
+	"chess/common/config"
 	"fmt"
 	"github.com/garyburd/redigo/redis"
 	"time"
-	"chess/common/config"
 )
 
 type Redis struct {

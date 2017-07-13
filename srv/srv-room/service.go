@@ -1,20 +1,22 @@
 package main
 
 import (
-	"errors"
-	"io"
-	"chess/srv/srv-room/client_handler"
 	"chess/common/helper"
 	"chess/common/log"
+	"chess/srv/srv-room/client_handler"
 	pb "chess/srv/srv-room/proto"
-	"google.golang.org/grpc/metadata"
-	"strconv"
 	"chess/srv/srv-room/registry"
 	. "chess/srv/srv-room/types"
 	"encoding/binary"
+	"errors"
+	"golang.org/x/net/context"
+	"google.golang.org/grpc/metadata"
+	"io"
+	"strconv"
 )
 
 const (
+	SERVICE_NAME        = "room"
 	DEFAULT_CH_IPC_SIZE = 16 // 默认玩家异步IPC消息队列大小
 )
 
@@ -148,4 +150,8 @@ func (s *server) Stream(stream pb.RoomService_StreamServer) error {
 			}
 		}
 	}
+}
+
+func (s *server) RoomInfo(ctx context.Context, args *pb.RoomInfoArgs) (*pb.RoomInfoRes, error) {
+	return &pb.RoomInfoRes{}, nil
 }

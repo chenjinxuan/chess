@@ -1,16 +1,12 @@
 package main
 
 import (
-	"encoding/binary"
-	"net"
-
-	log "github.com/Sirupsen/logrus"
-)
-
-import (
 	"chess/agent/misc/packet"
 	. "chess/agent/types"
 	"chess/agent/utils"
+	"chess/common/log"
+	"encoding/binary"
+	"net"
 )
 
 // PIPELINE #3: buffer
@@ -42,7 +38,7 @@ func (buf *Buffer) send(sess *Session, data []byte) {
 	select {
 	case buf.pending <- data:
 	default: // packet will be dropped if txqueuelen exceeds
-		log.WithFields(log.Fields{"userid": sess.UserId, "ip": sess.IP}).Warning("pending full")
+		log.Warnf("userid:%d ip:%s pending full", sess.UserId, sess.IP)
 	}
 	return
 }
@@ -70,7 +66,7 @@ func (buf *Buffer) raw_send(data []byte) bool {
 	// write data
 	n, err := buf.conn.Write(buf.cache[:sz+2])
 	if err != nil {
-		log.Warningf("Error send reply data, bytes: %v reason: %v", n, err)
+		log.Warnf("Error send reply data, bytes: %v reason: %v", n, err)
 		return false
 	}
 

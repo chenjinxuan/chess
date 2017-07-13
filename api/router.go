@@ -6,12 +6,12 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/itsjamie/gin-cors"
-	"time"
 	"chess/api/components/middleware"
 	"chess/api/controllers/debug"
 	"chess/common/config"
+	"github.com/gin-gonic/gin"
+	"github.com/itsjamie/gin-cors"
+	"time"
 )
 
 func InitRouter() {
@@ -57,11 +57,11 @@ func InitRouter() {
 	// @SubApi /auth - 授权相关 [/auth/]
 	authRouter := router.Group("/auth")
 	{
-		authRouter.POST("/login", nil) // 账号密码登录
-		authRouter.POST("/login/quick", nil) // 手机号快速登录
-		authRouter.POST("/login/tp", nil) // 第三方登录
-		authRouter.POST("/logout", nil) // 登出，销毁token
-		authRouter.POST("/token/info", nil) //获取token信息
+		authRouter.POST("/login", nil)         // 账号密码登录
+		authRouter.POST("/login/quick", nil)   // 手机号快速登录
+		authRouter.POST("/login/tp", nil)      // 第三方登录
+		authRouter.POST("/logout", nil)        // 登出，销毁token
+		authRouter.POST("/token/info", nil)    //获取token信息
 		authRouter.POST("/token/refresh", nil) // 刷新token
 	}
 

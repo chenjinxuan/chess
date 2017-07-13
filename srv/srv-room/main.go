@@ -1,17 +1,18 @@
 package main
 
 import (
-	"net"
-	"os"
-
+	"chess/common/consul"
 	"chess/common/log"
-	//"chess/common/config"
+	"net"
+	"net/http"
+	"os"
 	//"chess/common/db"
-	cli "gopkg.in/urfave/cli.v2"
-	"google.golang.org/grpc"
+	"chess/common/services"
 	pb "chess/srv/srv-room/proto"
+	"fmt"
+	"google.golang.org/grpc"
+	cli "gopkg.in/urfave/cli.v2"
 )
-
 
 func main() {
 	app := &cli.App{
@@ -20,17 +21,29 @@ func main() {
 		Version: "2.0",
 		Flags: []cli.Flag{
 			&cli.StringFlag{
+				Name:  "service-id",
+				Value: "room-1",
+				Usage: "service id",
+			},
+			&cli.StringFlag{
+				Name:  "address",
+				Value: "127.0.0.1",
+				Usage: "external address",
+			},
+			&cli.IntFlag{
 				Name:  "port",
-				Value: ":20001",
-				Usage: "listening address:port",
+				Value: 20001,
+				Usage: "listening port",
 			},
 		},
 		Action: func(c *cli.Context) error {
 			// TODO 从consul读取配置，初始化数据库连接
-			//err := config.InitConsulClientViaEnv()
-			//if err != nil {
-			//	panic(err)
-			//}
+			err := consul.InitConsulClientViaEnv()
+			if err != nil {
+				log.Error(err)
+				os.Exit(-1)
+			}
+
 			//err = config.Api.Import()
 			//if err != nil {
 			//	panic(err)
@@ -41,16 +54,27 @@ func main() {
 			//db.InitMongo()
 			//models.Init()
 
+			// consul 服务注册
+			err = services.Register(c.String("service-id"), SERVICE_NAME, c.String("address"), c.Int("port"), c.Int("port")+10, []string{"master"})
+			if err != nil {
+				log.Error(err)
+				os.Exit(-1)
+			}
 
-			// 监听
-			lis, err := net.Listen("tcp", c.String("port"))
+			// consul 健康检查
+			http.HandleFunc("/check", consulCheck)
+			go http.ListenAndServe(fmt.Sprintf(":%d", c.Int("port")+10), nil)
+
+			// grpc监听
+			laddr := fmt.Sprintf(":%d", c.Int("port"))
+			lis, err := net.Listen("tcp", laddr)
 			if err != nil {
 				log.Error(err)
 				os.Exit(-1)
 			}
 			log.Info("listening on ", lis.Addr())
 
-			// 注册服务
+			// 注册grpc服务
 			s := grpc.NewServer()
 			ins := &server{}
 			ins.init()
@@ -60,4 +84,8 @@ func main() {
 		},
 	}
 	app.Run(os.Args)
+}
+
+func consulCheck(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintln(w, "consulCheck")
 }

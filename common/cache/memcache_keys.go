@@ -1,4 +1,3 @@
 package cache
 
-var (
-)
+var ()

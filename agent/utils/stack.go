@@ -1,10 +1,9 @@
 package utils
 
 import (
-	"runtime"
-
-	log "github.com/Sirupsen/logrus"
+	"chess/common/log"
 	"github.com/davecgh/go-spew/spew"
+	"runtime"
 )
 
 // 产生panic时的调用栈打印

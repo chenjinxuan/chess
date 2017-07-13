@@ -11,9 +11,8 @@ import (
 
 	"chess/agent/misc/crypto/dh"
 	"chess/agent/misc/packet"
-	"chess/agent/services"
-
-	log "github.com/Sirupsen/logrus"
+	"chess/common/log"
+	"chess/common/services"
 
 	pb "chess/agent/proto"
 
@@ -87,17 +86,17 @@ func P_user_login_req(sess *Session, data []byte) []byte {
 	// 简单鉴权可以在agent直接完成，通常公司都存在一个用户中心服务器用于鉴权
 	sess.UserId = 1
 
-	// TODO: 选择GAME服务器
+	// TODO: 选择Room服务器
 	// 选服策略依据业务进行，比如小服可以固定选取某台，大服可以采用HASH或一致性HASH
 	sess.GSID = DEFAULT_GSID
 
 	// 连接到已选定GAME服务器
-	conn := services.GetServiceWithId("game-10000", sess.GSID)
+	conn := services.GetServiceWithId(sess.GSID, "room")
 	if conn == nil {
 		log.Error("cannot get game service:", sess.GSID)
 		return nil
 	}
-	cli := pb.NewGameServiceClient(conn)
+	cli := pb.NewRoomServiceClient(conn)
 
 	// 开启到游戏服的流
 	ctx := metadata.NewContext(context.Background(), metadata.New(map[string]string{"userid": fmt.Sprint(sess.UserId)}))

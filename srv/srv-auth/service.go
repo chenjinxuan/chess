@@ -1,11 +1,11 @@
 package main
 
 import (
-	"errors"
-	"regexp"
-	"golang.org/x/net/context"
-	. "chess/srv/srv-auth/proto"
 	"chess/common/log"
+	. "chess/srv/srv-auth/proto"
+	"errors"
+	"golang.org/x/net/context"
+	"regexp"
 	"time"
 )
 

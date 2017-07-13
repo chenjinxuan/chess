@@ -3,7 +3,7 @@ package main
 import (
 	"errors"
 
-	log "github.com/Sirupsen/logrus"
+	"chess/common/log"
 )
 
 import (
@@ -15,10 +15,10 @@ var (
 	ERROR_STREAM_NOT_OPEN = errors.New("stream not opened yet")
 )
 
-// forward messages to game server
+// forward messages to room server
 func forward(sess *Session, p []byte) error {
-	frame := &pb.Game_Frame{
-		Type:    pb.Game_Message,
+	frame := &pb.Room_Frame{
+		Type:    pb.Room_Message,
 		Message: p,
 	}
 	log.Debug(string(p))
@@ -35,8 +35,3 @@ func forward(sess *Session, p []byte) error {
 	}
 	return nil
 }
-
-//// forward messages to game server
-//func forward2Room(sess *Session, p []byte) error {
-//
-//}

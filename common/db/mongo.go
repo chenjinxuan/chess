@@ -1,10 +1,10 @@
 package db
 
 import (
+	"chess/common/config"
 	"fmt"
 	"gopkg.in/mgo.v2"
 	"time"
-	"chess/common/config"
 )
 
 func InitMongo() {

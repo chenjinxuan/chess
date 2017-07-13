@@ -2,8 +2,8 @@ package packet
 
 import (
 	"encoding/binary"
-	"github.com/golang/protobuf/proto"
 	"fmt"
+	"github.com/golang/protobuf/proto"
 )
 
 // 加上协议号

@@ -1,13 +1,13 @@
 // 消息封包格式
-// +----------------------------------------------------------------+     
-// | SIZE(2) | TIMESTAMP(4) | PROTO(2) | PAYLOAD(SIZE-6)            |     
-// +----------------------------------------------------------------+     
+// +----------------------------------------------------------------+
+// | SIZE(2) | TIMESTAMP(4) | PROTO(2) | PAYLOAD(SIZE-6)            |
+// +----------------------------------------------------------------+
 package main
 
 import (
-	"github.com/golang/protobuf/proto"
-	"fmt"
 	"encoding/binary"
+	"fmt"
+	"github.com/golang/protobuf/proto"
 
 	pb "chess/protobuf-test/proto"
 )
@@ -31,12 +31,12 @@ func read(data []byte) {
 
 	// 读消息体
 	stReceive := &pb.AutoId{}
-	pData := data[8:sz+2]
+	pData := data[8 : sz+2]
 	//protobuf解码
 	err := proto.Unmarshal(pData, stReceive)
 	if err != nil {
 		panic(err)
-	}else {
+	} else {
 		fmt.Println(*stReceive)
 	}
 }
@@ -54,14 +54,13 @@ func write() []byte {
 
 	// 写消息体
 	bBuf, _ := proto.Marshal(&pb.AutoId{
-		Id: 1,
-		ShortKey: []int32{1,2,3,4},
-		Score: 3.2,
+		Id:       1,
+		ShortKey: []int32{1, 2, 3, 4},
+		Score:    3.2,
 		Nested:   &pb.Nested{Bunny: "123", Cute: true},
-		Terrain: map[string]*pb.Nested{"key1": &pb.Nested{Bunny: "123", Cute: true}},
+		Terrain:  map[string]*pb.Nested{"key1": &pb.Nested{Bunny: "123", Cute: true}},
 	})
 	fmt.Println(bBuf)
-
 
 	data := make([]byte, 65535+2)
 	sz := len(bBuf) + 6
