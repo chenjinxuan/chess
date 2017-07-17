@@ -1,14 +1,14 @@
 package middleware
 
 import (
+	"chess/common/config"
+	"chess/common/helper"
+	"chess/common/log"
 	"encoding/json"
 	"errors"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"io/ioutil"
-	"chess/common/config"
-	"chess/common/helper"
-	"chess/common/log"
 )
 
 func BindJSON(c *gin.Context, params interface{}) error {

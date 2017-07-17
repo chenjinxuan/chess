@@ -1,8 +1,8 @@
 package config
 
 import (
-	"testing"
 	. "chess/common/consul"
+	"testing"
 )
 
 func TestDbConfig_Import(t *testing.T) {

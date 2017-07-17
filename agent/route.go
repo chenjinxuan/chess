@@ -1,16 +1,12 @@
 package main
 
 import (
-	"time"
-
-	log "github.com/Sirupsen/logrus"
-	"encoding/binary"
-)
-
-import (
 	"chess/agent/client_handler"
 	. "chess/agent/types"
 	"chess/agent/utils"
+	"chess/common/log"
+	"encoding/binary"
+	"time"
 )
 
 // route client protocol
@@ -54,7 +50,7 @@ func route(sess *Session, p []byte) []byte {
 	// 根据协议号断做服务划分
 	// 协议号的划分采用分割协议区间, 用户可以自定义多个区间，用于转发到不同的后端服务
 	var ret []byte
-	if b > 1000 {
+	if b > 2000 && b < 3000 {
 		if err := forward(sess, p[4:]); err != nil {
 			log.Errorf("service id:%v execute failed, error:%v", b, err)
 			sess.Flag |= SESS_KICKED_OUT
@@ -72,9 +68,7 @@ func route(sess *Session, p []byte) []byte {
 
 	elasped := time.Now().Sub(start)
 	if b != 0 { // 排除心跳包日志
-		log.WithFields(log.Fields{"cost": elasped,
-			"api":  client_handler.RCode[b],
-			"code": b}).Debug("REQ")
+		log.Infof("REQ --- cost:%d api:%s code:%d", elasped, client_handler.RCode[b], b)
 	}
 	return ret
 }

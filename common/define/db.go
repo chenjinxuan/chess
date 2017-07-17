@@ -1,5 +1,3 @@
 package define
 
-const (
-
-)
+const ()

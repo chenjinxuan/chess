@@ -1,6 +1,7 @@
 package consul
 
 import (
+	"chess/common/log"
 	"errors"
 	"github.com/hashicorp/consul/api"
 	"github.com/hashicorp/consul/watch"
@@ -9,11 +10,10 @@ import (
 	"os"
 	"strconv"
 	"strings"
-	"chess/common/log"
 )
 
 var (
-	ConsulCfg       ConsulConfig
+	ConsulCfg    ConsulConfig
 	ConsulClient *ConsulCliWrap
 )
 
@@ -311,10 +311,26 @@ func (c *ConsulCliWrap) RegisterService(registration *api.AgentServiceRegistrati
 	return c.cli.Agent().ServiceRegister(registration)
 }
 
+func (c *ConsulCliWrap) DeregisterService(serviceID string) error {
+	return c.cli.Agent().ServiceDeregister(serviceID)
+}
+
 func (c *ConsulCliWrap) Services() (map[string]*api.AgentService, error) {
 	return c.cli.Agent().Services()
 }
 
-//func (c *ConsulCliWrap) ServiceWatch() error {
-//
-//}
+func (c *ConsulCliWrap) ServiceWatch(service string, handler func(idx uint64, raw interface{})) error {
+	log.Debugf("Watching service:%s", service)
+
+	plan, _ := watch.Parse(map[string]interface{}{
+		"datacenter":  c.datacenter,
+		"token":       c.token,
+		"type":        "service",
+		"service":     service,
+		"passingonly": true,
+	})
+
+	plan.Handler = handler
+	return plan.Run(c.address)
+}
+

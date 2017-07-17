@@ -1,12 +1,12 @@
 package main
 
 import (
-	"fmt"
-	"os"
-	"net"
-	"time"
 	"chess/agent/misc/packet"
 	"encoding/binary"
+	"fmt"
+	"net"
+	"os"
+	"time"
 )
 
 func main() {
@@ -35,7 +35,7 @@ func main() {
 }
 
 type Ping struct {
-	Name string
+	Name    string
 	Message string
 }
 
@@ -43,9 +43,9 @@ func sender(conn net.Conn) {
 	for i := 0; i < 1; i++ {
 		data := packet.Writer()
 		// 写包序号，自增
-		data.WriteU32(uint32(i+1))
+		data.WriteU32(uint32(i + 1))
 		// 写 协议号 payload
-		_data := packet.Pack(int16(10), Ping{Name: "test", Message:"Ping"}, data)
+		_data := packet.Pack(int16(10), Ping{Name: "test", Message: "Ping"}, data)
 
 		cache := make([]byte, 65535+2)
 
@@ -62,4 +62,3 @@ func sender(conn net.Conn) {
 		}
 	}
 }
-

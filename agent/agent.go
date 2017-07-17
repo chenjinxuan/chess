@@ -17,7 +17,7 @@ func agent(sess *Session, in chan []byte, out *Buffer) {
 	defer utils.PrintPanicStack()
 
 	// init session
-	sess.MQ = make(chan pb.Game_Frame, 512)
+	sess.MQ = make(chan pb.Room_Frame, 512)
 	sess.ConnectTime = time.Now()
 	sess.LastPacketTime = time.Now()
 	// minute timer
@@ -54,9 +54,9 @@ func agent(sess *Session, in chan []byte, out *Buffer) {
 			sess.LastPacketTime = sess.PacketTime
 		case frame := <-sess.MQ: // packets from game
 			switch frame.Type {
-			case pb.Game_Message:
+			case pb.Room_Message:
 				out.send(sess, frame.Message)
-			case pb.Game_Kick:
+			case pb.Room_Kick:
 				sess.Flag |= SESS_KICKED_OUT
 			}
 		case <-min_timer: // minutes timer

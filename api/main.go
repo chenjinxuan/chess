@@ -26,5 +26,3 @@ func main() {
 
 	InitRouter()
 }
-
-

@@ -1,9 +1,9 @@
 package main
 
 import (
+	pb "chess/srv/srv-auth/proto"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
-	pb "chess/srv/srv-auth/proto"
 	"testing"
 )
 
@@ -22,12 +22,12 @@ func TestAuth(t *testing.T) {
 
 	// Contact the server and print out its response.
 	r, err := c.Auth(context.Background(), &pb.AuthArgs{
-		UserId: 1,
-		AppFrom: "ios",
-		AppVer: 100,
+		UserId:     1,
+		AppFrom:    "ios",
+		AppVer:     100,
 		AppChannel: "AppStore",
-		UniqueId: "xxxx-xxxx",
-		Token: "CA761232-ED42-11CE-BACD-00AA0057B223",
+		UniqueId:   "xxxx-xxxx",
+		Token:      "CA761232-ED42-11CE-BACD-00AA0057B223",
 	})
 	if err != nil {
 		t.Fatalf("could not query: %v", err)

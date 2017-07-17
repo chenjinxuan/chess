@@ -1,11 +1,11 @@
 package main
 
 import (
+	"code.google.com/p/go.net/websocket"
 	"encoding/binary"
 	"io"
 	"net"
 	"net/http"
-	"code.google.com/p/go.net/websocket"
 	_ "net/http/pprof"
 	"os"
 	"time"
@@ -13,16 +13,17 @@ import (
 	. "chess/agent/types"
 	"chess/agent/utils"
 
-	log "github.com/Sirupsen/logrus"
+	"chess/common/consul"
+	"chess/common/log"
+	"fmt"
 	"github.com/xtaci/kcp-go"
 	cli "gopkg.in/urfave/cli.v2"
-	"fmt"
 )
 
 var config *Config
 
 type Config struct {
-	wslisten                        string
+	wslisten                      string
 	listen                        string
 	readDeadline                  time.Duration
 	sockbuf                       int
@@ -36,7 +37,6 @@ type Config struct {
 }
 
 func main() {
-	log.SetLevel(log.DebugLevel)
 
 	// to catch all uncaught panic
 	defer utils.PrintPanicStack()
@@ -49,28 +49,18 @@ func main() {
 		Version: "2.0",
 		Flags: []cli.Flag{
 			&cli.StringFlag{
-				Name:  "listen",
+				Name:  "tcp-listen",
 				Value: ":8888",
-				Usage: "listening address:port",
+				Usage: "tpc listening address:port",
 			},
 			&cli.StringFlag{
-				Name:  "wslisten",
+				Name:  "ws-listen",
 				Value: ":8899",
 				Usage: "websocket listening address:port",
 			},
 			&cli.StringSliceFlag{
-				Name:  "etcd-hosts",
-				Value: cli.NewStringSlice("http://127.0.0.1:2379"),
-				Usage: "etcd hosts",
-			},
-			&cli.StringFlag{
-				Name:  "etcd-root",
-				Value: "/backends",
-				Usage: "etcd root path",
-			},
-			&cli.StringSliceFlag{
 				Name:  "services",
-				Value: cli.NewStringSlice("snowflake-10000", "game-10000"),
+				Value: cli.NewStringSlice("room"),
 				Usage: "auto-discovering services",
 			},
 			&cli.DurationFlag{
@@ -140,25 +130,24 @@ func main() {
 			},
 		},
 		Action: func(c *cli.Context) error {
-			log.Println("listen:", c.String("listen"))
-			log.Println("etcd-hosts:", c.StringSlice("etcd-hosts"))
-			log.Println("etcd-root:", c.String("etcd-root"))
-			log.Println("services:", c.StringSlice("services"))
-			log.Println("read-deadline:", c.Duration("read-deadline"))
-			log.Println("txqueuelen:", c.Int("txqueuelen"))
-			log.Println("sockbuf:", c.Int("sockbuf"))
-			log.Println("udp-sockbuf:", c.Int("udp-sockbuf"))
-			log.Println("udp-sndwnd:", c.Int("udp-sndwnd"))
-			log.Println("udp-rcvwnd:", c.Int("udp-rcvwnd"))
-			log.Println("udp-mtu:", c.Int("udp-mtu"))
-			log.Println("dscp:", c.Int("dscp"))
-			log.Println("rpm-limit:", c.Int("rpm-limit"))
-			log.Println("nodelay parameters:", c.Int("nodelay"), c.Int("interval"), c.Int("resend"), c.Int("nc"))
+			log.Info("tpc-listen:", c.String("tcp-listen"))
+			log.Info("ws-listen:", c.String("ws-listen"))
+			log.Info("services:", c.StringSlice("services"))
+			log.Info("read-deadline:", c.Duration("read-deadline"))
+			log.Info("txqueuelen:", c.Int("txqueuelen"))
+			log.Info("sockbuf:", c.Int("sockbuf"))
+			log.Info("udp-sockbuf:", c.Int("udp-sockbuf"))
+			log.Info("udp-sndwnd:", c.Int("udp-sndwnd"))
+			log.Info("udp-rcvwnd:", c.Int("udp-rcvwnd"))
+			log.Info("udp-mtu:", c.Int("udp-mtu"))
+			log.Info("dscp:", c.Int("dscp"))
+			log.Info("rpm-limit:", c.Int("rpm-limit"))
+			log.Info("nodelay parameters:", c.Int("nodelay"), c.Int("interval"), c.Int("resend"), c.Int("nc"))
 
 			//setup net param
 			config = &Config{
-				wslisten: c.String("wslisten"),
-				listen:       c.String("listen"),
+				wslisten:     c.String("ws-listen"),
+				listen:       c.String("tcp-listen"),
 				readDeadline: c.Duration("read-deadline"),
 				sockbuf:      c.Int("sockbuf"),
 				udp_sockbuf:  c.Int("udp-sockbuf"),
@@ -173,8 +162,15 @@ func main() {
 				nc:           c.Int("nc"),
 			}
 
+			// init consul config
+			err := consul.InitConsulClientViaEnv()
+			if err != nil {
+				log.Error(err)
+				os.Exit(-1)
+			}
+
 			// init services
-			startup(c)
+			startup(c.StringSlice("services"))
 			// init timer
 			initTimer(c.Int("rpm-limit"))
 
@@ -221,34 +217,13 @@ func wsServer() {
 	http.Handle("/", websocket.Handler(wsHandler))
 
 	if err := http.ListenAndServe(":8899", nil); err != nil {
-		log.Fatal("ListenAndServe:", err)
+		log.Error("ListenAndServe:", err)
 	}
 }
 
 func wsHandler(ws *websocket.Conn) {
 	ws.PayloadType = websocket.BinaryFrame
 	handleClient(ws)
-	//var err error
-	//
-	//for {
-	//
-	//	var reply string
-	//
-	//	if err = websocket.Message.Receive(ws, &reply); err != nil {
-	//		fmt.Println("Can't receive")
-	//		break
-	//	}
-	//
-	//	fmt.Println("Received back from client: " + reply)
-	//
-	//	msg := "Received:  " + reply
-	//	fmt.Println("Sending to client: " + msg)
-	//
-	//	if err = websocket.Message.Send(ws, msg); err != nil {
-	//		fmt.Println("Can't send")
-	//		break
-	//	}
-	//}
 }
 
 func tcpServer() {
@@ -265,7 +240,7 @@ func tcpServer() {
 	for {
 		conn, err := listener.AcceptTCP()
 		if err != nil {
-			log.Warning("accept failed:", err)
+			log.Warn("accept failed:", err)
 			continue
 		}
 		// set socket read buffer
@@ -284,20 +259,20 @@ func udpServer() {
 	lis := l.(*kcp.Listener)
 
 	if err := lis.SetReadBuffer(config.sockbuf); err != nil {
-		log.Println("SetReadBuffer", err)
+		log.Error("SetReadBuffer", err)
 	}
 	if err := lis.SetWriteBuffer(config.sockbuf); err != nil {
-		log.Println("SetWriteBuffer", err)
+		log.Error("SetWriteBuffer", err)
 	}
 	if err := lis.SetDSCP(config.dscp); err != nil {
-		log.Println("SetDSCP", err)
+		log.Error("SetDSCP", err)
 	}
 
 	// loop accepting
 	for {
 		conn, err := lis.AcceptKCP()
 		if err != nil {
-			log.Warning("accept failed:", err)
+			log.Warn("accept failed:", err)
 			continue
 		}
 		// set kcp parameters
@@ -359,7 +334,7 @@ func handleClient(conn net.Conn) {
 		// read 2B header
 		n, err := io.ReadFull(conn, header)
 		if err != nil {
-			log.Warningf("read header failed, ip:%v reason:%v size:%v", sess.IP, err, n)
+			log.Warnf("read header failed, ip:%v reason:%v size:%v", sess.IP, err, n)
 			return
 		}
 		size := binary.BigEndian.Uint16(header)
@@ -370,7 +345,7 @@ func handleClient(conn net.Conn) {
 		payload := make([]byte, size)
 		n, err = io.ReadFull(conn, payload)
 		if err != nil {
-			log.Warningf("read payload failed, ip:%v reason:%v size:%v", sess.IP, err, n)
+			log.Warnf("read payload failed, ip:%v reason:%v size:%v", sess.IP, err, n)
 			return
 		}
 		fmt.Print(payload)
@@ -379,7 +354,7 @@ func handleClient(conn net.Conn) {
 		select {
 		case in <- payload: // payload queued
 		case <-sess.Die:
-			log.Warningf("connection closed by logic, flag:%v ip:%v", sess.Flag, sess.IP)
+			log.Warnf("connection closed by logic, flag:%v ip:%v", sess.Flag, sess.IP)
 			return
 		}
 	}
@@ -387,7 +362,7 @@ func handleClient(conn net.Conn) {
 
 func checkError(err error) {
 	if err != nil {
-		log.Fatal(err)
+		log.Error(err)
 		os.Exit(-1)
 	}
 }

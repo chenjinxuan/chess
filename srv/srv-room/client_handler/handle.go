@@ -2,9 +2,9 @@ package client_handler
 
 import (
 	"chess/srv/srv-room/misc/packet"
-	"github.com/golang/protobuf/proto"
-	. "chess/srv/srv-room/types"
 	pb "chess/srv/srv-room/proto"
+	. "chess/srv/srv-room/types"
+	"github.com/golang/protobuf/proto"
 )
 
 //----------------------------------- ping

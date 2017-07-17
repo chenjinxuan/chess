@@ -1,11 +1,8 @@
 package main
 
 import (
-	log "github.com/Sirupsen/logrus"
-)
-
-import (
 	. "chess/agent/types"
+	"chess/common/log"
 )
 
 var (
@@ -25,11 +22,7 @@ func timer_work(sess *Session, out *Buffer) {
 	// 发包频率控制，太高的RPS直接踢掉
 	if sess.PacketCount1Min > rpmLimit {
 		sess.Flag |= SESS_KICKED_OUT
-		log.WithFields(log.Fields{
-			"userid":  sess.UserId,
-			"count1m": sess.PacketCount1Min,
-			"total":   sess.PacketCount,
-		}).Error("RPM")
+		log.Infof("RPM --- userid:%d count1m:%d total:%d", sess.UserId, sess.PacketCount1Min, sess.PacketCount)
 		return
 	}
 }

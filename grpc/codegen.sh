@@ -16,6 +16,7 @@
 protoc --go_out=plugins=grpc:. *.proto
 
 cp agent.pb.go $GOPATH/src/chess/agent/proto/
+cp room.pb.go $GOPATH/src/chess/agent/proto/
 
 cp agent.pb.go $GOPATH/src/chess/srv/srv-auth/proto/
 cp auth.pb.go $GOPATH/src/chess/srv/srv-auth/proto/

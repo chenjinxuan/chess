@@ -1,16 +1,12 @@
 package main
 
 import (
+	"chess/agent/utils"
+	"chess/common/log"
 	"os"
 	"os/signal"
 	"sync"
 	"syscall"
-
-	log "github.com/Sirupsen/logrus"
-)
-
-import (
-	"chess/agent/utils"
 )
 
 var (

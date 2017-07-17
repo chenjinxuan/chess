@@ -16,31 +16,28 @@
 [11]: https://img.shields.io/badge/license-MIT-blue.svg
 [12]: LICENSE
 
-[![Claude_Shannon](shannon.jpg)](https://en.wikipedia.org/wiki/Claude_Shannon)
-
-> *(Claude Elwood Shannon)*
-
 ## Introduction
 
-**kcp-go** is a ***Production-Grade Reliable-UDP*** library for [golang](https://golang.org/). 
+**kcp-go** is a **Production-Grade Reliable-UDP** library for [golang](https://golang.org/). 
 
-It provides ***fast, ordered and error-checked*** delivery of streams over **UDP** packets, has been well tested with opensource project [kcptun](https://github.com/xtaci/kcptun). Millions of devices(from low-end MIPS routers to high-end servers) are running with **kcp-go** at present, including applications like **online games, live broadcasting, file synchronization and network acceleration**.
+It provides **fast, ordered and error-checked** delivery of streams over **UDP** packets, has been well tested with opensource project [kcptun](https://github.com/xtaci/kcptun). Millions of devices(from low-end MIPS routers to high-end servers) are running with **kcp-go** at present, including applications like **online games, live broadcasting, file synchronization and network acceleration**.
 
 [Lastest Release](https://github.com/xtaci/kcp-go/releases)
 
 ## Features
 
-1. Optimized for ***Realtime Multiplayer Games, Audio/Video Streaming***.
+1. Optimized for **Realtime Online Games, Audio/Video Streaming and Latency-Sensitive Distributed Consensus**.
 1. Compatible with [skywind3000's](https://github.com/skywind3000) C version with language specific optimizations.
-1. ***Cache friendly*** and ***Memory optimized*** design, offers extremely ***High Performance*** core.
-1. Compatible with [net.Conn](https://golang.org/pkg/net/#Conn) and [net.Listener](https://golang.org/pkg/net/#Listener), easy to use.
+1. **Cache friendly** and **Memory optimized** design, offers extremely **High Performance** core.
+1. Handles **>5K concurrent connections** on a single commodity server.
+1. Compatible with [net.Conn](https://golang.org/pkg/net/#Conn) and [net.Listener](https://golang.org/pkg/net/#Listener), a drop-in replacement for [net.TCPConn](https://golang.org/pkg/net/#TCPConn).
 1. [FEC(Forward Error Correction)](https://en.wikipedia.org/wiki/Forward_error_correction) Support with [Reed-Solomon Codes](https://en.wikipedia.org/wiki/Reed%E2%80%93Solomon_error_correction)
 1. Packet level encryption support with [AES](https://en.wikipedia.org/wiki/Advanced_Encryption_Standard), [TEA](https://en.wikipedia.org/wiki/Tiny_Encryption_Algorithm), [3DES](https://en.wikipedia.org/wiki/Triple_DES), [Blowfish](https://en.wikipedia.org/wiki/Blowfish_(cipher)), [Cast5](https://en.wikipedia.org/wiki/CAST-128), [Salsa20]( https://en.wikipedia.org/wiki/Salsa20), etc. in [CFB](https://en.wikipedia.org/wiki/Block_cipher_mode_of_operation#Cipher_Feedback_.28CFB.29) mode.
-1. ***O(1) goroutines*** created for the entire server application, minimized goroutine context switch.
+1. **Fixed number of goroutines** created for the entire server application, minimized goroutine context switch.
 
 ## Conventions
 
-Control messages like **SYN/FIN/RST** in TCP ***are not defined*** in KCP, you need some ***keepalive/heartbeat mechanism*** in the application-level. A real world example is to use some ***multiplexing*** protocol over session, such as [smux](https://github.com/xtaci/smux)(with embeded keepalive mechanism), see [kcptun](https://github.com/xtaci/kcptun) for example.
+Control messages like **SYN/FIN/RST** in TCP **are not defined** in KCP, you need some **keepalive/heartbeat mechanism** in the application-level. A real world example is to use some **multiplexing** protocol over session, such as [smux](https://github.com/xtaci/smux)(with embedded keepalive mechanism), see [kcptun](https://github.com/xtaci/kcptun) for example.
 
 ## Documentation
 
@@ -155,7 +152,7 @@ In kcp-go, after each `kcp.output()` function call, current time will be updated
 
 ## Tuning
 
-Q: I'm running > 3000 connections on my server. the CPU utilization is high.
+Q: I'm handling >5K connections on my server. the CPU utilization is high.
 
 A: A standalone `agent` or `gate` server for kcp-go is suggested, not only for CPU utilization, but also important to the **precision** of RTT measurements which indirectly affects retransmission. By increasing update `interval` with `SetNoDelay` like `conn.SetNoDelay(1, 40, 1, 1)` will dramatically reduce system load.
 
@@ -166,6 +163,7 @@ A: A standalone `agent` or `gate` server for kcp-go is suggested, not only for C
 3. https://github.com/smallnest/rpcx -- A RPC service framework based on net/rpc like alibaba Dubbo and weibo Motan.
 4. https://github.com/gonet2/agent -- A gateway for games with stream multiplexing.
 5. https://github.com/syncthing/syncthing -- Open Source Continuous File Synchronization.
+6. https://play.google.com/store/apps/details?id=com.k17game.k3 -- Battle Zone - Earth 2048, a world-wide strategy game.
 
 ## Links
 

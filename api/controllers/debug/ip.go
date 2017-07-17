@@ -1,9 +1,9 @@
 package c_debug
 
 import (
-	"github.com/gin-gonic/gin"
 	"chess/common/define"
 	"chess/common/helper"
+	"github.com/gin-gonic/gin"
 )
 
 type IpResult struct {

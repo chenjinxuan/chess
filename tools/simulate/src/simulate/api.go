@@ -1,6 +1,5 @@
 package main
 
-
 var Code = map[string]int16{
 	"heart_beat_req":         0,    // 心跳包..
 	"heart_beat_ack":         1,    // 心跳包回复

@@ -1,9 +1,9 @@
 package config
 
 import (
+	. "chess/common/consul"
 	"encoding/json"
 	"time"
-	. "chess/common/consul"
 )
 
 var Db = new(DbConfig)
