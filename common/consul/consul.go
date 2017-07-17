@@ -1,4 +1,4 @@
-package config
+package consul
 
 import (
 	"errors"
@@ -315,6 +315,6 @@ func (c *ConsulCliWrap) Services() (map[string]*api.AgentService, error) {
 	return c.cli.Agent().Services()
 }
 
-func (c *ConsulCliWrap) ServiceWatch() error {
-
-}
+//func (c *ConsulCliWrap) ServiceWatch() error {
+//
+//}

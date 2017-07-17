@@ -6,7 +6,7 @@ import (
 	"google.golang.org/grpc"
 	"io"
 	"math/rand"
-	pb "proto"
+	pb "chess/srv/srv-game/proto"
 	"testing"
 	"time"
 )

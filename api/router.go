@@ -12,6 +12,7 @@ import (
 	"chess/api/components/middleware"
 	"chess/api/controllers/debug"
 	"chess/common/config"
+        "chess/api/controllers/auth"
 )
 
 func InitRouter() {
@@ -57,12 +58,14 @@ func InitRouter() {
 	// @SubApi /auth - 授权相关 [/auth/]
 	authRouter := router.Group("/auth")
 	{
-		authRouter.POST("/login", nil) // 账号密码登录
-		authRouter.POST("/login/quick", nil) // 手机号快速登录
-		authRouter.POST("/login/tp", nil) // 第三方登录
+		authRouter.POST("/login", c_auth.Login) // 账号密码登录
+		authRouter.POST("/login/quick", c_auth.LoginMobile) // 手机号快速登录
+		authRouter.POST("/login/tp", c_auth.TpLogin) // 第三方登录
 		authRouter.POST("/logout", nil) // 登出，销毁token
-		authRouter.POST("/token/info", nil) //获取token信息
-		authRouter.POST("/token/refresh", nil) // 刷新token
+		authRouter.POST("/token/info", c_auth.TokenInfo) //获取token信息
+		authRouter.POST("/token/refresh", c_auth.TokenRefrash) // 刷新token
+		authRouter.POST("/register/mobile", c_auth.RegisterMobile)
+		authRouter.POST("/password/reset", c_auth.PasswordReset)
 	}
 
 	// @SubApi /verify - 验证码相关 [/verify/]

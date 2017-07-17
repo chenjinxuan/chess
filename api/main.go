@@ -3,11 +3,12 @@ package main
 import (
 	"chess/common/config"
 	"chess/common/db"
+       "chess/common/consul"
 	"chess/models"
 )
 
 func main() {
-	err := config.InitConsulClientViaEnv()
+	err := consul.InitConsulClientViaEnv()
 	if err != nil {
 		panic(err)
 	}

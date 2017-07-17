@@ -1,0 +1,181 @@
+{
+	"secret": {
+		"jwt_secret": "poE7Cf7f"
+	},
+	"frontend": {
+		"coupon_jump_goods_id": 1180,
+		"allow_cross_domain_host": "*"
+	},
+	"databases": {
+		"mysql": {
+			"setting": {
+
+			},
+			"server": {
+				"main": {
+					"db": "treasure",
+					"host": "59.57.13.156:3306",
+					"username": "treasure",
+					"password": "WlPfD$x0RhY#Ale6G"
+				},
+				"logs": {
+					"db": "treasure_logs",
+					"host": "59.57.13.156:3306",
+					"username": "treasure",
+					"password": "WlPfD$x0RhY#Ale6G"
+				},
+				"games": {
+					"db": "treasure_games",
+					"host": "59.57.13.156:3306",
+					"username": "treasure",
+					"password": "WlPfD$x0RhY#Ale6G"
+				}
+			}
+		},
+		"mongo": {
+			"setting": {
+				"dial_timeout": 5
+			},
+			"server": {
+				"host": "59.57.13.156",
+				"username": "",
+				"password": ""
+			}
+		},
+		"redis": {
+			"setting": {
+				"max_idle": 10,
+				"max_active": 1000,
+				"idle_timeout": 30,
+				"wait_idle": true
+			},
+			"server": {
+				"main": {
+					"db": 1,
+					"host": "59.57.13.156:6380",
+					"password": ""
+				},
+				"order": {
+					"db": 9,
+					"host": "59.57.13.156:6380",
+					"password": ""
+				},
+				"sms": {
+					"db": 8,
+					"host": "59.57.13.156:6380",
+					"password": ""
+				},
+				"captcha": {
+					"db": 8,
+					"host": "59.57.13.156:6380",
+					"password": ""
+				},
+				"login": {
+					"db": 8,
+					"host": "59.57.13.156:6380",
+					"password": ""
+				},
+				"user_sts": {
+					"db": 8,
+					"host": "59.57.13.156:6380",
+					"password": ""
+				},
+				"coupon_lucky_time": {
+					"db": 8,
+					"host": "59.57.13.156:6380",
+					"password": ""
+				},
+				"config": {
+					"db": 0,
+					"host": "59.57.13.156:6380",
+					"password": ""
+				},
+				"coupon_notify": {
+					"db": 8,
+					"host": "59.57.13.156:6380",
+					"password": ""
+				},
+				"coupon_script": {
+					"db": 8,
+					"host": "59.57.13.156:6380",
+					"password": ""
+				}
+			}
+		}
+	},
+	"geoip": {
+		"lang": "zh-CN",
+		"path": "/data/lab/geoip/GeoLite2-City.mmdb"
+	},
+	"ip17mon": {
+		"path": "/data/lab/ip17mon/17monipdb.dat"
+	},
+	"ip_replace": [
+		"125.77.202.250",
+		"125.77.202.246",
+		"117.29.183.78",
+		"27.154.234.2",
+		"125.77.202.254",
+		"59.57.240.10",
+		"27.154.234.234",
+		"27.154.56.66"
+	],
+	"captcha": {
+		"expire_time": 60
+	},
+	"login": {
+		"show_captcha_count": 3,
+		"limit_time": 600,
+		"fail_limit": 10,
+		"token_expire_time": 604800
+	},
+	"rpc": {
+		"timeout": 5,
+		"lottery_gen": {
+			"servers": [
+				"59.57.13.156:11131",
+				"59.57.13.156:11151"
+			]
+		},
+		"coupon_gen": {
+			"server": "59.57.13.156:11171"
+		},
+		"notifier":{
+			"server": "59.57.13.156:11161"
+		},
+		"runner":{
+			"server": "59.57.13.156:11141"
+		}
+	},
+	"token_info_check": {
+		"ios": {
+			"check": false,
+			"min": 120,
+			"max": 130
+		},
+		"android": {
+			"check": true,
+			"min": 1,
+			"max": 11130
+		}
+	},
+	"base": {
+		"mod": "t",
+		"prod_url": "https://api.yyjinbao.com/",
+		"key": "ntYq9OZ5voWqDUBMU"
+	},
+	"filter_set": {
+		"set": ["idfa", "idfv"],
+		"is_async": true,
+		"action": "default"
+	},
+	"shiwan": {
+		"api_url": "http://192.168.40.141:15020/jinbao/",
+		"deskey": "ac68!3#1",
+		"desiv": "55%g7z!@"
+	},
+	"steer": {
+		"real_bet_rate": 0.80,
+		"goods_price": 3000
+	}
+}
