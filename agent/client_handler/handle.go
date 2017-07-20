@@ -77,6 +77,7 @@ func P_get_seed_req(sess *Session, data []byte) []byte {
 	sess.Decoder = decoder
 	sess.Flag |= SESS_KEYEXCG
 
+	log.Debug("seed_info ---", ret)
 	return packet.Pack(Code["get_seed_ack"], &ret)
 }
 
@@ -90,7 +91,7 @@ func P_user_login_req(sess *Session, data []byte) []byte {
 	// 选服策略依据业务进行，比如小服可以固定选取某台，大服可以采用HASH或一致性HASH
 	sess.GSID = DEFAULT_GSID
 
-	// 连接到已选定GAME服务器
+	// 连接到已选定Room服务器
 	conn := services.GetServiceWithId(sess.GSID, "room")
 	if conn == nil {
 		log.Error("cannot get game service:", sess.GSID)

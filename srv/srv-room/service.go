@@ -6,7 +6,7 @@ import (
 	"chess/srv/srv-room/client_handler"
 	pb "chess/srv/srv-room/proto"
 	"chess/srv/srv-room/registry"
-	. "chess/srv/srv-room/types"
+	"chess/srv/srv-room/texas_holdem"
 	"encoding/binary"
 	"errors"
 	"golang.org/x/net/context"
@@ -16,6 +16,8 @@ import (
 )
 
 const (
+	SESS_KICKED_OUT = 0x1 // 踢掉
+
 	SERVICE_NAME        = "room"
 	DEFAULT_CH_IPC_SIZE = 16 // 默认玩家异步IPC消息队列大小
 )
@@ -61,17 +63,10 @@ func (s *server) recv(stream pb.RoomService_StreamServer, sess_die chan struct{}
 // the center of room logic
 func (s *server) Stream(stream pb.RoomService_StreamServer) error {
 	defer helper.PrintPanicStack()
-	// session init
-	var sess Session
+
 	sess_die := make(chan struct{})
 	ch_agent := s.recv(stream, sess_die)
 	ch_ipc := make(chan *pb.Room_Frame, DEFAULT_CH_IPC_SIZE)
-
-	defer func() {
-		registry.Unregister(sess.UserId, ch_ipc)
-		close(sess_die)
-		log.Debug("stream end:", sess.UserId)
-	}()
 
 	// read metadata from context
 	md, ok := metadata.FromContext(stream.Context())
@@ -91,10 +86,20 @@ func (s *server) Stream(stream pb.RoomService_StreamServer) error {
 		return ERROR_INCORRECT_FRAME_TYPE
 	}
 
+	// todo get user info from mysql
+
+	// player init
+	player := texas_holdem.NewPlayer(userid, ch_ipc)
+
 	// register user
-	sess.UserId = int32(userid)
-	registry.Register(sess.UserId, ch_ipc)
-	log.Debug("userid", sess.UserId, "logged in")
+	registry.Register(player.Id, ch_ipc)
+	log.Debug("userid", player.Id, "logged in")
+
+	defer func() {
+		registry.Unregister(player.Id, ch_ipc)
+		close(sess_die)
+		log.Debug("stream end:", player.Id)
+	}()
 
 	// >> main message loop <<
 	for {
@@ -115,7 +120,7 @@ func (s *server) Stream(stream pb.RoomService_StreamServer) error {
 				}
 
 				// handle request
-				ret := handle(&sess, frame.Message[2:])
+				ret := handle(player, frame.Message[2:])
 
 				// construct frame & return message from logic
 				if ret != nil {
@@ -126,7 +131,7 @@ func (s *server) Stream(stream pb.RoomService_StreamServer) error {
 				}
 
 				// session control by logic
-				if sess.Flag&SESS_KICKED_OUT != 0 { // logic kick out
+				if player.Flag&SESS_KICKED_OUT != 0 { // logic kick out
 					if err := stream.Send(&pb.Room_Frame{Type: pb.Room_Kick}); err != nil {
 						log.Error(err)
 						return err
