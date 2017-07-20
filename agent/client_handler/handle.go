@@ -12,6 +12,7 @@ import (
 	"chess/agent/misc/crypto/dh"
 	"chess/agent/misc/packet"
 	"chess/common/log"
+	. "chess/common/define"
 	"chess/common/services"
 
 	pb "chess/agent/proto"
@@ -20,6 +21,17 @@ import (
 
 	. "chess/agent/types"
 )
+
+var Handlers map[int16]func(*Session, []byte) []byte
+
+func init() {
+	Handlers = map[int16]func(*Session, []byte) []byte{
+		0:  P_heart_beat_req,
+		10: P_user_login_req,
+		30: P_get_seed_req,
+	}
+}
+
 
 // 心跳包 直接把数据包发回去
 func P_heart_beat_req(sess *Session, data []byte) []byte {

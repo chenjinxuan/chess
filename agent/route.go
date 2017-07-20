@@ -5,6 +5,7 @@ import (
 	. "chess/agent/types"
 	"chess/agent/utils"
 	"chess/common/log"
+	"chess/common/define"
 	"encoding/binary"
 	"time"
 )
@@ -41,7 +42,7 @@ func route(sess *Session, p []byte) []byte {
 
 	// 读协议号
 	b := int16(binary.BigEndian.Uint16(p[4:6]))
-	if _, ok := client_handler.RCode[b]; !ok {
+	if _, ok := define.RCode[b]; !ok {
 		log.Error("protocol number not defined.")
 		sess.Flag |= SESS_KICKED_OUT
 		return nil
@@ -68,7 +69,7 @@ func route(sess *Session, p []byte) []byte {
 
 	elasped := time.Now().Sub(start)
 	if b != 0 { // 排除心跳包日志
-		log.Infof("REQ --- cost:%d api:%s code:%d", elasped, client_handler.RCode[b], b)
+		log.Infof("REQ --- cost:%d api:%s code:%d", elasped, define.RCode[b], b)
 	}
 	return ret
 }
