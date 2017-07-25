@@ -35,19 +35,13 @@ func init() {
 
 // 心跳包 直接把数据包发回去
 func P_heart_beat_req(sess *Session, data []byte) []byte {
-	log.Debug("heart_beat_req", data)
-	tbl := &pb.AutoId{}
-	err := proto.Unmarshal(data[2:], tbl)
+	req := &pb.AutoId{}
+	err := proto.Unmarshal(data[2:], req)
 	if err != nil {
 		log.Error("P_heart_beat_req Unmarshal ERROR", err)
 	}
-
-	log.Debugf("heart_beat_req Unmarshal %+v", *tbl)
-
-	tbl.Id += 1
-	//tbl.Score = 10
-
-	return packet.Pack(Code["heart_beat_ack"], tbl)
+	log.Debug("heart_beat_req ", req)
+	return packet.Pack(Code["heart_beat_ack"], req)
 }
 
 // 密钥交换
@@ -95,9 +89,17 @@ func P_get_seed_req(sess *Session, data []byte) []byte {
 
 // 玩家登陆过程
 func P_user_login_req(sess *Session, data []byte) []byte {
+	req := &pb.UserLoginReq{}
+	err := proto.Unmarshal(data[2:], req)
+	if err != nil {
+		log.Error("P_user_login_req Unmarshal ERROR ", err)
+	}
+
+	log.Debug("P_user_login_req: ", req)
+
 	// TODO: 登陆鉴权
 	// 简单鉴权可以在agent直接完成，通常公司都存在一个用户中心服务器用于鉴权
-	sess.UserId = 1
+	sess.UserId = req.UserId
 
 	// TODO: 选择Room服务器
 	// 选服策略依据业务进行，比如小服可以固定选取某台，大服可以采用HASH或一致性HASH
@@ -139,5 +141,5 @@ func P_user_login_req(sess *Session, data []byte) []byte {
 		}
 	}
 	go fetcher_task(sess)
-	return packet.Pack(Code["user_login_succeed_ack"], &pb.SeedInfo{})
+	return packet.Pack(Code["user_login_ack"], &pb.UserLoginAck{&pb.BaseAck{Ret:1,Msg:"ok"}})
 }

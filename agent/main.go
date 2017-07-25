@@ -15,7 +15,6 @@ import (
 
 	"chess/common/consul"
 	"chess/common/log"
-	"fmt"
 	"github.com/xtaci/kcp-go"
 	cli "gopkg.in/urfave/cli.v2"
 )
@@ -265,7 +264,7 @@ func udpServer() {
 		log.Error("SetWriteBuffer", err)
 	}
 	if err := lis.SetDSCP(config.dscp); err != nil {
-		log.Error("SetDSCP", err)
+		log.Error("SetDSCP ", err)
 	}
 
 	// loop accepting
@@ -339,8 +338,6 @@ func handleClient(conn net.Conn) {
 		}
 		size := binary.BigEndian.Uint16(header)
 
-		fmt.Print(header)
-
 		// alloc a byte slice of the size defined in the header for reading data
 		payload := make([]byte, size)
 		n, err = io.ReadFull(conn, payload)
@@ -348,7 +345,7 @@ func handleClient(conn net.Conn) {
 			log.Warnf("read payload failed, ip:%v reason:%v size:%v", sess.IP, err, n)
 			return
 		}
-		fmt.Print(payload)
+		log.Debug("read header:", header, " payload:", payload)
 
 		// deliver the data to the input queue of agent()
 		select {

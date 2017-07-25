@@ -7,6 +7,7 @@ import (
 	"errors"
 	"github.com/golang/protobuf/proto"
 	"time"
+	"chess/common/log"
 )
 
 const (
@@ -138,10 +139,12 @@ func (p *Player) Join(rid int, tid string) (table *Table) {
 	})
 
 	// 2006, 当玩家加入房间后，服务器会向此用户推送房间信息
-	p.SendMessage(define.Code["room_get_table_ack"], &pb.RoomGetTableAck{
+	ack := &pb.RoomGetTableAck{
 		BaseAck: &pb.BaseAck{Ret: 1, Msg: "ok"},
 		Table:   table.ToProtoMessage(),
-	})
+	}
+	log.Debug(ack)
+	p.SendMessage(define.Code["room_get_table_ack"],  ack)
 
 	return
 }
@@ -203,10 +206,14 @@ func (p *Player) ToProtoMessage() *pb.PlayerInfo {
 type Players []*Player
 
 func (ps Players) ToProtoMessage() []*pb.PlayerInfo {
-	var _players []*pb.PlayerInfo
-	for _, v := range ps {
-		_player := v.ToProtoMessage()
-		_players = append(_players, _player)
+	_players := make([]*pb.PlayerInfo, len(ps), MaxN)
+	for k, v := range ps {
+		if v != nil {
+			_player := v.ToProtoMessage()
+			_players[k] = _player
+		} else {
+			_players[k] = &pb.PlayerInfo{}
+		}
 	}
 	return _players
 }

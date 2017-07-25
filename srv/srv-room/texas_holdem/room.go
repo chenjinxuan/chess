@@ -80,6 +80,18 @@ func (r *Room) Tables() map[string]*Table {
 
 var rooms = make(map[int]*Room)
 
+// TODO 初始化房间列表
+func init() {
+	rooms[1] = &Room{
+		Id:1,
+		tables: Tables{
+			M:       make(map[string]*Table),
+			counter: 0,
+			lock:    sync.Mutex{},
+		},
+	}
+}
+
 func DelTable(tid string) {
 	tmp := strings.Split(tid, "-")
 	if len(tmp) != 2 {

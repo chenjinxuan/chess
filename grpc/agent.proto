@@ -193,7 +193,7 @@ message TableInfo{
 // 牌
 message CardInfo{
     int32 suit = 1; //程序统一标准：0是黑桃、1是红桃、2是梅花、3是方片
-    int32 value =2; //0代表‘牌2’、1代表‘牌3’...etc
+    int32 val =2; //0代表‘牌2’、1代表‘牌3’...etc
 }
 
 // 玩家信息
