@@ -87,5 +87,6 @@ func main() {
 }
 
 func consulCheck(w http.ResponseWriter, r *http.Request) {
+	//log.Info("Consul Health Check!")
 	fmt.Fprintln(w, "consulCheck")
 }

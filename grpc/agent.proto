@@ -2,38 +2,209 @@ syntax = "proto3";
 
 package proto;
 
-// 心跳包
+// 0,1 心跳包
 message AutoId{
     int32 id = 1;
-    repeated int32 short_key = 2;
-    float score = 3;
-    Nested nested = 4;
-    map<string, Nested> terrain = 5;
 }
 
-message Nested {
-    string bunny = 1;
-    bool cute = 2;
-}
-
-// 通信加密种子
+// 30,31 通信加密种子
 message SeedInfo{
     int32 client_send_seed = 1;
     int32 client_receive_seed = 2;
 }
 
-// 一般性回复payload,1代表成功
+// 一般性回复payload
 message BaseAck{
-    int32 ret = 1;
+    int32 ret = 1; // 1代表成功
     string msg = 2;
 }
 
-message UserLoginReq{
-    int32 user_id = 1;
-    string app_from = 2;
+// 一般性请求payload
+message BaseReq{
+    string app_from = 1;
+    int32 app_ver = 2;
     string app_channel = 3;
-    int32 app_ver = 4;
-    string unique_id = 5;
-    string token = 6;
 }
 
+// 10, 用户登录
+message UserLoginReq{
+    BaseReq base_req = 1;
+    int32 user_id = 2;
+    string unique_id = 3;
+    string token = 4;
+}
+
+// 11, 用户登录回复
+message UserLoginAck{
+    BaseAck base_ack = 1;
+}
+
+// 2003, 创建牌桌
+message RoomSetTableReq{
+    BaseReq base_req = 1;
+    int32 small_blind = 2;  // 小盲注
+    int32 big_blind = 3;  // 大盲注
+    int32 timeout = 4; // 倒计时超时时间(秒)
+    int32 max = 5; //  房间最大玩家人数
+}
+
+// 2004, 创建牌桌回复
+message RoomSetTableAck{
+    BaseAck base_ack = 1;
+    TableInfo table = 2;
+}
+
+// 2005, 查询牌桌信息
+message RoomGetTableReq{
+    BaseReq base_req = 1;
+    int32 room_id = 2;  // 房间id
+    string table_id = 3; // 牌桌id
+}
+
+// 2006, 查询牌桌信息回复 (当玩家加入牌桌后，服务器会向此用户推送牌桌信息)
+message RoomGetTableAck{
+    BaseAck base_ack = 1;
+    TableInfo table = 2;
+}
+
+// 2007, 查询玩家信息
+message RoomGetPlayerReq{
+    BaseReq base_req = 1;
+    int32 player_id = 2;
+}
+
+// 2008, 查询玩家信息回复
+message RoomGetPlayerAck{
+    BaseAck base_ack = 1;
+    PlayerInfo player = 2;
+}
+
+// 2101, 玩家加入游戏
+message RoomPlayerJoinReq{
+    BaseReq base_req = 1;
+    int32 room_id = 2;
+    string table_id = 3;
+}
+
+// 2102, 通报加入游戏的玩家
+message RoomPlayerJoinAck{
+    BaseAck base_ack = 1;
+    PlayerInfo player = 2;
+}
+
+// 2103, 玩家离开牌桌
+message RoomPlayerGoneReq{
+    BaseReq base_req = 1;
+    string table_id = 2;
+}
+
+// 2104, 服务器广播离开房间的玩家
+message RoomPlayerGoneAck{
+    BaseAck base_ack = 1;
+    PlayerInfo player = 2;
+}
+
+// 2105, 玩家下注
+// 玩家有四种下注方式，下注数分别对应为：
+// 弃牌：< 0 或空 表示弃牌 (fold)
+// 看注：= 0 表示看注 (check)
+// 跟注：小于等于单注额 (call)
+// 加注：大于单注额 (raise)
+// 全押：等于玩家手中所有筹码 (allin)
+message RoomPlayerBetReq{
+    BaseReq base_req = 1;
+    string table_id = 2;
+    int32 bet = 3;
+}
+
+// 2106, 玩家下注回复
+message RoomPlayerBetAck{
+    BaseAck base_ack = 1;
+    string table_id = 2;
+    string action = 3; // 下注方式
+    int32 bet = 4; // 下注数(总数)
+    int32 chips = 5; // 剩余筹码数
+}
+
+// 2107, 通报本局庄家 (服务器广播此消息，代表游戏开始并确定本局庄家)
+message RoomButtonAck{
+    BaseAck base_ack = 1;
+    string table_id = 2;
+    int32 button_pos = 3; // 庄家座位号，从1开始
+}
+
+// 2108, 发牌 - 共有四轮发牌，按顺序分别为：preflop (底牌), flop (翻牌), turn (转牌), river(河牌)
+message RoomDealAck{
+    BaseAck base_ack = 1;
+    string action = 2; // preflop (底牌), flop (翻牌), turn (转牌), river(河牌)
+    repeated CardInfo cards = 3;
+    /*
+    这套手牌的权重等级，一共有10个等级
+    皇家同花顺：10
+    同花顺    ：9
+    四条      ：8
+    葫芦      ：7
+    同花      ：6
+    顺子      ：5
+    三条      ：4
+    两对      ：3
+    一对      ：2
+    高牌      ：1
+    */
+    int32 hand_level = 4;
+}
+
+// 2109, 通报奖池
+message RoomPotAck{
+    BaseAck base_ack = 1;
+    repeated int32 pot = 2;
+}
+
+// 2110, 通报当前下注玩家
+message RoomActionAck{
+    BaseAck base_ack = 1;
+    int32 pos = 2;
+    int32 base_bet = 3;  // 单注额
+}
+
+// 2111, 摊牌和比牌
+message RoomShowdownAck{
+    BaseAck base_ack = 1;
+    TableInfo table = 2;
+}
+
+
+// 牌桌信息
+message TableInfo{
+    string id = 1; // 牌桌id
+    int32 small_blind = 2;  // 小盲注
+    int32 big_blind = 3;  // 大盲注
+    int32 bet = 4;  // 当前下注额
+    int32 timeout = 5; // 倒计时超时时间(秒)
+    repeated CardInfo cards = 6; //公共牌
+    repeated int32 pot = 7;  // 当前奖池筹码数
+    repeated int32 chips = 8;  // 玩家本局下注的总筹码数，与players一一对应
+    int32 button = 9;  // 当前庄家座位号，从1开始
+    int32 n = 10; // 当前玩家人数
+    int32 max = 11; //  房间最大玩家人数
+    repeated PlayerInfo players = 12; // 玩家列表
+}
+
+// 牌
+message CardInfo{
+    int32 suit = 1; //程序统一标准：0是黑桃、1是红桃、2是梅花、3是方片
+    int32 val =2; //0代表‘牌2’、1代表‘牌3’...etc
+}
+
+// 玩家信息
+message PlayerInfo{
+    int32 pos = 1; // 玩家座位号，从1开始
+    int32 id = 2; // 玩家id
+    string nickname = 3; // 玩家显示名
+    string avatar = 4; // 玩家头像
+    string level = 5; // 玩家等级
+    int32 chips = 6; // 玩家手上的筹码
+    int32 bet = 7; // 玩家当前下注筹码数
+    string action = 8;  // 玩家当前行动(ready, check, call, raise, fold)，初始状态为ready, 中途加入的玩家状态为空
+    repeated CardInfo cards = 9; // 玩家底牌，其他玩家只有摊牌时才能看到
+}

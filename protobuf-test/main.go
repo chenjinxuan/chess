@@ -30,7 +30,7 @@ func read(data []byte) {
 	fmt.Println(p)
 
 	// 读消息体
-	stReceive := &pb.AutoId{}
+	stReceive := &pb.RoomGetTableAck{}
 	pData := data[8 : sz+2]
 	//protobuf解码
 	err := proto.Unmarshal(pData, stReceive)
@@ -53,12 +53,15 @@ func write() []byte {
 	fmt.Println(pBuf)
 
 	// 写消息体
-	bBuf, _ := proto.Marshal(&pb.AutoId{
-		Id:       1,
-		ShortKey: []int32{1, 2, 3, 4},
-		Score:    3.2,
-		Nested:   &pb.Nested{Bunny: "123", Cute: true},
-		Terrain:  map[string]*pb.Nested{"key1": &pb.Nested{Bunny: "123", Cute: true}},
+	bBuf, _ := proto.Marshal(&pb.RoomGetTableAck{
+		BaseAck: &pb.BaseAck{Ret:20},
+		Table: &pb.TableInfo{
+			Id: "100",
+			Cards: []*pb.CardInfo{&pb.CardInfo{Suit:10}},
+			Players: []*pb.PlayerInfo{
+				&pb.PlayerInfo{Id:10},
+			},
+		},
 	})
 	fmt.Println(bBuf)
 
