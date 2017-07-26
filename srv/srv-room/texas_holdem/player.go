@@ -64,6 +64,7 @@ func (p *Player) Broadcast(code int16, msg proto.Message) {
 }
 
 func (p *Player) SendMessage(code int16, msg proto.Message) {
+	log.Debugf("SendMessage code:%d msg:%+v", code, msg)
 	message := &pb.Room_Frame{
 		Type:    pb.Room_Message,
 		Message: packet.Pack(code, msg),
@@ -139,12 +140,10 @@ func (p *Player) Join(rid int, tid string) (table *Table) {
 	})
 
 	// 2006, 当玩家加入房间后，服务器会向此用户推送房间信息
-	ack := &pb.RoomGetTableAck{
+	p.SendMessage(define.Code["room_get_table_ack"],  &pb.RoomGetTableAck{
 		BaseAck: &pb.BaseAck{Ret: 1, Msg: "ok"},
 		Table:   table.ToProtoMessage(),
-	}
-	log.Debug(ack)
-	p.SendMessage(define.Code["room_get_table_ack"],  ack)
+	})
 
 	return
 }
@@ -209,7 +208,8 @@ func (ps Players) ToProtoMessage() []*pb.PlayerInfo {
 	_players := make([]*pb.PlayerInfo, len(ps), MaxN)
 	for k, v := range ps {
 		if v != nil {
-			_player := v.ToProtoMessage()
+			tmp := *v
+			_player := tmp.ToProtoMessage()
 			_players[k] = _player
 		} else {
 			_players[k] = &pb.PlayerInfo{}

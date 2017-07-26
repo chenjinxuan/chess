@@ -45,7 +45,7 @@ message RoomSetTableReq{
     int32 small_blind = 2;  // 小盲注
     int32 big_blind = 3;  // 大盲注
     int32 timeout = 4; // 倒计时超时时间(秒)
-    int32 max = 5; //  房间最大玩家人数
+    int32 max = 5; //  牌桌最大玩家人数
 }
 
 // 2004, 创建牌桌回复
@@ -98,7 +98,7 @@ message RoomPlayerGoneReq{
     string table_id = 2;
 }
 
-// 2104, 服务器广播离开房间的玩家
+// 2104, 服务器广播离开牌桌的玩家
 message RoomPlayerGoneAck{
     BaseAck base_ack = 1;
     PlayerInfo player = 2;
@@ -186,7 +186,7 @@ message TableInfo{
     repeated int32 chips = 8;  // 玩家本局下注的总筹码数，与players一一对应
     int32 button = 9;  // 当前庄家座位号，从1开始
     int32 n = 10; // 当前玩家人数
-    int32 max = 11; //  房间最大玩家人数
+    int32 max = 11; //  牌桌最大玩家人数
     repeated PlayerInfo players = 12; // 玩家列表
 }
 
