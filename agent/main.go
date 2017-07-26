@@ -49,7 +49,7 @@ func main() {
 		Flags: []cli.Flag{
 			&cli.StringFlag{
 				Name:  "tcp-listen",
-				Value: ":8888",
+				Value: ":8898",
 				Usage: "tpc listening address:port",
 			},
 			&cli.StringFlag{

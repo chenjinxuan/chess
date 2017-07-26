@@ -93,12 +93,12 @@ func (s *server) Stream(stream pb.RoomService_StreamServer) error {
 
 	// register user
 	registry.Register(player.Id, ch_ipc)
-	log.Debug("userid", player.Id, "logged in")
+	log.Debug("userid:", player.Id, " logged in")
 
 	defer func() {
 		registry.Unregister(player.Id, ch_ipc)
 		close(sess_die)
-		log.Debug("stream end:", player.Id)
+		log.Debug("stream end userid:", player.Id)
 	}()
 
 	// >> main message loop <<
