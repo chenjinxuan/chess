@@ -5,7 +5,7 @@ import (
 )
 
 type Registry struct {
-	records map[int32]interface{} // id -> v
+	records map[int]interface{} // id -> v
 	sync.RWMutex
 }
 
@@ -18,18 +18,18 @@ func init() {
 }
 
 func (r *Registry) init() {
-	r.records = make(map[int32]interface{})
+	r.records = make(map[int]interface{})
 }
 
 // register a user
-func (r *Registry) Register(id int32, v interface{}) {
+func (r *Registry) Register(id int, v interface{}) {
 	r.Lock()
 	r.records[id] = v
 	r.Unlock()
 }
 
 // unregister a user
-func (r *Registry) Unregister(id int32, v interface{}) {
+func (r *Registry) Unregister(id int, v interface{}) {
 	r.Lock()
 	if oldv, ok := r.records[id]; ok {
 		if oldv == v {
@@ -40,7 +40,7 @@ func (r *Registry) Unregister(id int32, v interface{}) {
 }
 
 // query a user
-func (r *Registry) Query(id int32) (x interface{}) {
+func (r *Registry) Query(id int) (x interface{}) {
 	r.RLock()
 	x = r.records[id]
 	r.RUnlock()
@@ -55,15 +55,15 @@ func (r *Registry) Count() (count int) {
 	return
 }
 
-func Register(id int32, v interface{}) {
+func Register(id int, v interface{}) {
 	_default_registry.Register(id, v)
 }
 
-func Unregister(id int32, v interface{}) {
+func Unregister(id int, v interface{}) {
 	_default_registry.Unregister(id, v)
 }
 
-func Query(id int32) interface{} {
+func Query(id int) interface{} {
 	return _default_registry.Query(id)
 }
 
