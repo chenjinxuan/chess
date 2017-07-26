@@ -3,12 +3,12 @@ package c_auth
 import (
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"treasure/components/auth"
-	"treasure/components/input"
-	"treasure/components/sms"
-	"treasure/config"
-	"treasure/define"
-	"treasure/models"
+	"chess/api/components/auth"
+	"chess/api/components/input"
+	"chess/api/components/sms"
+	"chess/common/config"
+	"chess/api/define"
+	"chess/models"
 )
 
 type PasswordResetParams struct {
@@ -27,7 +27,7 @@ func PasswordReset(c *gin.Context) {
 	var form PasswordResetParams
 
 	_conf, ok1 := c.Get("config")
-	cConf, ok2 := _conf.(*config.Config)
+	cConf, ok2 := _conf.(*config.ApiConfig)
 	if !ok1 || !ok2 {
 		result.Msg = "Get config fail."
 		c.JSON(http.StatusOK, result)
@@ -39,7 +39,7 @@ func PasswordReset(c *gin.Context) {
 
 	if input.BindJSON(c, &form, cConf) == nil {
 
-		result.Ret, result.Msg, err = sms.CheckCode(form.MobileNumber, form.Code, sms.SMS_PWD_RESET, cConf.Sms)
+		result.Ret, result.Msg, err = sms.CheckCode(form.MobileNumber, form.Code, sms.SMS_PWD_RESET, cConf)
 		if err != nil {
 			// 验证不通过
 			c.JSON(http.StatusOK, result)

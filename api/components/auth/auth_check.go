@@ -3,8 +3,8 @@ package auth
 import (
 	"errors"
 	"strconv"
-	"chess/api/config"
-	"chess/api/databases"
+	"chess/common/config"
+        "chess/models"
 )
 
 func GetFailLoginKey(mobile string) string {
@@ -13,7 +13,7 @@ func GetFailLoginKey(mobile string) string {
 
 func GetFailLoginCount(mobile string) (int, error) {
 	key := GetFailLoginKey(mobile)
-	client := databases.Redis.Login
+	client := models.ChessRedis.Login
 	isExist, err := client.Exists(key)
 	if err != nil {
 		return 0, errors.New("system error")
@@ -34,13 +34,13 @@ func GetFailLoginCount(mobile string) (int, error) {
 
 func FailCountPlusOne(mobile string) error {
 	key := GetFailLoginKey(mobile)
-	client := databases.Redis.Login
+	client := models.ChessRedis.Login
 	isExist, err := client.Exists(key)
 	if err != nil {
 		return errors.New("system error")
 	}
 	if !isExist {
-		err = client.Setex(key, "1", config.C.Login.LimitTime)
+		err = client.Setex(key, "1" ,config.C.Login.LimitTime)
 		return err
 	}
 
@@ -51,7 +51,7 @@ func FailCountPlusOne(mobile string) error {
 	}
 	count, err := strconv.Atoi(countStr)
 	c := count + 1
-	err = client.Setex(key, strconv.Itoa(c), config.C.Login.LimitTime)
+	err = client.Setex(key,strconv.Itoa(c), config.C.Login.LimitTime )
 	if err != nil {
 		return errors.New("system error,cant update count")
 	}

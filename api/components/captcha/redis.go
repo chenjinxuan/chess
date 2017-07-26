@@ -3,20 +3,21 @@ package captcha
 import (
 	"github.com/dchest/captcha"
 	"chess/api/config"
-	"chess/api/databases"
+        "chess/common/db"
+        "chess/models"
 )
 
-func init() {
-	store := NewRedisStore()
-	captcha.SetCustomStore(store)
-}
+//func init() {
+//	store := NewRedisStore()
+//	captcha.SetCustomStore(store)
+//}
 
 var (
 	Strore = new(RedisStore)
 )
 
 type RedisStore struct {
-	Client *databases.RedisPool
+	Client *db.Redis
 }
 
 func NewRedisStore() captcha.Store {
@@ -27,16 +28,16 @@ func NewRedisStore() captcha.Store {
 
 func (r *RedisStore) SetRandom(id string) {
 	digits := captcha.RandomDigits(4)
-	databases.Redis.Captcha.Setex(id, string(digits), config.C.Captcha.ExpireTime)
+	models.ChessRedis.Captcha.Setex(id, string(digits), config.C.Captcha.ExpireTime)
 }
 
 func (r *RedisStore) Set(id string, digits []byte) {
-	databases.Redis.Captcha.Setex(id, string(digits), config.C.Captcha.ExpireTime)
+    models.ChessRedis.Captcha.Setex(id, string(digits),config.C.Captcha.ExpireTime)
 }
 
 func (r *RedisStore) Get(id string, clear bool) (digits []byte) {
 	// digits = captcha.RandomDigits(4)
-	str, err := databases.Redis.Captcha.Get(id)
+	str, err := models.ChessRedis.Captcha.Get(id)
 	if err != nil {
 		// @todo
 		digits = captcha.RandomDigits(4)
@@ -46,6 +47,6 @@ func (r *RedisStore) Get(id string, clear bool) (digits []byte) {
 }
 
 func (r *RedisStore) Del(id string) error {
-	err := databases.Redis.Captcha.Del(id)
+	err := models.ChessRedis.Captcha.Del(id)
 	return err
 }

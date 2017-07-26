@@ -4,9 +4,9 @@ import (
 	"github.com/satori/go.uuid"
 	"strconv"
 	"time"
-	"chess/api/config"
+	"chess/common/config"
 	"chess/api/define"
-	"chess/api/models"
+	"chess/models"
 )
 
 type AuthResult struct {

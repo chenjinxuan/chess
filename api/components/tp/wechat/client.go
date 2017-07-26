@@ -6,7 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
-	"treasure/config"
+	"chess/common/config"
 	//"treasure/log"
 	"fmt"
 	"strings"
@@ -26,9 +26,9 @@ type Client struct {
 func NewDefaultWxCliant() *Client {
 	//conf := config.C.Tp.Wechat
 	client := new(Client)
-	if config.C != nil {
-		log.Log.Info("config is nil")
-	}
+	//if config.C != nil {
+	//	log.Log.Info("config is nil")
+	//}
 	// client.SetAppId(config.C.Tp.Wechat.AppId)
 	//client.SetAppSecret(conf.AppSecret)
 	return client

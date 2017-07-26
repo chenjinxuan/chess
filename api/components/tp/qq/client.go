@@ -7,8 +7,8 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
-	"treasure/config"
-	"treasure/log"
+	"chess/common/config"
+	"chess/api/log"
 )
 
 var (

@@ -1,6 +1,6 @@
 package models
 
-import "chess/api/databases"
+
 
 var Device = new(DeviceModel)
 
@@ -30,7 +30,7 @@ func (m *DeviceModel) Upsert() error {
 		ON DUPLICATE KEY UPDATE
 		openudid = ?, idfa = ?, idfv = ?, imei = ?, imsi = ?, mac = ?, language = ?, manu = ?, model = ?, rom_info = ?, os_ver = ?`
 
-	_, err := databases.MySQL.Main.Exec(sqlStr,
+	_, err := ChessMysql.Main.Exec(sqlStr,
 		m.UserId, m.UniqueId, m.Type, m.Openudid, m.Idfa, m.Idfv, m.Imei, m.Imsi, m.Mac, m.Language, m.Manu, m.Model, m.RomInfo, m.OsVer,
 		m.Openudid, m.Idfa, m.Idfv, m.Imei, m.Imsi, m.Mac, m.Language, m.Manu, m.Model, m.RomInfo, m.OsVer,
 	)
@@ -42,27 +42,27 @@ func (m *DeviceModel) CountByIdfa(idfa string) (cnt int, err error) {
 		FROM device
 		WHERE idfa = ?`
 
-	err = databases.MySQL.Main.QueryRow(sqlStr, idfa).Scan(&cnt)
+	err = ChessMysql.Main.QueryRow(sqlStr, idfa).Scan(&cnt)
 	return
 }
 
 func (m *DeviceModel) GetUserIdByUniqueId(uniqueId string) (res int, err error) {
 	sqlStr := `SELECT user_id FROM device WHERE unique_id = ? AND user_id != 0 and user_id != -1`
 
-	err = databases.MySQL.Main.QueryRow(sqlStr, uniqueId).Scan(&res)
+	err = ChessMysql.Main.QueryRow(sqlStr, uniqueId).Scan(&res)
 	return
 }
 
 func (m *DeviceModel) GetUserIdByIdfv(idfv string) (res int, err error) {
 	sqlStr := `SELECT user_id FROM device WHERE idfv = ? AND user_id != 0 and user_id != -1`
 
-	err = databases.MySQL.Main.QueryRow(sqlStr, idfv).Scan(&res)
+	err = ChessMysql.Main.QueryRow(sqlStr, idfv).Scan(&res)
 	return
 }
 
 func (m *DeviceModel) GetUserIdByIdfa(idfa string) (res int, err error) {
 	sqlStr := `SELECT user_id FROM device WHERE idfa = ? AND user_id != 0 and user_id != -1`
 
-	err = databases.MySQL.Main.QueryRow(sqlStr, idfa).Scan(&res)
+	err = ChessMysql.Main.QueryRow(sqlStr, idfa).Scan(&res)
 	return
 }

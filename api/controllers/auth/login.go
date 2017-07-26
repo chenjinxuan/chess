@@ -7,11 +7,12 @@ import (
 	"chess/api/components/auth"
 	"chess/api/components/captcha"
 	"chess/api/components/input"
-	"chess/api/config"
+	"chess/common/config"
 	"chess/api/define"
 	"chess/api/helper"
 	"chess/api/log"
-	"chess/api/models"
+	"chess/models"
+    "fmt"
 )
 
 const (
@@ -48,7 +49,7 @@ func Login(c *gin.Context) {
 	var form LoginParams
 
 	_conf, ok1 := c.Get("config")
-	cConf, ok2 := _conf.(*config.Config)
+	cConf, ok2 := _conf.(*config.ApiConfig)
 	if !ok1 || !ok2 {
 		result.Msg = "Get config fail."
 		c.JSON(http.StatusOK, result)
@@ -69,14 +70,14 @@ func Login(c *gin.Context) {
 			c.JSON(http.StatusOK, result)
 			return
 		}
-		if failCount >= config.C.Login.FailLimit {
+		if failCount >= cConf.Login.FailLimit {
 			// 达到错误上线,不允许登录
 			result.Ret = Login_Fail_Limit
 			result.Msg = "login limit"
 			c.JSON(http.StatusOK, result)
 			return
 		}
-		if failCount >= config.C.Login.ShowCaptchaCount {
+		if failCount >=  cConf.Login.ShowCaptchaCount {
 			result.NeedCaptcha = true
 			if form.Captcha == "" {
 				// 未填写验证码
@@ -153,4 +154,14 @@ func Login(c *gin.Context) {
 	result.Ret = 0
 	result.Msg = "Params invaild"
 	c.JSON(http.StatusOK, result)
+}
+
+func Ttest(c *gin.Context)  {
+    _conf, ok1 := c.Get("apiconfig")
+    cConf, ok2 := _conf.(*config.ApiConfig)
+    if !ok1 || !ok2 {
+
+    }
+
+    fmt.Println(cConf)
 }

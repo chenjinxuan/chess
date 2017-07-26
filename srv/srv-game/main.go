@@ -111,8 +111,8 @@ func main() {
 			pb.RegisterGameServiceServer(s, ins)
 
 			// 初始化Services
-			etcdclient.Init(c.StringSlice("etcd-hosts"))
-			services.Init(c.String("etcd-root"), c.StringSlice("etcd-hosts"), c.StringSlice("services"))
+			//etcdclient.Init(c.StringSlice("etcd-hosts"))
+			services.Init( c.StringSlice("etcd-hosts"))
 			numbers.Init(c.String("numbers"))
 			kafka.Init(c.StringSlice("kafka-brokers"), c.String("wal-topic"), c.String("trace-topic"), c.String("id"))
 			client_handler.Init(c.String("mongodb"), c.Int("mongodb-concurrent"), c.Duration("mongodb-concurrent"))

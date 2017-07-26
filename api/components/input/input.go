@@ -6,19 +6,19 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"io/ioutil"
-	"chess/api/config"
+	"chess/common/config"
 	"chess/api/helper"
 	"chess/api/log"
 )
 
-func BindJSON(c *gin.Context, params interface{}, cConf *config.Config) error {
+func BindJSON(c *gin.Context, params interface{}, cConf *config.ApiConfig) error {
 	defer c.Request.Body.Close()
 	body, err := ioutil.ReadAll(c.Request.Body)
 	if err != nil {
 		return err
 	}
 
-	log.Log.Debugf("Parms Des String(%s) Key(%s)", string(body), cConf.Backend.ParamsDesKey)
+	log.Log.Debugf("Parms Des String(%s) Key(%s)", string(body), cConf.PostDesKey)
 
 	err = json.Unmarshal(body, params)
 	if err == nil {
@@ -27,7 +27,7 @@ func BindJSON(c *gin.Context, params interface{}, cConf *config.Config) error {
 	}
 
 	// 解密
-	text := helper.DesDecryptECB(cConf.Backend.ParamsDesKey, string(body))
+	text := helper.DesDecryptECB(cConf.PostDesKey, string(body))
 	if text == "" {
 		return errors.New("decrypt params fail")
 	}

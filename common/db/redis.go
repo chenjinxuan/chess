@@ -91,7 +91,7 @@ func (r *Redis) Set(key string, value string) error {
 	return err
 }
 
-func (r *Redis) Setex(key string, time int64, value string) error {
+func (r *Redis) Setex(key string, value string, time int64,) error {
 	conn := r.GetConn()
 	defer conn.Close()
 

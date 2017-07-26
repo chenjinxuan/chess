@@ -9,10 +9,10 @@ import (
     "chess/api/components/input"
     "chess/api/components/sms"
     "chess/api/components/user_init"
-    "chess/api/config"
+    "chess/common/config"
     "chess/api/helper"
     "chess/api/log"
-    "chess/api/models"
+    "chess/models"
 )
 
 const (
@@ -38,7 +38,7 @@ func RegisterMobile(c *gin.Context) {
     var user = new(models.UsersModel)
 
     _conf, ok1 := c.Get("config")
-    cConf, ok2 := _conf.(*config.Config)
+    cConf, ok2 := _conf.(*config.ApiConfig)
     if !ok1 || !ok2 {
 	result.Msg = "Get config fail."
 	c.JSON(http.StatusOK, result)
@@ -71,7 +71,7 @@ func RegisterMobile(c *gin.Context) {
 	    return
 	}
 
-	result.Ret, result.Msg, err = sms.CheckCode(post.MobileNumber, post.Code, sms.SMS_REGISTER, cConf.Sms)
+	result.Ret, result.Msg, err = sms.CheckCode(post.MobileNumber, post.Code, sms.SMS_REGISTER, cConf)
 	if err != nil {
 	    // 验证不通过
 	    c.JSON(http.StatusOK, result)
@@ -125,7 +125,7 @@ func RegisterMobile(c *gin.Context) {
 	extra["unique_id"] = post.UniqueId
 	extra["idfv"] = c.Query("idfv")
 	extra["idfa"] = c.Query("idfa")
-	user.IsFresh, err = user_init.UserInit(*user, extra, cConf)
+	//user.IsFresh, err = user_init.UserInit(*user, extra, cConf)
 	if err != nil {
 	    log.Log.Error(err)
 	}

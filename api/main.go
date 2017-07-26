@@ -3,15 +3,16 @@ package main
 import (
 	"chess/common/config"
 	"chess/common/db"
-       "chess/common/consul"
+        "chess/common/consul"
 	"chess/models"
 )
 
 func main() {
-	err := consul.InitConsulClientViaEnv()
+	err := consul.InitConsulClient("127.0.0.1:8500","local","","")
 	if err != nil {
 		panic(err)
 	}
+
 
 	// TODO 换皮配置分发，可存储到mongodb
 	err = config.Api.Import()
@@ -20,9 +21,10 @@ func main() {
 	}
 
 	//InitRpcWrapper()
+        config.InitConfig()
 	db.InitMySQL()
 	db.InitMongo()
+        db.InitRedis()
 	models.Init()
-
 	InitRouter()
 }

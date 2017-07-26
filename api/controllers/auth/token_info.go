@@ -8,10 +8,10 @@ import (
 	"chess/api/components/auth"
 	"chess/api/components/input"
 	"chess/api/components/tp"
-	"chess/api/config"
+	"chess/common/config"
 	"chess/api/define"
 	"chess/api/log"
-	"chess/api/models"
+	"chess/models"
 )
 
 type TokenInfoParams struct {
@@ -32,7 +32,7 @@ func TokenInfo(c *gin.Context) {
 	var post TokenInfoParams
 
 	_conf, ok1 := c.Get("config")
-	cConf, ok2 := _conf.(*config.Config)
+	cConf, ok2 := _conf.(*config.ApiConfig)
 	if !ok1 || !ok2 {
 		result.Msg = "Get config fail."
 		c.JSON(http.StatusOK, result)
@@ -71,20 +71,20 @@ func TokenInfo(c *gin.Context) {
 
 		// TODO: 检查黑名单
 
-		var checkConfig config.TokenInfoCheckDetail
-		if post.From == "ios" {
-			checkConfig = config.C.TokenInfoCheck.Ios
-		}
-		if post.From == "android" {
-			checkConfig = config.C.TokenInfoCheck.Android
-		}
-
-		if !checkConfig.Check || post.Ver < checkConfig.Min || post.Ver > checkConfig.Max {
-			result.Ret = 1
-			result.Expire = session.Token.Expire
-			c.JSON(http.StatusOK, result)
-			return
-		}
+		//var checkConfig config.TokenInfoCheckDetail
+		//if post.From == "ios" {
+		//	checkConfig = config.C.TokenInfoCheck.Ios
+		//}
+		//if post.From == "android" {
+		//	checkConfig = config.C.TokenInfoCheck.Android
+		//}
+                //
+		//if !checkConfig.Check || post.Ver < checkConfig.Min || post.Ver > checkConfig.Max {
+		//	result.Ret = 1
+		//	result.Expire = session.Token.Expire
+		//	c.JSON(http.StatusOK, result)
+		//	return
+		//}
 
 		// wechat union id check
 		var tpUser models.UsersTpModel

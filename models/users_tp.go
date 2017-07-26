@@ -2,7 +2,6 @@ package models
 
 import (
 	"github.com/Sirupsen/logrus"
-	"chess/api/databases"
 	"chess/api/log"
 )
 
@@ -21,7 +20,7 @@ type UsersTpModel struct {
 func (m *UsersTpModel) IsReg(openid, Type string) (UserId int, err error) {
 	sqlString := `SELECT user_id,openid
 				FROM users_tp WHERE openid = ? AND type = ?`
-	err = databases.MySQL.Main.QueryRow(
+	err = ChessMysql.Main.QueryRow(
 		sqlString,
 		openid,
 		Type,
@@ -33,7 +32,7 @@ func (m *UsersTpModel) IsReg(openid, Type string) (UserId int, err error) {
 func (m *UsersTpModel) CheckWxUnionId(wxUnionId, Type string) (id, UserId int, err error) {
 	sqlString := `SELECT id,user_id,openid
 				FROM users_tp WHERE wx_union_id = ? AND type = ?`
-	err = databases.MySQL.Main.QueryRow(
+	err = ChessMysql.Main.QueryRow(
 		sqlString,
 		wxUnionId,
 		Type,
@@ -47,7 +46,7 @@ func (m *UsersTpModel) Insert(user *UsersTpModel) (int, error) {
 		(type,user_id,openid,wx_union_id,wx_h5_openid)
 		VALUES
 		(?, ?, ?, ?,?)`
-	result, err := databases.MySQL.Main.Exec(
+	result, err := ChessMysql.Main.Exec(
 		sqlString,
 		user.Type,
 		user.UserID,
@@ -74,7 +73,7 @@ func (m *UsersTpModel) Insert(user *UsersTpModel) (int, error) {
 // update wx union id
 func (m *UsersTpModel) UpdateWxUnionIdByUid(uid int, wxUnionId string) error {
 	sqlString := `UPDATE users_tp SET wx_union_id = ? WHERE user_id = ?`
-	_, err := databases.MySQL.Main.Exec(
+	_, err := ChessMysql.Main.Exec(
 		sqlString, wxUnionId, uid,
 	)
 
@@ -89,7 +88,7 @@ func (m *UsersTpModel) UpdateWxUnionIdByUid(uid int, wxUnionId string) error {
 // update openid by id
 func (m *UsersTpModel) UpdateOpenidIdById(id int, openid string) error {
 	sqlString := `UPDATE users_tp SET openid = ? WHERE id = ?`
-	_, err := databases.MySQL.Main.Exec(
+	_, err := ChessMysql.Main.Exec(
 		sqlString, openid, id,
 	)
 	// Debug
@@ -104,7 +103,7 @@ func (m *UsersTpModel) GetByUid(uid int, user *UsersTpModel) error {
 	sqlString := `SELECT
 					id,type,user_id,openid,wx_union_id
 				FROM users_tp WHERE user_id = ?`
-	return databases.MySQL.Main.QueryRow(
+	return ChessMysql.Main.QueryRow(
 		sqlString, uid,
 	).Scan(
 		&user.Id,
@@ -119,7 +118,7 @@ func (m *UsersTpModel) GetByMobile(mobile string, user *UsersTpModel) error {
 	sqlString := `SELECT a.id,a.type,a.user_id,a.openid,a.wx_union_id
 				FROM users_tp AS a,users AS b
 				WHERE a.user_id = b.id  AND b.mobile_number = ?`
-	return databases.MySQL.Main.QueryRow(
+	return ChessMysql.Main.QueryRow(
 		sqlString, mobile,
 	).Scan(
 		&user.Id,
@@ -134,7 +133,7 @@ func (m *UsersTpModel) GetId(id int, user *UsersTpModel) error {
 	sqlString := `SELECT
 					id,type,user_id,openid,wx_union_id
 				FROM users_tp WHERE id = ?`
-	return databases.MySQL.Main.QueryRow(
+	return ChessMysql.Main.QueryRow(
 		sqlString, id,
 	).Scan(
 		&user.Id,
@@ -147,7 +146,7 @@ func (m *UsersTpModel) GetId(id int, user *UsersTpModel) error {
 
 func (m *UsersTpModel) GetOpenid(id int) (openid string, err error) {
 	sqlStr := `SELECT openid FROM users_tp WHERE user_id = ?`
-	err = databases.MySQL.Main.QueryRow(
+	err = ChessMysql.Main.QueryRow(
 		sqlStr, id,
 	).Scan(&openid)
 

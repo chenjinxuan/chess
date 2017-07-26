@@ -1,9 +1,5 @@
 package models
 
-import (
-	"chess/api/databases"
-)
-
 const (
 	UsersWalletStatusAvailable   = 1
 	UsersWalletStatusUnavailable = 0
@@ -25,7 +21,7 @@ type UsersWalletModel struct {
 func (m *UsersWalletModel) Init(userId int) error {
 	sqlString := `INSERT INTO users_wallet (user_id, status) VALUES  (?, ?)`
 
-	_, err := databases.MySQL.Main.Exec(sqlString, userId, 1)
+	_, err := ChessMysql.Main.Exec(sqlString, userId, 1)
 
 	return err
 }
@@ -36,7 +32,7 @@ func (m *UsersWalletModel) Get(userId int, data *UsersWalletModel) error {
 				FROM users_wallet
 				WHERE user_id = ?`
 
-	return databases.MySQL.Main.QueryRow(
+	return ChessMysql.Main.QueryRow(
 		sqlString, userId,
 	).Scan(
 		&data.UserId,
@@ -53,12 +49,12 @@ func (m *UsersWalletModel) GetBalanceByMobile(mobile string) (balance int, err e
 	sqlString := `SELECT balance 
 		FROM users_wallet,users
 		WHERE users_wallet.user_id = users.id AND users.mobile_number = ?`
-	err = databases.MySQL.Main.QueryRow(sqlString, mobile).Scan(&balance)
+	err = ChessMysql.Main.QueryRow(sqlString, mobile).Scan(&balance)
 	return
 }
 
 func (m *UsersWalletModel) SendImitPresent(uid, amount int) error {
-	tx, err := databases.MySQL.Main.Begin()
+	tx, err := ChessMysql.Main.Begin()
 	if err != nil {
 		return err
 	}
@@ -86,7 +82,7 @@ func (m *UsersWalletModel) SendImitPresent(uid, amount int) error {
 }
 
 func (m *UsersWalletModel) AddVirBalance(uid, amount int) error {
-	tx, err := databases.MySQL.Main.Begin()
+	tx, err := ChessMysql.Main.Begin()
 	if err != nil {
 		return err
 	}

@@ -11,11 +11,11 @@ import (
 	"chess/api/components/tp/qq"
 	"chess/api/components/tp/wechat"
 	"chess/api/components/user_init"
-	"chess/api/config"
+	"chess/common/config"
 	"chess/api/define"
 	"chess/api/helper"
 	"chess/api/log"
-	"chess/api/models"
+	"chess/models"
 )
 
 const (
@@ -47,7 +47,7 @@ func TpLogin(c *gin.Context) {
 	var userId int
 
 	_conf, ok1 := c.Get("config")
-	cConf, ok2 := _conf.(*config.Config)
+	cConf, ok2 := _conf.(*config.ApiConfig)
 	if !ok1 || !ok2 {
 		result.Msg = "Get config fail."
 		c.JSON(http.StatusOK, result)
@@ -106,20 +106,20 @@ func TpLogin(c *gin.Context) {
 		isNew = isnew
 		userId = user.Id
 		userInfo = user
-
-	case TpWeibo:
-		isnew, user, msg, err := tp.LoginByWeibo(form.Key, clientIp, form.Channel, form.From, cConf)
-		if err != nil {
-			log.Log.Error("weibo login failed", err)
-			result.Ret = 0
-			result.Msg = msg
-			c.JSON(http.StatusOK, result)
-			return
-			break
-		}
-		isNew = isnew
-		userId = user.Id
-		userInfo = user
+        //
+	//case TpWeibo:
+	//	isnew, user, msg, err := tp.LoginByWeibo(form.Key, clientIp, form.Channel, form.From, cConf)
+	//	if err != nil {
+	//		log.Log.Error("weibo login failed", err)
+	//		result.Ret = 0
+	//		result.Msg = msg
+	//		c.JSON(http.StatusOK, result)
+	//		return
+	//		break
+	//	}
+	//	isNew = isnew
+	//	userId = user.Id
+	//	userInfo = user
 
 	case TpWechat, TpWechatH5:
 		client := wechat.NewClient(cConf.Tp.Wechat.AppId, cConf.Tp.Wechat.AppSecret)
@@ -152,10 +152,11 @@ func TpLogin(c *gin.Context) {
 	extra["unique_id"] = form.UniqueId
 	extra["idfv"] = c.Query("idfv")
 	extra["idfa"] = c.Query("idfa")
-	isfresh, err := user_init.UserInit(userInfo, extra, cConf)
-	if err != nil {
-		log.Log.Error(err)
-	}
+    _=userInfo
+	//isfresh, err := user_init.UserInit(userInfo, extra, cConf)
+	//if err != nil {
+	//	log.Log.Error(err)
+	//}
 
 	// 绑定邀请码
 	if isNew {

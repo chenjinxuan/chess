@@ -2,7 +2,7 @@ package user_init
 
 import (
 	"strings"
-	"chess/api/models"
+	"chess/models"
 )
 
 func DeviceInit(uId int, from, uniqueId, idfv, idfa string) error {

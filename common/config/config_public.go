@@ -13,6 +13,9 @@ type PublicConfig struct {
 	QiniuBucketJiafenCard   string
 	QiniuDomainJiafenImages string
 	QiniuDomainJiafenCard   string
+        SmsSendLimit            int
+        SmsCheckLimit           int
+        SmsTime                 int
 }
 
 func (c *PublicConfig) Import() error {
@@ -46,6 +49,17 @@ func (c *PublicConfig) Import() error {
 	if err != nil {
 		return err
 	}
-
+	c.SmsSendLimit, err = ConsulClient.KeyInt("public/sms_send", 10)
+	if err != nil {
+	    return err
+	}
+	c.SmsCheckLimit, err = ConsulClient.KeyInt("public/sms_check", 5)
+	if err != nil {
+	    return err
+	}
+	c.SmsTime, err = ConsulClient.KeyInt("public/sms_time", 600)
+	if err != nil {
+	    return err
+	}
 	return nil
 }

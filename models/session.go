@@ -6,7 +6,6 @@ import (
 	"gopkg.in/mgo.v2/bson"
 	"strings"
 	"time"
-	"chess/api/databases"
 	"chess/api/define"
 	"chess/api/log"
 )
@@ -31,7 +30,7 @@ type SessionToken struct {
 func (m *SessionModel) Get(userId int, from, uniqueId string) (*SessionModel, error) {
 	var session = new(SessionModel)
 
-	err := databases.Mongo.M(define.MongoDB, define.MongoColSession, func(c *mgo.Collection) error {
+	err := ChessMongo.M(define.MongoDB, define.MongoColSession, func(c *mgo.Collection) error {
 		query := bson.M{
 			"user_id":   userId,
 			"from":      from,
@@ -48,7 +47,7 @@ func (m *SessionModel) Get(userId int, from, uniqueId string) (*SessionModel, er
 
 func (m *SessionModel) Upsert(userId int, from, uniqueId string, session *SessionModel) error {
 	from = strings.ToLower(from) // @todo
-	return databases.Mongo.M(define.MongoDB, define.MongoColSession, func(c *mgo.Collection) error {
+	return ChessMongo.M(define.MongoDB, define.MongoColSession, func(c *mgo.Collection) error {
 		query := bson.M{
 			"user_id":   userId,
 			"from":      from,
@@ -70,7 +69,7 @@ func (m *SessionModel) Upsert(userId int, from, uniqueId string, session *Sessio
 }
 
 func (m *SessionModel) RemoveByUid(userId int) error {
-	return databases.Mongo.M(define.MongoDB, define.MongoColSession, func(c *mgo.Collection) error {
+	return ChessMongo.M(define.MongoDB, define.MongoColSession, func(c *mgo.Collection) error {
 		query := bson.M{
 			"user_id": userId,
 		}

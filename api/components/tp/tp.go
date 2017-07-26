@@ -4,14 +4,11 @@ package tp
 
 import (
 	"errors"
-	"strconv"
 	"chess/api/components/tp/qq"
 	"chess/api/components/tp/wechat"
-	"chess/api/components/tp/weibo"
-	"chess/api/config"
 	"chess/api/helper"
 	"chess/api/log"
-	"chess/api/models"
+	"chess/models"
 )
 
 const (
@@ -107,6 +104,7 @@ func LoginByQQ(token string, ip, channel, from string, client *qqsdk.Client) (is
 	user.LastLoginIp = user.RegIp
 	user.Avatar = qqUser.Figureurl_qq_2
 	user.Type = models.TYPE_QQ
+        user.AppFrom = from
 	userid, err := models.Users.Insert(&user)
 	if err != nil {
 		msg = "Could not create new user."
@@ -122,8 +120,6 @@ func LoginByQQ(token string, ip, channel, from string, client *qqsdk.Client) (is
 		return isNew, user, msg, err
 	}
 
-	// Init user info
-	models.UsersInfo.Init(userid, channel, from)
 	// 插入users_tp表
 	userQQ := new(models.UsersTpModel)
 	userQQ.Type = TpType
@@ -142,87 +138,86 @@ func LoginByQQ(token string, ip, channel, from string, client *qqsdk.Client) (is
 }
 
 //
-func LoginByWeibo(token string, ip, channel, from string, cConf *config.Config) (isNew bool, user models.UsersModel, msg string, err error) {
-	TpType := Weibo
-	weiboApi := weibo.NewApi(token, cConf.Tp.Weibo.AppId, cConf.Tp.Weibo.AppSecret)
-
-	tokenInfo, err := weibo.GetTokenInfo(token, weiboApi)
-	// appid 获取出错 token有误
-	if err != nil {
-		msg = "token wrong"
-		return
-	}
-
-	// token 非官方appid获取
-	if tokenInfo.AppKey != cConf.Tp.Weibo.AppId {
-		msg = "token wrong"
-		err = errors.New("token is not verify")
-		return
-	}
-
-	openid := strconv.Itoa(tokenInfo.UID)
-
-	UserId, err := models.UsersTp.IsReg(openid, TpType)
-	if err != nil {
-		// openid不存在，创建用户并更新userid
-
-		// 获取微博信息
-		//weiboUser := weibo.NewWeigoUser()
-		weiboUser, wberr := weibo.GetUserShowByUid(token, openid, cConf.Tp.Weibo.AppId, weiboApi)
-		err = wberr
-		// @TODO 错误处理
-		if err != nil {
-			msg = "Could get weibo user info"
-			return
-		}
-		// 插入users表
-		//var user = new(models.UsersModel)
-		user.RegIp = ip
-		nickname := weiboUser.Name
-		nickname = helper.ConvertNickname(nickname)
-		//nickname = helper.ConverUnsupportStr(nickname)
-		//if len(nickname) > 20 {
-		//	nickname = nickname[:20]
-		//}
-		user.Nickname = nickname
-		user.Channel = channel
-		user.LastLoginIp = user.RegIp
-		user.Avatar = weiboUser.Avatar_large
-		user.Type = models.TYPE_WEIBO
-		userid, err := models.Users.Insert(&user)
-		if err != nil {
-			msg = "Could not create new user."
-			return isNew, user, msg, err
-		}
-
-		user.Id = userid
-		// 插入wallet
-		// Init user wallet
-		err = models.UsersWallet.Init(userid)
-		if err != nil {
-			log.Log.Error(err)
-			return isNew, user, msg, err
-		}
-		// Init user info
-		models.UsersInfo.Init(userid, channel, from)
-		// 插入users_tp表
-		tpUser := new(models.UsersTpModel)
-		tpUser.Type = TpType
-		tpUser.OpenID = openid
-		tpUser.UserID = userid
-		_, err = models.UsersTp.Insert(tpUser)
-		// @TODO 错误处理
-		if err != nil {
-			log.Log.Error(err)
-			msg = "Could not create new weibo user."
-			return isNew, user, msg, err
-		}
-		isNew = true
-	} else {
-		user.Id = UserId
-	}
-	return
-}
+//func LoginByWeibo(token string, ip, channel, from string, cConf *config.Config) (isNew bool, user models.UsersModel, msg string, err error) {
+//	TpType := Weibo
+//	weiboApi := weibo.NewApi(token, cConf.Tp.Weibo.AppId, cConf.Tp.Weibo.AppSecret)
+//
+//	tokenInfo, err := weibo.GetTokenInfo(token, weiboApi)
+//	// appid 获取出错 token有误
+//	if err != nil {
+//		msg = "token wrong"
+//		return
+//	}
+//
+//	// token 非官方appid获取
+//	if tokenInfo.AppKey != cConf.Tp.Weibo.AppId {
+//		msg = "token wrong"
+//		err = errors.New("token is not verify")
+//		return
+//	}
+//
+//	openid := strconv.Itoa(tokenInfo.UID)
+//
+//	UserId, err := models.UsersTp.IsReg(openid, TpType)
+//	if err != nil {
+//		// openid不存在，创建用户并更新userid
+//
+//		// 获取微博信息
+//		//weiboUser := weibo.NewWeigoUser()
+//		weiboUser, wberr := weibo.GetUserShowByUid(token, openid, cConf.Tp.Weibo.AppId, weiboApi)
+//		err = wberr
+//		// @TODO 错误处理
+//		if err != nil {
+//			msg = "Could get weibo user info"
+//			return
+//		}
+//		// 插入users表
+//		//var user = new(models.UsersModel)
+//		user.RegIp = ip
+//		nickname := weiboUser.Name
+//		nickname = helper.ConvertNickname(nickname)
+//		//nickname = helper.ConverUnsupportStr(nickname)
+//		//if len(nickname) > 20 {
+//		//	nickname = nickname[:20]
+//		//}
+//		user.Nickname = nickname
+//		user.Channel = channel
+//		user.LastLoginIp = user.RegIp
+//		user.Avatar = weiboUser.Avatar_large
+//		user.Type = models.TYPE_WEIBO
+//	        user.AppFrom = from
+//		userid, err := models.Users.Insert(&user)
+//		if err != nil {
+//			msg = "Could not create new user."
+//			return isNew, user, msg, err
+//		}
+//
+//		user.Id = userid
+//		// 插入wallet
+//		// Init user wallet
+//		err = models.UsersWallet.Init(userid)
+//		if err != nil {
+//			log.Log.Error(err)
+//			return isNew, user, msg, err
+//		}
+//		// 插入users_tp表
+//		tpUser := new(models.UsersTpModel)
+//		tpUser.Type = TpType
+//		tpUser.OpenID = openid
+//		tpUser.UserID = userid
+//		_, err = models.UsersTp.Insert(tpUser)
+//		// @TODO 错误处理
+//		if err != nil {
+//			log.Log.Error(err)
+//			msg = "Could not create new weibo user."
+//			return isNew, user, msg, err
+//		}
+//		isNew = true
+//	} else {
+//		user.Id = UserId
+//	}
+//	return
+//}
 
 func LoginByWechat(code string, ip, channel, from string, client *wechat.Client) (isNew bool, user models.UsersModel, msg string, err error) {
 	TpType := Wechat
@@ -302,6 +297,7 @@ func LoginByWechat(code string, ip, channel, from string, client *wechat.Client)
 	user.Channel = channel
 	user.Avatar = wechatUser.HeadImageURL
 	user.Type = models.TYPE_WECHAT
+        user.AppFrom = from
 	userid, err := models.Users.Insert(&user)
 	if err != nil {
 		msg = "Could not create new user."
@@ -317,8 +313,7 @@ func LoginByWechat(code string, ip, channel, from string, client *wechat.Client)
 		msg = "system error"
 		return
 	}
-	// Init user info
-	models.UsersInfo.Init(userid, channel, from)
+
 	// 插入users_tp表
 	tpUser := new(models.UsersTpModel)
 	tpUser.Type = TpType

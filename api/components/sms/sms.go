@@ -12,13 +12,13 @@ import (
 	"regexp"
 	"strconv"
 	"time"
-	"treasure/components/auth"
-	"treasure/config"
-	"treasure/databases"
-	"treasure/define"
-	"treasure/log"
-	"treasure/models"
-	"treasure/rpc"
+	"chess/api/components/auth"
+	"chess/common/config"
+	//"chess/api/databases"
+	"chess/api/define"
+	"chess/api/log"
+	"chess/models"
+	//"chess/api/rpc"
 )
 
 const (
@@ -82,49 +82,49 @@ func genCode() string {
 }
 
 // 发送验证码，返回code
-func SendCode(MobileNumber, ip string, vtype int, cSms *config.Sms, from string) (int, error) {
-	var verifyCode string
-	var err error
-
-	if !CheckMobileNumber(MobileNumber, cSms.MobileNumberRegular) {
-		err = errors.New("mobile number wrong")
-		return Wrong_Mobile_Number, err
-	}
-
-	err = SendMobileLimit(MobileNumber, cSms)
-	if err != nil {
-		return Send_Limit, err
-	}
-
-	verifyCode = genCode()
-
-	// Insert to mobile verify database
-	expire := time.Now().Add(30 * time.Minute).Unix()
-	mvID, err := models.UsersMobileVerify.Insert(MobileNumber, verifyCode, ip, vtype, int(expire))
-	if err != nil {
-		// result.Msg = "Could not insert verify code."
-		return 0, err
-	}
-
-	// Send login verify SMS - call RPC
-	var rpcArgs rpc.SendSmsArgs
-	rpcArgs.From = from
-	rpcArgs.Phone = MobileNumber
-	rpcArgs.TplArgs = append(rpcArgs.TplArgs, verifyCode)
-	rpcArgs.TplKey = fmt.Sprintf("verify-%d", vtype)
-	//rpcArgs.Sign.Source = cSms.Source
-	//rpcArgs.Sign.Suffix = cSms.ContentPrefix
-
-	rpcCli := rpc.Notifier.Get()
-	var ret bool
-	err = rpcCli.Call(rpc.NotifierServiceSendSms, rpcArgs, &ret)
-	if err != nil {
-		return Send_Fail, err
-	}
-
-	models.UsersMobileVerify.SetSendStatus(mvID, 1)
-	return 1, nil
-}
+//func SendCode(MobileNumber, ip string, vtype int, cSms *config.Sms, from string) (int, error) {
+//	var verifyCode string
+//	var err error
+//
+//	if !CheckMobileNumber(MobileNumber, cSms.MobileNumberRegular) {
+//		err = errors.New("mobile number wrong")
+//		return Wrong_Mobile_Number, err
+//	}
+//
+//	err = SendMobileLimit(MobileNumber, cSms)
+//	if err != nil {
+//		return Send_Limit, err
+//	}
+//
+//	verifyCode = genCode()
+//
+//	// Insert to mobile verify database
+//	expire := time.Now().Add(30 * time.Minute).Unix()
+//	mvID, err := models.UsersMobileVerify.Insert(MobileNumber, verifyCode, ip, vtype, int(expire))
+//	if err != nil {
+//		// result.Msg = "Could not insert verify code."
+//		return 0, err
+//	}
+//
+//	// Send login verify SMS - call RPC
+//	var rpcArgs rpc.SendSmsArgs
+//	rpcArgs.From = from
+//	rpcArgs.Phone = MobileNumber
+//	rpcArgs.TplArgs = append(rpcArgs.TplArgs, verifyCode)
+//	rpcArgs.TplKey = fmt.Sprintf("verify-%d", vtype)
+//	//rpcArgs.Sign.Source = cSms.Source
+//	//rpcArgs.Sign.Suffix = cSms.ContentPrefix
+//
+//	rpcCli := rpc.Notifier.Get()
+//	var ret bool
+//	err = rpcCli.Call(rpc.NotifierServiceSendSms, rpcArgs, &ret)
+//	if err != nil {
+//		return Send_Fail, err
+//	}
+//
+//	models.UsersMobileVerify.SetSendStatus(mvID, 1)
+//	return 1, nil
+//}
 
 func SendToPhone(mobileNumber, ip, content, source string) error {
 	apiUrlFmt := "http://sms.api.tongbu.com/message.ashx?SMSgxmtgame&t=%v&ip=%v&token=%v&source=%v&phone=%v&content=%v&stime="
@@ -208,7 +208,7 @@ func SendPromotionToPhone(mobileNumber, ip, content, source string) (err error, 
 	return nil, rspStr
 }
 
-func CheckCode(mobile, code string, Type int, cSms *config.Sms) (int, string, error) {
+func CheckCode(mobile, code string, Type int, cSms *config.ApiConfig) (int, string, error) {
 	// check limit
 	//err := CheckMobileLimit(mobile)
 	count, err := GetCheckMobileCount(mobile)
@@ -218,7 +218,7 @@ func CheckCode(mobile, code string, Type int, cSms *config.Sms) (int, string, er
 		msg := "system error"
 		return ret, msg, err
 	}
-	if count > cSms.CheckLimit {
+	if count > cSms.SmsCheckLimit {
 		ret := Check_Limit
 		msg := "over check limit"
 		return ret, msg, errors.New("over check limit")
@@ -274,7 +274,7 @@ func getMobileCheckKey(mobile string) string {
 
 func GetCheckMobileCount(mobile string) (int, error) {
 	key := getMobileCheckKey(mobile)
-	isExist, err := databases.Redis.Sms.Exists(key)
+	isExist, err := models.ChessRedis.Sms.Exists(key)
 	if err != nil {
 		return 0, errors.New("system error")
 	}
@@ -284,7 +284,7 @@ func GetCheckMobileCount(mobile string) (int, error) {
 	}
 
 	// 获取当前count
-	countStr, err := databases.Redis.Sms.Get(key)
+	countStr, err := models.ChessRedis.Sms.Get(key)
 	if err != nil {
 		return 0, errors.New("system error")
 	}
@@ -297,20 +297,20 @@ func GetCheckMobileCount(mobile string) (int, error) {
 
 }
 
-func MobileCheckLimitCountPlus(mobile string, cSms *config.Sms) error {
+func MobileCheckLimitCountPlus(mobile string, cSms *config.ApiConfig) error {
 	key := getMobileCheckKey(mobile)
-	isExist, err := databases.Redis.Sms.Exists(key)
+	isExist, err := models.ChessRedis.Sms.Exists(key)
 	if err != nil {
 		return err
 	}
 	// 检查key是否存在
 	if !isExist {
-		err = databases.Redis.Sms.Setex(key, "1", cSms.Time)
+		err = models.ChessRedis.Sms.Setex(key, "1", int64(cSms.SmsTime))
 		return err
 	}
 
 	// 获取当前count
-	countStr, err := databases.Redis.Sms.Get(key)
+	countStr, err := models.ChessRedis.Sms.Get(key)
 	if err != nil {
 		return err
 	}
@@ -318,20 +318,20 @@ func MobileCheckLimitCountPlus(mobile string, cSms *config.Sms) error {
 	count, err := strconv.Atoi(countStr)
 	//
 	c := count + 1
-	err = databases.Redis.Sms.Setex(key, strconv.Itoa(c), cSms.Time)
+	err = models.ChessRedis.Sms.Setex(key, strconv.Itoa(c), int64(cSms.SmsTime))
 	return nil
 }
 
-func SendMobileLimit(mobile string, cSms *config.Sms) error {
+func SendMobileLimit(mobile string, cSms *config.ApiConfig) error {
 	key := "mobile-send-" + mobile
 	// sms := databases.Redis.Sms
-	isExist, err := databases.Redis.Sms.Exists(key)
+	isExist, err := models.ChessRedis.Sms.Exists(key)
 	if err != nil {
 		return errors.New("system error")
 	}
 	// 检查key是否存在
 	if !isExist {
-		err = databases.Redis.Sms.Setex(key, "1", cSms.Time)
+		err = models.ChessRedis.Sms.Setex(key, "1", int64(cSms.SmsTime))
 		if err != nil {
 			return err
 		}
@@ -339,7 +339,7 @@ func SendMobileLimit(mobile string, cSms *config.Sms) error {
 	}
 
 	// 获取当前count
-	countStr, err := databases.Redis.Sms.Get(key)
+	countStr, err := models.ChessRedis.Sms.Get(key)
 	if err != nil {
 		return errors.New("system error")
 	}
@@ -347,12 +347,12 @@ func SendMobileLimit(mobile string, cSms *config.Sms) error {
 	count, err := strconv.Atoi(countStr)
 	//
 	c := count + 1
-	err = databases.Redis.Sms.Setex(key, strconv.Itoa(c), cSms.Time)
+	err = models.ChessRedis.Sms.Setex(key, strconv.Itoa(c), int64(cSms.SmsTime))
 	if err != nil {
 		return errors.New("system error,cant update count")
 	}
 
-	if count > cSms.SendLimit {
+	if count > cSms.SmsSendLimit {
 		return errors.New("over send code limte")
 	}
 	return nil
@@ -365,7 +365,7 @@ func TypeCheck(smsType int) bool {
 	return true
 }
 
-func CheckCodeNotUpdateStatus(mobile, code string, Type int, cSms *config.Sms) (int, string, error) {
+func CheckCodeNotUpdateStatus(mobile, code string, Type int, cSms *config.ApiConfig) (int, string, error) {
 	// check limit
 	count, err := GetCheckMobileCount(mobile)
 	// @todo
@@ -374,7 +374,7 @@ func CheckCodeNotUpdateStatus(mobile, code string, Type int, cSms *config.Sms) (
 		msg := "system error"
 		return ret, msg, err
 	}
-	if count > cSms.CheckLimit {
+	if count > cSms.SmsCheckLimit {
 		ret := Check_Limit
 		msg := "over check limit"
 		return ret, msg, errors.New("over check limit")

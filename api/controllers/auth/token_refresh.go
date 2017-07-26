@@ -7,13 +7,13 @@ import (
 	"net/http"
 	"strconv"
 	"time"
-	"treasure/components/auth"
-	"treasure/components/input"
-	"treasure/config"
-	"treasure/define"
+	"chess/api/components/auth"
+	"chess/api/components/input"
+	"chess/common/config"
+	"chess/api/define"
 	// "treasure/log"
 	"strings"
-	"treasure/models"
+	"chess/models"
 )
 
 type TokenRefreshParams struct {
@@ -33,7 +33,7 @@ func TokenRefrash(c *gin.Context) {
 	var post TokenRefreshParams
 
 	_conf, ok1 := c.Get("config")
-	cConf, ok2 := _conf.(*config.Config)
+	cConf, ok2 := _conf.(*config.ApiConfig)
 	if !ok1 || !ok2 {
 		result.Msg = "Get config fail."
 		c.JSON(http.StatusOK, result)

@@ -42,7 +42,6 @@ func SetConsulCfg(addr, dc, token, proxy string) {
 	ConsulCfg.Token = token
 	ConsulCfg.Proxy = proxy
 }
-
 func SetConsulCfgViaEnv() {
 	ConsulCfg.Address = os.Getenv("CONSUL_ADDRESS")
 	ConsulCfg.Datacenter = os.Getenv("CONSUL_DATACENTER")
@@ -85,11 +84,9 @@ func NewConsulClient(cfg ConsulConfig) (*ConsulCliWrap, error) {
 	c.Token = cfg.Token
 	c.HttpClient = proxyClient
 	cli, err := api.NewClient(c)
-
 	if err != nil {
 		return nil, err
 	}
-
 	wrap := ConsulCliWrap{cli: cli, address: cfg.Address, datacenter: cfg.Datacenter, token: cfg.Token}
 
 	return &wrap, nil
@@ -135,6 +132,23 @@ func (c *ConsulCliWrap) KeyInt64(key string, def int64) (int64, error) {
 
 	resInt64, err := strconv.ParseInt(res, 10, 64)
 	return resInt64, err
+}
+func(c *ConsulCliWrap) KeyList(prefix string) (map[string][]byte,error) {
+	if c.cli != nil  {
+	    kv := c.cli.KV()
+	    pair ,_ ,err:=kv.List(prefix,nil)
+	    if pair == nil {
+		return nil, nil
+	    }
+
+	    val := make(map[string][]byte)
+	    log.Debugf("get key %s", prefix)
+	    for _,v := range pair {
+		val[v.Key]=v.Value
+	    }
+	    return val, err
+	}
+	return nil, ErrCliNil
 }
 
 func (c *ConsulCliWrap) KeyBool(key string, def bool) (bool, error) {

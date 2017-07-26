@@ -2,7 +2,7 @@ package qqsdk
 
 import (
 	"errors"
-	"treasure/log"
+	"chess/api/log"
 )
 
 func GetOpenId(accessToken string) (string, error) {
