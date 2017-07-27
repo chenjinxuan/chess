@@ -18,7 +18,7 @@ type UsersMobileVerifyModel struct {
 
 func (m *UsersMobileVerifyModel) Insert(mobileNumber, verifyCode, ip string, verifyType, expire int) (int, error) {
 	sqlString := `INSERT INTO users_mobile_verify (mobile_number, verify_type, verify_code,ip, expire, status,send_status) VALUES (?, ?, ?, ?, ?, ?,?)`
-	result, err := ChessMysql.Main.Exec(
+	result, err := Mysql.Chess.Exec(
 		sqlString,
 		mobileNumber,
 		verifyType,
@@ -40,7 +40,7 @@ func (m *UsersMobileVerifyModel) Insert(mobileNumber, verifyCode, ip string, ver
 
 func (m *UsersMobileVerifyModel) GetCode(userMobileVerify *UsersMobileVerifyModel) error {
 	sqlString := `SELECT id, verify_code, expire, status FROM users_mobile_verify WHERE mobile_number = ? AND verify_type = ? ORDER BY id DESC`
-	err := ChessMysql.Main.QueryRow(
+	err := Mysql.Chess.QueryRow(
 		sqlString,
 		userMobileVerify.MobileNumber,
 		userMobileVerify.VerifyType,
@@ -62,7 +62,7 @@ func (m *UsersMobileVerifyModel) GetCode(userMobileVerify *UsersMobileVerifyMode
 
 func (m *UsersMobileVerifyModel) GetCodeVerified(userMobileVerify *UsersMobileVerifyModel) error {
 	sqlString := `SELECT id, verify_code, expire,status FROM users_mobile_verify WHERE mobile_number = ? AND verify_type = ?  AND status = 1 ORDER BY id DESC`
-	err := ChessMysql.Main.QueryRow(
+	err := Mysql.Chess.QueryRow(
 		sqlString,
 		userMobileVerify.MobileNumber,
 		userMobileVerify.VerifyType,
@@ -82,7 +82,7 @@ func (m *UsersMobileVerifyModel) GetCodeVerified(userMobileVerify *UsersMobileVe
 }
 func (m *UsersMobileVerifyModel) SetCodeStatus(id, status int) error {
 	sqlString := `UPDATE users_mobile_verify SET status = ? WHERE id = ?`
-	_, err := ChessMysql.Main.Exec(
+	_, err := Mysql.Chess.Exec(
 		sqlString,
 		status,
 		id,
@@ -92,7 +92,7 @@ func (m *UsersMobileVerifyModel) SetCodeStatus(id, status int) error {
 
 func (m *UsersMobileVerifyModel) SetSendStatus(id, status int) error {
 	sqlString := `UPDATE users_mobile_verify SET send_status = ? WHERE id = ?`
-	_, err := ChessMysql.Main.Exec(
+	_, err := Mysql.Chess.Exec(
 		sqlString,
 		status,
 		id,
@@ -105,6 +105,6 @@ func (m *UsersMobileVerifyModel) CountRecentlySend(mobile string, verifyType, ho
 		FROM users_mobile_verify
 		WHERE mobile_number = ? AND verify_type = ? AND status = 1 AND created >= DATE_SUB(NOW(), INTERVAL ? HOUR)`
 
-	err = ChessMysql.Main.QueryRow(sqlStr, mobile, verifyType, hours).Scan(&cnt)
+	err = Mysql.Chess.QueryRow(sqlStr, mobile, verifyType, hours).Scan(&cnt)
 	return
 }

@@ -29,7 +29,7 @@ func (m *UsersRegisterLogModel) GetLog(key, val string, userId int) (res []Users
 	sqlStr := `SELECT id, user_id, init_status, init_snapshot, channel, device_from, ver, device_unique_key, device_unique_val 
 				FROM users_register_log
 				WHERE (device_unique_key = ? and device_unique_val = ?) or user_id = ?`
-	rows, err := ChessMysql.Main.Query(sqlStr, key, val, userId)
+	rows, err := Mysql.Chess.Query(sqlStr, key, val, userId)
 	if err != nil {
 		return
 	}
@@ -62,6 +62,6 @@ func (m *UsersRegisterLogModel) GetLog(key, val string, userId int) (res []Users
 func (m *UsersRegisterLogModel) Insert() error {
 	sqlStr := `INSERT INTO users_register_log (user_id,init_status,init_snapshot,channel ,device_from,ver,device_unique_key, device_unique_val)
 				VALUES (?,?,?,?,?,?,?,?) `
-	_, err := ChessMysql.Main.Exec(sqlStr, m.UserId, m.InitStatus, m.InitSnapshot, m.Channel, m.From, m.Ver, m.DeviceUniqueKey, m.DeviceUniqueVal)
+	_, err := Mysql.Chess.Exec(sqlStr, m.UserId, m.InitStatus, m.InitSnapshot, m.Channel, m.From, m.Ver, m.DeviceUniqueKey, m.DeviceUniqueVal)
 	return err
 }

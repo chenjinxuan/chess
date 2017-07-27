@@ -48,7 +48,7 @@ func (m *UsersModel) Get(id int, user *UsersModel) error {
 					mobile_number,contact_mobile, gender,avatar, reg_ip,
 					last_login_ip, channel,type,status, is_fresh,updated, created
 				FROM users WHERE id = ?`
-	return ChessMysql.Main.QueryRow(
+	return Mysql.Chess.QueryRow(
 		sqlString, id,
 	).Scan(
 		&user.Id,
@@ -77,7 +77,7 @@ func (m *UsersModel) GetByMobileNumber(mobileNumber string, user *UsersModel) er
 					last_login_ip, status,is_fresh,
 					updated, created
 				FROM users WHERE mobile_number = ?`
-	return ChessMysql.Main.QueryRow(sqlString, mobileNumber).Scan(
+	return Mysql.Chess.QueryRow(sqlString, mobileNumber).Scan(
 		&user.Id,
 		&user.Email,
 		&user.Pwd,
@@ -95,7 +95,7 @@ func (m *UsersModel) GetByMobileNumber(mobileNumber string, user *UsersModel) er
 func (m *UsersModel) GetContactMobileById(id int) (mobileNumber string, err error) {
 	sqlStr := `SELECT contact_mobile FROM users WHERE id = ?`
 
-	err = ChessMysql.Main.QueryRow(sqlStr, id).Scan(&mobileNumber)
+	err = Mysql.Chess.QueryRow(sqlStr, id).Scan(&mobileNumber)
 	return
 }
 
@@ -104,7 +104,7 @@ func (m *UsersModel) Insert(user *UsersModel) (int, error) {
 		(email, pwd, nickname, mobile_number,gender,avatar, reg_ip, last_login_ip,channel,app_from,type, status)
 		VALUES
 		(?, ?, ?, ?, ?, ?, ?, ?,?,?,?,?)`
-	result, err := ChessMysql.Main.Exec(
+	result, err := Mysql.Chess.Exec(
 		sqlString,
 		user.Email,
 		user.Pwd,
@@ -137,7 +137,7 @@ func (m *UsersModel) Insert(user *UsersModel) (int, error) {
 
 func (m *UsersModel) UpdateFresh(id int, is_fresh int) (err error) {
 	sqlStr := `UPDATE users SET is_fresh = ? WHERE id = ?`
-	_, err = ChessMysql.Main.Exec(sqlStr, is_fresh, id)
+	_, err = Mysql.Chess.Exec(sqlStr, is_fresh, id)
 	return err
 }
 
@@ -148,7 +148,7 @@ func (m *UsersModel) GetDetail(id int, user *UsersModel) error {
 					u.last_login_ip, u.channel, u.type, u.status, u.is_fresh, IFNULL(ui.device_from, ''), u.updated, u.created
 				FROM users AS u LEFT JOIN users_info AS ui ON u.id = ui.user_id
 				WHERE u.id = ?`
-	return ChessMysql.Main.QueryRow(
+	return Mysql.Chess.QueryRow(
 		sqlString, id,
 	).Scan(
 		&user.Id,
@@ -173,12 +173,12 @@ func (m *UsersModel) GetDetail(id int, user *UsersModel) error {
 
 func (m *UsersModel) GetPwdByMobile(mobile string) (pwd string, err error) {
 	sqlStr := `SELECT pwd FROM users WHERE mobile_number = ?`
-	err = ChessMysql.Main.QueryRow(sqlStr, mobile).Scan(&pwd)
+	err = Mysql.Chess.QueryRow(sqlStr, mobile).Scan(&pwd)
 	return
 }
 
 func (m *UsersModel) MergeUser(pwd string, mobile string) error {
-	tx, err := ChessMysql.Main.Begin()
+	tx, err := Mysql.Chess.Begin()
 	if err != nil {
 		return err
 	}
@@ -227,7 +227,7 @@ func (m *UsersModel) MergeUser(pwd string, mobile string) error {
 
 // 合并余额
 func (m *UsersModel) MergeUserNew(uid, oldUid int, balance uint, pwd string, mobile string) error {
-	tx, err := ChessMysql.Main.Begin()
+	tx, err := Mysql.Chess.Begin()
 	if err != nil {
 		return err
 	}
@@ -302,7 +302,7 @@ func (m *UsersModel) UpdateLastLoginIp(uid int, ip string) error {
 	sqlString := `UPDATE users
 		SET last_login_ip = ?
 		WHERE id = ?`
-	_, err := ChessMysql.Main.Exec(sqlString, ip, uid)
+	_, err := Mysql.Chess.Exec(sqlString, ip, uid)
 	return err
 
 }
@@ -313,7 +313,7 @@ func (m *UsersModel) GetSimulateUserByRand() (user UsersModel, err error) {
 		FROM users
 		WHERE id = (SELECT user_id FROM simulate_charge ORDER BY id DESC LIMIT 1)`
 
-	err = ChessMysql.Main.QueryRow(sqlStr).Scan(
+	err = Mysql.Chess.QueryRow(sqlStr).Scan(
 		&user.Id,
 		&user.Nickname,
 		&user.Avatar,
@@ -329,7 +329,7 @@ func (m *UsersModel) GetSimulateUser(limit int) (users []UsersModel, err error) 
 		WHERE channel = 'simulate' AND status = 1
 		LIMIT ?`
 
-	rows, err := ChessMysql.Main.Query(sqlStr, limit)
+	rows, err := Mysql.Chess.Query(sqlStr, limit)
 	if err != nil {
 		return
 	}
@@ -352,7 +352,7 @@ func (m *UsersModel) GetUserCreatedDays(userId int) (days int, err error) {
 	sqlStr := `SELECT DATEDIFF(CURRENT_DATE, DATE(created)) + 1
 		FROM users WHERE id = ?`
 
-	err = ChessMysql.Main.QueryRow(sqlStr, userId).Scan(&days)
+	err = Mysql.Chess.QueryRow(sqlStr, userId).Scan(&days)
 	return
 }
 
@@ -366,7 +366,7 @@ func (m *UsersModel) GetUserNickAuto(num int) (n []UserNickModel, err error) {
 FROM users  AS t1 JOIN (SELECT ROUND(RAND() * ((SELECT MAX(id) FROM users )-(SELECT MIN(id) FROM users ))+(SELECT MIN(id) FROM users )) AS id) AS t2
 WHERE t1.id >= t2.id
 ORDER BY t1.id LIMIT ?`
-	rows, err := ChessMysql.Main.Query(sqlStr, num)
+	rows, err := Mysql.Chess.Query(sqlStr, num)
 	if err != nil {
 		return
 	}
@@ -386,7 +386,7 @@ func (m *UsersModel) Save() error {
     sqlString := `UPDATE users SET
 		email = ?, pwd = ?, nickname = ?, mobile_number = ?, reg_ip = ?, last_login_ip = ?, status = ?
 		WHERE id = ?`
-    result, err := ChessMysql.Main.Exec(
+    result, err := Mysql.Chess.Exec(
 	sqlString,
 	m.Email,
 	m.Pwd,
@@ -415,7 +415,7 @@ func (m *UsersModel) UpdateNickname(nickname string) error {
     sqlString := `UPDATE users SET
 		 nickname = ?
 		WHERE id = ?`
-    result, err := ChessMysql.Main.Exec(
+    result, err := Mysql.Chess.Exec(
 	sqlString,
 	nickname,
 	m.Id,
@@ -438,7 +438,7 @@ func (m *UsersModel) UpdateMobile(mobile string) error {
     sqlString := `UPDATE users SET
 		 mobile_number = ?
 		WHERE id = ?`
-    result, err := ChessMysql.Main.Exec(
+    result, err := Mysql.Chess.Exec(
 	sqlString,
 	mobile,
 	m.Id,
@@ -460,7 +460,7 @@ func (m *UsersModel) UpdateAllMobile(mobile string) error {
     sqlString := `UPDATE users 
 		SET mobile_number = ?,contact_mobile = ? 
 		WHERE id = ?`
-    result, err := ChessMysql.Main.Exec(
+    result, err := Mysql.Chess.Exec(
 	sqlString,
 	mobile,
 	mobile,
@@ -484,7 +484,7 @@ func (m *UsersModel) UpdatePassword(password string) error {
     sqlString := `UPDATE users SET
 		 pwd = ?
 		WHERE id = ?`
-    result, err := ChessMysql.Main.Exec(
+    result, err := Mysql.Chess.Exec(
 	sqlString,
 	password,
 	m.Id,
@@ -507,7 +507,7 @@ func (m *UsersModel) UpdateContactMobile(mobile string) error {
     sqlString := `UPDATE users SET
 		 contact_mobile = ?
 		WHERE id = ?`
-    result, err := ChessMysql.Main.Exec(
+    result, err := Mysql.Chess.Exec(
 	sqlString,
 	mobile,
 	m.Id,
@@ -530,7 +530,7 @@ func (m *UsersModel) UpdateAvatar(avatar string) error {
     sqlString := `UPDATE users SET
 		 avatar = ?
 		WHERE id = ?`
-    result, err := ChessMysql.Main.Exec(
+    result, err := Mysql.Chess.Exec(
 	sqlString,
 	avatar,
 	m.Id,
@@ -553,7 +553,7 @@ func (m *UsersModel) UpdateGender(gender int) error {
     sqlString := `UPDATE users SET
 		 gender = ?
 		WHERE id = ?`
-    result, err := ChessMysql.Main.Exec(
+    result, err := Mysql.Chess.Exec(
 	sqlString,
 	gender,
 	m.Id,
