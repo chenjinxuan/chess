@@ -19,7 +19,7 @@
       2001-3000: 游戏逻辑段
       ....
       
-具体的划分根据业务需求进行扩展或调整。
+[查看消息协议号定义](http://gitlab.airdroid.com/chess/chess/blob/dev/grpc/agent.proto)
 
 ## 消息封包格式
  
