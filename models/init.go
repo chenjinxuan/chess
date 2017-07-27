@@ -7,44 +7,27 @@ import (
 )
 
 var (
-	ChessMysql      MySQLDB
-	ChessMongo      *db.MongoDB
-        ChessRedis      RedisDB
+	Mysql      MySQLDB
+	Mongo      MongoDB
 )
 
-
-type RedisDB struct {
-    Main             *db.Redis
-    Order            *db.Redis
-    Sms              *db.Redis
-    Captcha          *db.Redis
-    Login            *db.Redis
-    Config           *db.Redis
-}
-
 type MySQLDB struct {
-    Main  *sql.DB
-    Logs  *sql.DB
-    Games *sql.DB
+    Chess  *sql.DB
 }
+
+type MongoDB struct {
+	Chess *db.MongoDB
+}
+
 func Init() {
 	var err error
-	ChessMysql.Main, err = db.D("main")
+	Mysql.Chess, err = db.D("chess")
 	if err != nil {
-		log.Warnf("db.D Error(%s)", err)
+		log.Warnf("db.D(\"chess\") Error(%s)", err)
 	}
 
-	ChessMongo, err = db.M("main")
+	Mongo.Chess, err = db.M("chess")
 	if err != nil {
-		log.Warnf("db.M Error(%s)", err)
-	}
-
-        ChessRedis.Main, err = db.R("main")
-	if err != nil {
-	    log.Warnf("db.R Error(%s)", err)
-	}
-	ChessRedis.Login, err = db.R("login")
-	if err != nil {
-	    log.Warnf("db.R Error(%s)", err)
+		log.Warnf("db.M(\"chess\") Error(%s)", err)
 	}
 }
