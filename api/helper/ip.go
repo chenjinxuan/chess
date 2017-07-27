@@ -4,7 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"net"
 	"strings"
-	"treasure/config"
+	"chess/common/config"
 	"unicode"
 )
 

@@ -2,7 +2,7 @@ package captcha
 
 import (
 	"github.com/dchest/captcha"
-	"chess/api/config"
+	"chess/common/config"
         "chess/common/db"
         "chess/models"
 )

@@ -55,7 +55,6 @@ func Login(c *gin.Context) {
 		c.JSON(http.StatusOK, result)
 		return
 	}
-
 	//var err error
 	var user = new(models.UsersModel)
 	if input.BindJSON(c, &form, cConf) == nil {
@@ -113,7 +112,8 @@ func Login(c *gin.Context) {
 			c.JSON(http.StatusOK, result)
 			return
 		}
-
+	    fmt.Println(1)
+fmt.Println(form.Password)
 		err = auth.Passwords.Check(user.Pwd, form.Password)
 		if err != nil {
 			// fail count plus one

@@ -13,6 +13,7 @@ import (
 	"chess/api/helper"
 	"chess/api/log"
 	"chess/models"
+    "fmt"
 )
 
 var (
@@ -48,7 +49,7 @@ func LoginMobile(c *gin.Context) {
 	var err error
 	var user = new(models.UsersModel)
 	if input.BindJSON(c, &post, cConf) == nil {
-		clientIp := helper.ClientIP(c)
+	       clientIp := helper.ClientIP(c)
 		if post.Channel == "" {
 			post.Channel = "default"
 		}

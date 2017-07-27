@@ -8,6 +8,7 @@ import (
 
     "github.com/gin-gonic/gin"
     "strings"
+    "fmt"
 )
 
 var Api = new(ApiConfig)
@@ -38,7 +39,7 @@ type ApiConfig struct {
 	UserInit *UserInit  `json:"user_init"`
 
 	Pay         []map[string]interface{}       `json:"pay"`
-	Feedback    Feedback                       `json:"feedback"`
+	Feedback    *Feedback                       `json:"feedback"`
 	Steer       *Steer `json:"steer"`
 
 }
@@ -244,10 +245,7 @@ func SetContextConfig() gin.HandlerFunc {
     return func(c *gin.Context) {
 	from := strings.ToLower(c.Query("from"))
 	subfrom := strings.ToLower(c.Query("subfrom"))
-
-
 	config := Get(from)
-
 	// web内嵌页
 	if subfrom == "web" {
 	    configBytes, _ := json.Marshal(config)
@@ -256,7 +254,6 @@ func SetContextConfig() gin.HandlerFunc {
 	    if err != nil {
 		subConfig = config
 	    }
-
 	    webConfig := Get("web")
 	    subConfig.Backend.ParamsDesKey = webConfig.Backend.ParamsDesKey
 	    c.Set("config", subConfig)
@@ -278,25 +275,21 @@ func InitConfig() {
 	//return err
     //}
     err = json.Unmarshal([]byte(defaultStr),&C)
+
     //if err != nil {
 	//return err
     //}
+fmt.Println(C.Login.FailLimit )
     diffStr ,err := ConsulClient.KeyList("api/diff")
     Cs = make(map[string]*ApiConfig)
-    defaultBytes, err := json.Marshal(C)
+    defaultBytes, err := json.Marshal(&C)
+
     if err != nil {
 	panic(err)
     }
 
     for k, v := range diffStr {
-	if k == "default" {
-	    continue
-	}
 
-	//valueBytes, err := json.Marshal(v)
-	//if err != nil {
-	//    panic(err)
-	//}
 	conf := new(ApiConfig)
 	err = json.Unmarshal(defaultBytes, conf)
 	if err != nil {

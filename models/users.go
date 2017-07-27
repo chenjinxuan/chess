@@ -77,9 +77,7 @@ func (m *UsersModel) GetByMobileNumber(mobileNumber string, user *UsersModel) er
 					last_login_ip, status,is_fresh,
 					updated, created
 				FROM users WHERE mobile_number = ?`
-	return ChessMysql.Main.QueryRow(
-		sqlString, mobileNumber,
-	).Scan(
+	return ChessMysql.Main.QueryRow(sqlString, mobileNumber).Scan(
 		&user.Id,
 		&user.Email,
 		&user.Pwd,
@@ -103,7 +101,7 @@ func (m *UsersModel) GetContactMobileById(id int) (mobileNumber string, err erro
 
 func (m *UsersModel) Insert(user *UsersModel) (int, error) {
 	sqlString := `INSERT INTO users
-		(email, pwd, nickname, mobile_number,contact_mobile,gender,avatar, reg_ip, last_login_ip,channel,app_from,type, status)
+		(email, pwd, nickname, mobile_number,gender,avatar, reg_ip, last_login_ip,channel,app_from,type, status)
 		VALUES
 		(?, ?, ?, ?, ?, ?, ?, ?,?,?,?,?)`
 	result, err := ChessMysql.Main.Exec(
@@ -112,7 +110,6 @@ func (m *UsersModel) Insert(user *UsersModel) (int, error) {
 		user.Pwd,
 		user.Nickname,
 		user.MobileNumber,
-		user.ContactMobile,
 		user.Gender,
 		user.Avatar,
 		user.RegIp,
