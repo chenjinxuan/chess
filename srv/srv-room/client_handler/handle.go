@@ -68,8 +68,6 @@ func P_room_player_join_req(p *Player, data []byte) []byte {
 		return nil
 	}
 
-	log.Debug(req)
-
 	table := p.Join(int(req.RoomId), req.TableId)
 	if table == nil {
 		log.Error("table not found")
@@ -77,12 +75,6 @@ func P_room_player_join_req(p *Player, data []byte) []byte {
 		return packet.Pack(Code["room_player_join_ack"], ack)
 	}
 
-	//card := &Card{
-	//	Suit: 1,
-	//	Value: 3,
-	//}
-	//testAck := card.ToProtoMessage()
-	//return packet.Pack(Code["room_get_table_ack"], req)
 	return nil
 }
 

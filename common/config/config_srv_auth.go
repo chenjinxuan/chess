@@ -5,9 +5,9 @@ import (
 	"chess/common/log"
 )
 
-var SrvUser = new(SrvUserConfig)
+var SrvAuth = new(SrvAuthConfig)
 
-type SrvUserConfig struct {
+type SrvAuthConfig struct {
 	PublicConfig
 	DbConfig
 
@@ -15,7 +15,7 @@ type SrvUserConfig struct {
 	RPCPort         string
 }
 
-func (c *SrvUserConfig) Import() error {
+func (c *SrvAuthConfig) Import() error {
 	var err error
 
 	err = c.PublicConfig.Import()
@@ -23,22 +23,22 @@ func (c *SrvUserConfig) Import() error {
 		return err
 	}
 
-	err = c.DbConfig.Import("srv_user")
+	err = c.DbConfig.Import("srv_auth")
 	if err != nil {
 		return err
 	}
 
-	c.RPCPort, err = ConsulClient.Key("srv_user/rpc_port", ":11121")
+	c.RPCPort, err = ConsulClient.Key("srv_auth/rpc_port", ":11121")
 	if err != nil {
 		return err
 	}
 	//ConsulClient.KeyWatch("user/test", &c.RPCPort)
 
-	c.ServerAliasName, err = ConsulClient.Key("srv_user/server_alias_name", "srv-user")
+	c.ServerAliasName, err = ConsulClient.Key("srv_auth/server_alias_name", "srv-user")
 	if err != nil {
 		return err
 	}
 
-	log.Debugf("SrvUser config import success! [%+v]", *c)
+	log.Debugf("SrvAuth config import success! [%+v]", *c)
 	return nil
 }

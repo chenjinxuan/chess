@@ -64,6 +64,7 @@ func (p *Player) Broadcast(code int16, msg proto.Message) {
 }
 
 func (p *Player) SendMessage(code int16, msg proto.Message) {
+	log.Debugf("SendMessage to %d --- code:%d msg:%+v", p.Id, code, msg)
 	message := &pb.Room_Frame{
 		Type:    pb.Room_Message,
 		Message: packet.Pack(code, msg),
@@ -120,8 +121,11 @@ func (p *Player) GetActionBet(timeout time.Duration) (*pb.RoomPlayerBetReq, erro
 func (p *Player) Join(rid int, tid string) (table *Table) {
 	table = GetTable(rid, tid)
 	if table == nil {
+		log.Debug("找不到房间")
 		return
 	}
+
+	log.Debugf("(%s)玩家%d加入牌桌", table.Id, p.Id)
 
 	p.Bet = 0
 	p.Cards = nil
@@ -139,12 +143,10 @@ func (p *Player) Join(rid int, tid string) (table *Table) {
 	})
 
 	// 2006, 当玩家加入房间后，服务器会向此用户推送房间信息
-	ack := &pb.RoomGetTableAck{
+	p.SendMessage(define.Code["room_get_table_ack"],  &pb.RoomGetTableAck{
 		BaseAck: &pb.BaseAck{Ret: 1, Msg: "ok"},
 		Table:   table.ToProtoMessage(),
-	}
-	log.Debug(ack)
-	p.SendMessage(define.Code["room_get_table_ack"],  ack)
+	})
 
 	return
 }
@@ -154,6 +156,8 @@ func (p *Player) Leave() (table *Table) {
 	if table == nil {
 		return
 	}
+
+	log.Debugf("(%s)玩家%d离开牌桌", table.Id, p.Id)
 
 	// 2104, 广播离开房间的玩家
 	table.Broadcast(define.Code["room_player_gone_ack"], &pb.RoomPlayerGoneAck{
@@ -209,7 +213,8 @@ func (ps Players) ToProtoMessage() []*pb.PlayerInfo {
 	_players := make([]*pb.PlayerInfo, len(ps), MaxN)
 	for k, v := range ps {
 		if v != nil {
-			_player := v.ToProtoMessage()
+			tmp := *v
+			_player := tmp.ToProtoMessage()
 			_players[k] = _player
 		} else {
 			_players[k] = &pb.PlayerInfo{}

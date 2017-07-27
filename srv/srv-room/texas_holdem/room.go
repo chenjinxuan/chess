@@ -20,8 +20,8 @@ type Room struct {
 }
 
 func NewRoom(rid int) *Room {
-	if rooms[rid] == nil {
-		rooms[rid] = &Room{
+	if RoomList[rid] == nil {
+		RoomList[rid] = &Room{
 			Id: rid,
 			tables: Tables{
 				M:       make(map[string]*Table),
@@ -30,7 +30,7 @@ func NewRoom(rid int) *Room {
 			},
 		}
 	}
-	return rooms[rid]
+	return RoomList[rid]
 }
 
 func (r *Room) SetTable(t *Table) {
@@ -59,7 +59,7 @@ func (r *Room) GetTable(tid string) *Table {
 				return v
 			}
 		}
-		table = NewTable(9, 5, 10)
+		table = NewTable(r.Id, 9, 5, 10)
 		r.setTable(table)
 	}
 
@@ -78,11 +78,11 @@ func (r *Room) Tables() map[string]*Table {
 	return r.tables.M
 }
 
-var rooms = make(map[int]*Room)
+var RoomList = make(map[int]*Room)
 
 // TODO 初始化房间列表
-func init() {
-	rooms[1] = &Room{
+func InitRoomList() {
+	RoomList[1] = &Room{
 		Id:1,
 		tables: Tables{
 			M:       make(map[string]*Table),
@@ -103,7 +103,7 @@ func DelTable(tid string) {
 		return
 	}
 
-	if room, ok := rooms[int(rid)]; ok {
+	if room, ok := RoomList[int(rid)]; ok {
 		room.DelTable(tid)
 	}
 }
@@ -117,7 +117,7 @@ func GetTable(rid int, tid string) *Table {
 		}
 	}
 
-	if room, ok := rooms[rid]; ok {
+	if room, ok := RoomList[rid]; ok {
 		return room.GetTable(tid)
 	}
 	return nil
