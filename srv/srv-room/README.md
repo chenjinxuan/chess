@@ -1,5 +1,7 @@
 # room(逻辑)
 
+![徳扑游戏流程__1_](http://gitlab.airdroid.com/chess/chess/uploads/d4850d230156495b895108b30b4f2851/徳扑游戏流程__1_.png)
+
 ## 设计理念
 游戏服务器对agent只提供一个接口， 即:
 
