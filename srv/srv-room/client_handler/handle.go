@@ -68,8 +68,6 @@ func P_room_player_join_req(p *Player, data []byte) []byte {
 		return nil
 	}
 
-	log.Debug(req)
-
 	table := p.Join(int(req.RoomId), req.TableId)
 	if table == nil {
 		log.Error("table not found")

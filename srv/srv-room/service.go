@@ -6,7 +6,7 @@ import (
 	"chess/srv/srv-room/client_handler"
 	pb "chess/srv/srv-room/proto"
 	"chess/srv/srv-room/registry"
-	"chess/srv/srv-room/texas_holdem"
+	. "chess/srv/srv-room/texas_holdem"
 	"encoding/binary"
 	"errors"
 	"golang.org/x/net/context"
@@ -30,6 +30,8 @@ var (
 type server struct{}
 
 func (s *server) init() {
+	// Todo 从mysql取房间列表
+	InitRoomList()
 }
 
 // PIPELINE #1 stream receiver
@@ -89,7 +91,8 @@ func (s *server) Stream(stream pb.RoomService_StreamServer) error {
 	// todo get user info from mysql
 
 	// player init
-	player := texas_holdem.NewPlayer(userid, ch_ipc)
+	player := NewPlayer(userid, ch_ipc)
+	player.Chips = 10000
 
 	// register user
 	registry.Register(player.Id, ch_ipc)
@@ -98,6 +101,7 @@ func (s *server) Stream(stream pb.RoomService_StreamServer) error {
 	defer func() {
 		registry.Unregister(player.Id, ch_ipc)
 		close(sess_die)
+		player.Leave()
 		log.Debug("stream end userid:", player.Id)
 	}()
 

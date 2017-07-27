@@ -3,6 +3,9 @@ package main
 import (
 	"chess/common/consul"
 	"chess/common/log"
+	"chess/common/config"
+	"chess/common/db"
+	"chess/models"
 	"net"
 	"net/http"
 	"os"
@@ -44,15 +47,14 @@ func main() {
 				os.Exit(-1)
 			}
 
-			//err = config.Api.Import()
-			//if err != nil {
-			//	panic(err)
-			//}
-			//
-			////InitRpcWrapper()
-			//db.InitMySQL()
+			err = config.SrvRoom.Import()
+			if err != nil {
+				panic(err)
+			}
+
+			db.InitMySQL()
 			//db.InitMongo()
-			//models.Init()
+			models.Init()
 
 			// consul 服务注册
 			err = services.Register(c.String("service-id"), SERVICE_NAME, c.String("address"), c.Int("port"), c.Int("port")+10, []string{"master"})

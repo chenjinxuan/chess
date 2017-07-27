@@ -7,6 +7,7 @@ import (
 	"github.com/golang/protobuf/proto"
 	"sync"
 	"time"
+	"chess/common/log"
 )
 
 const (
@@ -45,19 +46,19 @@ type Table struct {
 	dm       *DealMachine
 }
 
-func NewTable(max, sb, bb int) *Table {
+func NewTable(rid, max, sb, bb int) *Table {
 	if max <= 0 || max > MaxN {
 		max = 9 // default 9 players
 	}
 
 	table := &Table{
-		Id:         "",
+		Id:         fmt.Sprintf("%d-%d", rid, time.Now().Unix()),
 		Players:    make([]*Player, max, MaxN),
 		Chips:      make([]int32, max, MaxN),
 		SmallBlind: sb,
 		BigBlind:   bb,
 		Pot:        make([]int32, 1),
-		Timeout:    30,
+		Timeout:    10,
 		Max:        max,
 		lock:       sync.Mutex{},
 		dm:         NewDealMachine(),
@@ -136,6 +137,7 @@ func (t *Table) DelPlayer(p *Player) {
 	}
 
 	if t.N == 0 {
+		log.Debugf("(%s)牌桌上已无玩家，销毁之！", t.Id)
 		DelTable(t.Id)
 		select {
 		case t.exitChan <- 0:
@@ -194,12 +196,14 @@ func (t *Table) start() {
 	})
 
 	if dealer == nil {
+		log.Debugf("(%s)找不到庄家", t.Id)
 		return
 	}
 
 	t.lock.Lock()
 	if t.N < 2 {
 		t.lock.Unlock()
+		log.Debugf("(%s)牌桌上玩家小于2人", t.Id)
 		return
 	}
 
@@ -211,8 +215,18 @@ func (t *Table) start() {
 	if t.N == 2 { // one-to-one
 		sb = dealer
 	}
+	if sb == nil {
+		log.Debugf("(%s)找不到小盲注玩家", t.Id)
+		return
+	}
+
 	// Big Blind
 	bb := sb.Next()
+	if bb == nil {
+		log.Debugf("(%s)找不到大盲注玩家", t.Id)
+		return
+	}
+
 	bbPos := bb.Pos
 
 	t.Pot = nil
@@ -365,6 +379,7 @@ func (t *Table) action(pos int) {
 				return false
 			}
 
+			// 跳过玩家
 			if p.Pos == skip || p.Chips == 0 || len(p.Cards) == 0 {
 				return true
 			}
@@ -389,7 +404,7 @@ func (t *Table) action(pos int) {
 				n = int(msg.Bet)
 			}
 
-			if t.betting(p.Pos, n) {
+			if t.betting(p.Pos, n) { // 玩家加注
 				raised = p.Pos
 				return false
 			}

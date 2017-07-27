@@ -22,18 +22,14 @@ func (c *SrvRoomConfig) Import() error {
 		return err
 	}
 
-	err = c.DbConfig.Import("srv_user")
+	err = c.DbConfig.Import("srv_room")
 	if err != nil {
 		return err
 	}
 
-	c.RPCPort, err = ConsulClient.Key("srv_user/rpc_port", ":11121")
-	if err != nil {
-		return err
-	}
 	//ConsulClient.KeyWatch("user/test", &c.RPCPort)
 
-	c.ServerAliasName, err = ConsulClient.Key("srv_user/server_alias_name", "srv-user")
+	c.ServerAliasName, err = ConsulClient.Key("srv_room/server_alias_name", "room")
 	if err != nil {
 		return err
 	}

@@ -2,7 +2,7 @@ package packet
 
 import (
 	"encoding/binary"
-	"fmt"
+	//"fmt"
 	"github.com/golang/protobuf/proto"
 )
 
@@ -15,6 +15,6 @@ func Pack(tos int16, msg proto.Message) []byte {
 
 	copy(cache[2:], data)
 
-	fmt.Println("conn write -----------", cache[:len(data)+2])
+	//fmt.Println("conn write -----------", cache[:len(data)+2])
 	return cache[:len(data)+2]
 }
