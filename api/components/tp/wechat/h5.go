@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"time"
 	"chess/api/log"
-        "chess/models"
+        "chess/api/redis"
 )
 
 type TicketData struct {
@@ -21,7 +21,7 @@ type TicketData struct {
 // 获取公众号的access token
 func (c *Client) GetGlobalAccessToken() (string, error) {
 	var accessToken string
-	redis := models.ChessRedis.Main
+	redis := redis.Redis.Main
 	key := "GlobalAccessToken" + c.appId
 	isExist, err := redis.Exists(key)
 	if err != nil {
@@ -47,7 +47,7 @@ func (c *Client) GetGlobalAccessToken() (string, error) {
 }
 
 func (c *Client) GetTicketStr() (string, error) {
-	redis := models.ChessRedis.Main
+	redis := redis.Redis.Main
 	key := fmt.Sprintf("jsapiTicket-%s", c.appId)
 	// 获取公众号
 	var ticketStr string
@@ -77,7 +77,7 @@ func (c *Client) GetTicket(openid, fromUrl string) (TicketData, error) {
 	timeStr = strconv.Itoa(int(timeInt))
 	//
 	var ticketStr string
-	redis := models.ChessRedis.Main
+	redis := redis.Redis.Main
 	//fromUrl := c.Request.Header.Get("Referer")
 
 	// 生成nonceStr

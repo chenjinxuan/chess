@@ -4,7 +4,7 @@ import (
 	"errors"
 	"strconv"
 	"chess/common/config"
-        "chess/models"
+        "chess/api/redis"
 )
 
 func GetFailLoginKey(mobile string) string {
@@ -13,7 +13,7 @@ func GetFailLoginKey(mobile string) string {
 
 func GetFailLoginCount(mobile string) (int, error) {
 	key := GetFailLoginKey(mobile)
-	client := models.ChessRedis.Login
+	client := redis.Redis.Login
 	isExist, err := client.Exists(key)
 	if err != nil {
 		return 0, errors.New("system error")
@@ -34,7 +34,7 @@ func GetFailLoginCount(mobile string) (int, error) {
 
 func FailCountPlusOne(mobile string) error {
 	key := GetFailLoginKey(mobile)
-	client := models.ChessRedis.Login
+	client := redis.Redis.Login
 	isExist, err := client.Exists(key)
 	if err != nil {
 		return errors.New("system error")

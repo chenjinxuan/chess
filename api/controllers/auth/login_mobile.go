@@ -7,13 +7,12 @@ import (
 	"strings"
 	"chess/api/components/auth"
 	"chess/api/components/input"
-	"chess/api/components/sms"
+	//"chess/api/components/sms"
 	"chess/api/components/user_init"
 	"chess/common/config"
 	"chess/api/helper"
 	"chess/api/log"
 	"chess/models"
-    "fmt"
 )
 
 var (
@@ -46,7 +45,7 @@ func LoginMobile(c *gin.Context) {
 		return
 	}
 
-	var err error
+	//var err error
 	var user = new(models.UsersModel)
 	if input.BindJSON(c, &post, cConf) == nil {
 	       clientIp := helper.ClientIP(c)
@@ -57,12 +56,12 @@ func LoginMobile(c *gin.Context) {
 			post.From = "default"
 		}
 		post.From = strings.ToLower(post.From)
-		result.Ret, result.Msg, err = sms.CheckCode(post.MobileNumber, post.Password, sms.SMS_LOGIN, cConf)
-		if err != nil {
-			// 验证不通过
-			c.JSON(http.StatusOK, result)
-			return
-		}
+		//result.Ret, result.Msg, err = sms.CheckCode(post.MobileNumber, post.Password, sms.SMS_LOGIN, cConf)
+		//if err != nil {
+		//	// 验证不通过
+		//	c.JSON(http.StatusOK, result)
+		//	return
+		//}
 
 
 		// Query the user is exists

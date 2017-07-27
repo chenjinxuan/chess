@@ -2,7 +2,7 @@ package models
 
 import (
 	"github.com/Sirupsen/logrus"
-	"chess/api/log"
+	"chess/common/log"
 )
 
 var UsersMobileVerify = new(UsersMobileVerifyModel)
@@ -51,11 +51,11 @@ func (m *UsersMobileVerifyModel) GetCode(userMobileVerify *UsersMobileVerifyMode
 		&userMobileVerify.Status,
 	)
 
-	log.Log.WithFields(logrus.Fields{
+	log.Debugf("UsersMobileVerifyModel.GetCode",logrus.Fields{
 		"sql":   sqlString,
 		"Error": err,
 		"v":     userMobileVerify,
-	}).Debug("UsersMobileVerifyModel.GetCode")
+	})
 
 	return err
 }
@@ -72,11 +72,11 @@ func (m *UsersMobileVerifyModel) GetCodeVerified(userMobileVerify *UsersMobileVe
 		&userMobileVerify.Expire,
 		&userMobileVerify.Status,
 	)
-	log.Log.WithFields(logrus.Fields{
+	log.Debugf("UsersMobileVerifyModel.GetCode",logrus.Fields{
 		"sql":   sqlString,
 		"Error": err,
 		"v":     userMobileVerify,
-	}).Debug("UsersMobileVerifyModel.GetCode")
+	})
 
 	return err
 }

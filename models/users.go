@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"github.com/Sirupsen/logrus"
 	"time"
-	"chess/api/log"
+	"chess/common/log"
 )
 
 const (
@@ -121,10 +121,10 @@ func (m *UsersModel) Insert(user *UsersModel) (int, error) {
 	)
 
 	// Debug
-	log.Log.WithFields(logrus.Fields{
+	log.Debugf("UsersModel.Insert",logrus.Fields{
 		"sql":   sqlString,
 		"Error": err,
-	}).Debug("UsersModel.Insert")
+	})
 
 	if err != nil {
 		return 0, err
@@ -189,7 +189,7 @@ func (m *UsersModel) MergeUser(pwd string, mobile string) error {
 		WHERE mobile_number = ?`
 	newMobile := mobile + "#"
 	res, err := tx.Exec(sqlStr, newMobile, newMobile, mobile)
-	log.Log.Debug(sqlStr)
+	log.Debug(sqlStr)
 	if err != nil {
 		tx.Rollback()
 		return err
@@ -238,7 +238,7 @@ func (m *UsersModel) MergeUserNew(uid, oldUid int, balance uint, pwd string, mob
 		WHERE mobile_number = ?`
 	newMobile := mobile + "#"
 	res, err := tx.Exec(sqlStr, newMobile, newMobile, mobile)
-	log.Log.Debug(sqlStr)
+	log.Debug(sqlStr)
 	if err != nil {
 		tx.Rollback()
 		return err
@@ -386,7 +386,7 @@ func (m *UsersModel) Save() error {
     sqlString := `UPDATE users SET
 		email = ?, pwd = ?, nickname = ?, mobile_number = ?, reg_ip = ?, last_login_ip = ?, status = ?
 		WHERE id = ?`
-    result, err := Mysql.Chess.Exec(
+    _, err := Mysql.Chess.Exec(
 	sqlString,
 	m.Email,
 	m.Pwd,
@@ -399,10 +399,10 @@ func (m *UsersModel) Save() error {
     )
 
     // Debug
-    log.Log.WithFields(logrus.Fields{
+    log.Debugf("UsersModel.Save",logrus.Fields{
 	"sql":   sqlString,
 	"Error": err,
-    }).Debug("UsersModel.Save", result)
+    })
 
     if err != nil {
 	return err
@@ -415,17 +415,17 @@ func (m *UsersModel) UpdateNickname(nickname string) error {
     sqlString := `UPDATE users SET
 		 nickname = ?
 		WHERE id = ?`
-    result, err := Mysql.Chess.Exec(
+    _, err := Mysql.Chess.Exec(
 	sqlString,
 	nickname,
 	m.Id,
     )
 
     // Debug
-    log.Log.WithFields(logrus.Fields{
+    log.Debugf("UsersModel.UpdateProfile",logrus.Fields{
 	"sql":   sqlString,
 	"Error": err,
-    }).Debug("UsersModel.UpdateProfile", result)
+    })
 
     if err != nil {
 	return err
@@ -438,17 +438,17 @@ func (m *UsersModel) UpdateMobile(mobile string) error {
     sqlString := `UPDATE users SET
 		 mobile_number = ?
 		WHERE id = ?`
-    result, err := Mysql.Chess.Exec(
+    _, err := Mysql.Chess.Exec(
 	sqlString,
 	mobile,
 	m.Id,
     )
 
     // Debug
-    log.Log.WithFields(logrus.Fields{
+    log.Debugf("UsersModel.UpdateProfile",logrus.Fields{
 	"sql":   sqlString,
 	"Error": err,
-    }).Debug("UsersModel.UpdateProfile", result)
+    })
 
     if err != nil {
 	return err
@@ -460,7 +460,7 @@ func (m *UsersModel) UpdateAllMobile(mobile string) error {
     sqlString := `UPDATE users 
 		SET mobile_number = ?,contact_mobile = ? 
 		WHERE id = ?`
-    result, err := Mysql.Chess.Exec(
+    _, err := Mysql.Chess.Exec(
 	sqlString,
 	mobile,
 	mobile,
@@ -468,10 +468,10 @@ func (m *UsersModel) UpdateAllMobile(mobile string) error {
     )
 
     // Debug
-    log.Log.WithFields(logrus.Fields{
+    log.Debugf("UsersModel.UpdateProfile",logrus.Fields{
 	"sql":   sqlString,
 	"Error": err,
-    }).Debug("UsersModel.UpdateProfile", result)
+    })
 
     if err != nil {
 	return err
@@ -484,17 +484,17 @@ func (m *UsersModel) UpdatePassword(password string) error {
     sqlString := `UPDATE users SET
 		 pwd = ?
 		WHERE id = ?`
-    result, err := Mysql.Chess.Exec(
+    _, err := Mysql.Chess.Exec(
 	sqlString,
 	password,
 	m.Id,
     )
 
     // Debug
-    log.Log.WithFields(logrus.Fields{
+    log.Debugf("UsersModel.UpdateProfile.Password",logrus.Fields{
 	"sql":   sqlString,
 	"Error": err,
-    }).Debug("UsersModel.UpdateProfile.Password", result)
+    })
 
     if err != nil {
 	return err
@@ -507,17 +507,17 @@ func (m *UsersModel) UpdateContactMobile(mobile string) error {
     sqlString := `UPDATE users SET
 		 contact_mobile = ?
 		WHERE id = ?`
-    result, err := Mysql.Chess.Exec(
+    _, err := Mysql.Chess.Exec(
 	sqlString,
 	mobile,
 	m.Id,
     )
 
     // Debug
-    log.Log.WithFields(logrus.Fields{
+    log.Debugf("UsersModel.UpdateContactMobile",logrus.Fields{
 	"sql":   sqlString,
 	"Error": err,
-    }).Debug("UsersModel.UpdateContactMobile", result)
+    })
 
     if err != nil {
 	return err
@@ -530,17 +530,17 @@ func (m *UsersModel) UpdateAvatar(avatar string) error {
     sqlString := `UPDATE users SET
 		 avatar = ?
 		WHERE id = ?`
-    result, err := Mysql.Chess.Exec(
+    _, err := Mysql.Chess.Exec(
 	sqlString,
 	avatar,
 	m.Id,
     )
 
     // Debug
-    log.Log.WithFields(logrus.Fields{
+    log.Debugf("UsersModel.UpdateAvatar",logrus.Fields{
 	"sql":   sqlString,
 	"Error": err,
-    }).Debug("UsersModel.UpdateAvatar", result)
+    })
 
     if err != nil {
 	return err
@@ -553,17 +553,17 @@ func (m *UsersModel) UpdateGender(gender int) error {
     sqlString := `UPDATE users SET
 		 gender = ?
 		WHERE id = ?`
-    result, err := Mysql.Chess.Exec(
+    _, err := Mysql.Chess.Exec(
 	sqlString,
 	gender,
 	m.Id,
     )
 
     // Debug
-    log.Log.WithFields(logrus.Fields{
+    log.Debugf("UsersModel.UpdateGender",logrus.Fields{
 	"sql":   sqlString,
 	"Error": err,
-    }).Debug("UsersModel.UpdateGender", result)
+    })
 
     if err != nil {
 	return err

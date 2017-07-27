@@ -5,6 +5,7 @@ import (
 	"chess/common/db"
         "chess/common/consul"
 	"chess/models"
+        "chess/api/redis"
 )
 
 func main() {
@@ -25,6 +26,10 @@ func main() {
 	db.InitMySQL()
 	db.InitMongo()
         db.InitRedis()
+        //init redis
+        redis.InitApiRedis()
 	models.Init()
 	InitRouter()
 }
+
+
