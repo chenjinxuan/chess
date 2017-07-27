@@ -26,6 +26,8 @@ type Table struct {
 	RoomId     int
 	SmallBlind int
 	BigBlind   int
+	MinCarry int
+	MaxCarry int
 	Cards      Cards
 	Pot        []int32 // 奖池筹码数, 第一项为主池，其他项(若存在)为边池
 	Timeout    int
@@ -46,7 +48,7 @@ type Table struct {
 	dm       *DealMachine
 }
 
-func NewTable(rid, max, sb, bb int) *Table {
+func NewTable(rid, max, sb, bb, minC, maxC int) *Table {
 	if max <= 0 || max > MaxN {
 		max = 9 // default 9 players
 	}
@@ -57,6 +59,8 @@ func NewTable(rid, max, sb, bb int) *Table {
 		Chips:      make([]int32, max, MaxN),
 		SmallBlind: sb,
 		BigBlind:   bb,
+		MinCarry: minC,
+		MaxCarry: maxC,
 		Pot:        make([]int32, 1),
 		Timeout:    10,
 		Max:        max,

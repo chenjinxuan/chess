@@ -49,7 +49,8 @@ func main() {
 
 			err = config.SrvRoom.Import()
 			if err != nil {
-				panic(err)
+				log.Error(err)
+				os.Exit(-1)
 			}
 
 			db.InitMySQL()
