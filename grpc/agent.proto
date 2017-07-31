@@ -124,6 +124,7 @@ message RoomPlayerBetAck{
     string action = 3; // 下注方式
     int32 bet = 4; // 下注数(总数)
     int32 chips = 5; // 剩余筹码数
+    int32 pos = 6; // 下注玩家位置
 }
 
 // 2107, 通报本局庄家 (服务器广播此消息，代表游戏开始并确定本局庄家)
@@ -138,6 +139,7 @@ message RoomDealAck{
     BaseAck base_ack = 1;
     string action = 2; // preflop (底牌), flop (翻牌), turn (转牌), river(河牌)
     repeated CardInfo cards = 3;
+
     /*
     这套手牌的权重等级，一共有10个等级
     皇家同花顺：10
@@ -152,6 +154,14 @@ message RoomDealAck{
     高牌      ：1
     */
     int32 hand_level = 4;
+
+    /*
+	 一副手牌的最终值，Level相同的情况下，我们用FinalValue来比较大小
+	 例如一副手牌：3 3 3 7 7 A K，
+	 它的值是：33377AK
+	 数据排序规则是，出现次数多者优先，次数相同则大小优先
+	*/
+    int32 hand_final_value = 5;
 }
 
 // 2109, 通报奖池
@@ -207,4 +217,5 @@ message PlayerInfo{
     int32 bet = 7; // 玩家当前下注筹码数
     string action = 8;  // 玩家当前行动(ready, check, call, raise, fold)，初始状态为ready, 中途加入的玩家状态为空
     repeated CardInfo cards = 9; // 玩家底牌，其他玩家只有摊牌时才能看到
+    int32 hand_level = 10;  // 牌型
 }

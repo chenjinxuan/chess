@@ -115,9 +115,9 @@ func (h *Hand) Init() {
 	h.count = []int{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
 	h.cards = make(Cards, 7)
 	for i := 0; i < 7; i++ {
-		if h.cards[i] != nil {
-			continue
-		}
+		//if h.cards[i] != nil {
+		//	continue
+		//}
 		h.cards[i] = new(Card)
 	}
 	h.handvalue = 0
@@ -147,9 +147,9 @@ func (h *Hand) AnalyseHand() error {
 	if h.initilized == false {
 		return errors.New("Hand must init first")
 	}
-	if h.handsize < 7 {
-		return errors.New("not enough cards, must have seven!")
-	}
+	//if h.handsize < 7 {
+	//	return errors.New("not enough cards, must have seven!")
+	//}
 
 	h.analyCards()
 	sort.Sort(h.cards)

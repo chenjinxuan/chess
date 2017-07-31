@@ -49,7 +49,7 @@ func (s *server) recv(stream pb.RoomService_StreamServer, sess_die chan struct{}
 			}
 
 			if err != nil {
-				log.Error(err)
+				log.Error("stream.Recv() ", err)
 				return
 			}
 			select {
@@ -68,7 +68,7 @@ func (s *server) Stream(stream pb.RoomService_StreamServer) error {
 
 	sess_die := make(chan struct{})
 	ch_agent := s.recv(stream, sess_die)
-	ch_ipc := make(chan *pb.Room_Frame, DEFAULT_CH_IPC_SIZE)
+	ch_ipc := make(chan *pb.Room_Frame)
 
 	// read metadata from context
 	md, ok := metadata.FromContext(stream.Context())
@@ -91,7 +91,7 @@ func (s *server) Stream(stream pb.RoomService_StreamServer) error {
 	// todo get user info from mysql
 
 	// player init
-	player := NewPlayer(userid, ch_ipc)
+	player := NewPlayer(userid, stream)
 	player.Chips = 10000
 
 	// register user

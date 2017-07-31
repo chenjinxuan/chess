@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	actionWait = 20 * time.Second
+	actionWait = 20
 	MaxN       = 10
 
 	// 四轮发牌 preflop (底牌), flop (翻牌), turn (转牌), river(河牌)
@@ -62,7 +62,7 @@ func NewTable(rid, max, sb, bb, minC, maxC int) *Table {
 		MinCarry: minC,
 		MaxCarry: maxC,
 		Pot:        make([]int32, 1),
-		Timeout:    10,
+		Timeout:    actionWait,
 		Max:        max,
 		lock:       sync.Mutex{},
 		dm:         NewDealMachine(),
@@ -242,8 +242,6 @@ func (t *Table) start() {
 	t.Each(0, func(p *Player) bool {
 		p.Bet = 0
 		p.Cards = Cards{t.dm.Deal(), t.dm.Deal()}
-		p.Hand.SetCard(p.Cards[0])
-		p.Hand.SetCard(p.Cards[1])
 		//p.Action = ActReady
 		p.Action = ""
 		t.remain++
@@ -270,6 +268,7 @@ func (t *Table) start() {
 			Action:    DealPreflop,
 			Cards:     p.Cards.ToProtoMessage(),
 			HandLevel: -1,
+			HandFinalValue: -1,
 		})
 		return true
 	})
@@ -289,9 +288,12 @@ func (t *Table) start() {
 	}
 	t.Each(0, func(p *Player) bool {
 		if len(p.Cards) > 0 {
+			p.Hand.Init()
 			p.Hand.SetCard(t.Cards[0])
 			p.Hand.SetCard(t.Cards[1])
 			p.Hand.SetCard(t.Cards[2])
+			p.Hand.SetCard(p.Cards[0])
+			p.Hand.SetCard(p.Cards[1])
 			p.Hand.AnalyseHand()
 		}
 		// 2108,  翻牌
@@ -300,6 +302,7 @@ func (t *Table) start() {
 			Action:    DealFlop,
 			Cards:     t.Cards.ToProtoMessage(),
 			HandLevel: int32(p.Hand.Level),
+			HandFinalValue: int32(p.Hand.FinalValue),
 		})
 
 		return true
@@ -317,7 +320,13 @@ func (t *Table) start() {
 	t.Cards = append(t.Cards, t.dm.Deal())
 	t.Each(0, func(p *Player) bool {
 		if len(p.Cards) > 0 {
+			p.Hand.Init()
+			p.Hand.SetCard(t.Cards[0])
+			p.Hand.SetCard(t.Cards[1])
+			p.Hand.SetCard(t.Cards[2])
 			p.Hand.SetCard(t.Cards[3])
+			p.Hand.SetCard(p.Cards[0])
+			p.Hand.SetCard(p.Cards[1])
 			p.Hand.AnalyseHand()
 		}
 		// 2108,  转牌
@@ -326,6 +335,7 @@ func (t *Table) start() {
 			Action:    DealTurn,
 			Cards:     t.Cards.ToProtoMessage(),
 			HandLevel: int32(p.Hand.Level),
+			HandFinalValue: int32(p.Hand.FinalValue),
 		})
 
 		return true
@@ -341,7 +351,14 @@ func (t *Table) start() {
 	t.Cards = append(t.Cards, t.dm.Deal())
 	t.Each(0, func(p *Player) bool {
 		if len(p.Cards) > 0 {
+			p.Hand.Init()
+			p.Hand.SetCard(t.Cards[0])
+			p.Hand.SetCard(t.Cards[1])
+			p.Hand.SetCard(t.Cards[2])
+			p.Hand.SetCard(t.Cards[3])
 			p.Hand.SetCard(t.Cards[4])
+			p.Hand.SetCard(p.Cards[0])
+			p.Hand.SetCard(p.Cards[1])
 			p.Hand.AnalyseHand()
 		}
 		// 2108,  河牌
@@ -350,6 +367,7 @@ func (t *Table) start() {
 			Action:    DealRiver,
 			Cards:     t.Cards.ToProtoMessage(),
 			HandLevel: int32(p.Hand.Level),
+			HandFinalValue: int32(p.Hand.FinalValue),
 		})
 
 		return true
@@ -392,7 +410,7 @@ func (t *Table) action(pos int) {
 			t.Broadcast(define.Code["room_action_ack"], &pb.RoomActionAck{
 				BaseAck: &pb.BaseAck{Ret: 1, Msg: "ok"},
 				Pos:     int32(p.Pos),
-				BaseBet: int32(p.Bet),
+				BaseBet: int32(t.Bet),
 			})
 
 			msg, _ := p.GetActionBet(time.Duration(t.Timeout) * time.Second)
@@ -541,6 +559,7 @@ func (t *Table) betting(pos, n int) (raised bool) {
 		Action:  p.Action,
 		Bet:     int32(p.Bet),
 		Chips:   int32(p.Chips),
+		Pos: int32(pos),
 	})
 
 	return
