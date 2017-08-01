@@ -185,3 +185,23 @@ func TestAnalyseCards(t *testing.T) {
 		t.Error("test high card fail")
 	}
 }
+
+func TestHand_AnalyseHand(t *testing.T) {
+
+	h := th.NewHand()
+
+
+	//test RoyalFlush : 黑桃3 黑桃6 方块4 方块9 红桃2
+	h.Init()
+
+	h.SetCard(&th.Card{Suit: 3, Value: 7})
+	h.SetCard(&th.Card{Suit: 1, Value: 0})
+	h.SetCard(&th.Card{Suit: 0, Value: 1})
+	h.SetCard(&th.Card{Suit: 0, Value: 4})
+	h.SetCard(&th.Card{Suit: 3, Value: 2})
+
+	h.AnalyseHand()
+	t.Log(h.Level)
+	h.AnalyseHand()
+	t.Log(h.Level)
+}

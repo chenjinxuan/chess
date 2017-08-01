@@ -1,6 +1,0 @@
-syntax  = "proto3";
-package proto;
-//xi tiaobao
-message AutoId{
-int32 id  =1;
-}

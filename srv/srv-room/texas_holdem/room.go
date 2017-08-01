@@ -6,6 +6,8 @@ import (
 	"strings"
 	"sync"
 	"time"
+	"chess/models"
+	"chess/common/log"
 )
 
 type Tables struct {
@@ -16,13 +18,25 @@ type Tables struct {
 
 type Room struct {
 	Id     int
+	BigBlind int
+	SmallBlind int
+	MinCarry int
+	MaxCarry int
+	Max int
+
 	tables Tables
 }
 
-func NewRoom(rid int) *Room {
+func NewRoom(rid, bb, sb, minC, maxC, max int) *Room {
 	if RoomList[rid] == nil {
 		RoomList[rid] = &Room{
 			Id: rid,
+			BigBlind: bb,
+			SmallBlind: sb,
+			MinCarry: minC,
+			MaxCarry: maxC,
+			Max: max,
+
 			tables: Tables{
 				M:       make(map[string]*Table),
 				counter: 0,
@@ -44,6 +58,7 @@ func (r *Room) setTable(t *Table) {
 	if t.Id == "" {
 		t.Id = fmt.Sprintf("%d-%d", r.Id, time.Now().Unix())
 	}
+	log.Debugf("创建新牌桌(%s)", t.Id)
 	r.tables.M[t.Id] = t
 	r.tables.counter++
 }
@@ -59,7 +74,7 @@ func (r *Room) GetTable(tid string) *Table {
 				return v
 			}
 		}
-		table = NewTable(r.Id, 9, 5, 10)
+		table = NewTable(r.Id, r.Max, r.SmallBlind, r.BigBlind, r.MinCarry, r.MaxCarry)
 		r.setTable(table)
 	}
 
@@ -82,13 +97,14 @@ var RoomList = make(map[int]*Room)
 
 // TODO 初始化房间列表
 func InitRoomList() {
-	RoomList[1] = &Room{
-		Id:1,
-		tables: Tables{
-			M:       make(map[string]*Table),
-			counter: 0,
-			lock:    sync.Mutex{},
-		},
+	list, err := models.Rooms.GetAll()
+	if err != nil {
+		log.Errorf("models.Rooms.GetAll ERROR: %s", err)
+	}
+
+	for _, v := range list {
+		log.Debugf("初始化游戏房间-%d", v.Id)
+		NewRoom(v.Id, v.BigBlind, v.SmallBlind, v.MinCarry, v.MaxCarry, v.Max)
 	}
 }
 

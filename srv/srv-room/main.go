@@ -43,8 +43,7 @@ func main() {
 			// TODO 从consul读取配置，初始化数据库连接
 			err := consul.InitConsulClientViaEnv()
 			if err != nil {
-				log.Error(err)
-				os.Exit(-1)
+				panic(err)
 			}
 
 			err = config.SrvRoom.Import()
@@ -59,8 +58,7 @@ func main() {
 			// consul 服务注册
 			err = services.Register(c.String("service-id"), SERVICE_NAME, c.String("address"), c.Int("port"), c.Int("port")+10, []string{"master"})
 			if err != nil {
-				log.Error(err)
-				os.Exit(-1)
+				panic(err)
 			}
 
 			// consul 健康检查

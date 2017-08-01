@@ -37,15 +37,17 @@ type Player struct {
 	timer  *time.Timer // action timer
 
 	Flag int // 会话标记
+	stream pb.RoomService_StreamServer
 	Ipc  chan *pb.Room_Frame
 }
 
-func NewPlayer(id int, ipc chan *pb.Room_Frame) *Player {
+func NewPlayer(id int, stream pb.RoomService_StreamServer) *Player {
 	player := &Player{
 		Id:     id,
 		Hand:   NewHand(),
 		ActBet: make(chan *pb.RoomPlayerBetReq),
-		Ipc:    ipc,
+		//Ipc:    ipc,
+		stream: stream,
 	}
 	player.Hand.Init()
 	return player
@@ -69,7 +71,10 @@ func (p *Player) SendMessage(code int16, msg proto.Message) {
 		Type:    pb.Room_Message,
 		Message: packet.Pack(code, msg),
 	}
-	p.Ipc <- message
+	if err := p.stream.Send(message); err != nil {
+		log.Error("p.stream.Send ", err)
+	}
+	//p.Ipc <- message
 }
 
 func (p *Player) Betting(n int) (raised bool) {
@@ -78,18 +83,18 @@ func (p *Player) Betting(n int) (raised bool) {
 		return
 	}
 
-	if n < 0 {
+	if n < 0 { // 弃牌
 		p.Action = ActFold
 		p.Cards = nil
 		p.Hand.Init()
 		n = 0
-	} else if n == 0 {
+	} else if n == 0 { // 让牌
 		p.Action = ActCheck
-	} else if n+p.Bet <= table.Bet {
+	} else if n+p.Bet <= table.Bet { // 跟注
 		p.Action = ActCall
 		p.Chips -= n
 		p.Bet += n
-	} else {
+	} else { // 加注
 		p.Action = ActRaise
 		p.Chips -= n
 		p.Bet += n
@@ -142,6 +147,7 @@ func (p *Player) Join(rid int, tid string) (table *Table) {
 		Player:  p.ToProtoMessage(),
 	})
 
+	log.Debug("推送房间信息")
 	// 2006, 当玩家加入房间后，服务器会向此用户推送房间信息
 	p.SendMessage(define.Code["room_get_table_ack"],  &pb.RoomGetTableAck{
 		BaseAck: &pb.BaseAck{Ret: 1, Msg: "ok"},
@@ -204,6 +210,7 @@ func (p *Player) ToProtoMessage() *pb.PlayerInfo {
 		Bet:      int32(p.Bet),
 		Action:   p.Action,
 		Cards:    p.Cards.ToProtoMessage(),
+		HandLevel: int32(p.Hand.Level),
 	}
 }
 
