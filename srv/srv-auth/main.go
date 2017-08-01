@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"chess/common/log"
+	"chess/common/define"
 	"chess/common/consul"
         "chess/common/config"
 	"chess/common/db"
@@ -58,7 +59,7 @@ func main() {
 			db.InitMongo()
 			models.Init()
 
-		       err = services.Register(c.String("service-id"), SERVICE_NAME, c.String("address"), c.Int("port"), c.Int("port")+10, []string{"master"})
+		       err = services.Register(c.String("service-id"), define.SRV_NAME_AUTH, c.String("address"), c.Int("port"), c.Int("port")+10, []string{"master"})
 		    if err != nil {
 			log.Error(err)
 			os.Exit(-1)

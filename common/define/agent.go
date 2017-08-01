@@ -64,3 +64,10 @@ var RCode = map[int16]string{
 	2110: "room_action_ack",      // 通报当前下注玩家
 	2111: "room_showdown_ack",    // 摊牌和比牌
 }
+
+const (
+	SALT         = "CHESS_DH"
+
+	AUTH_FAIL = -999
+	SYSTEM_ERROR = -500
+)

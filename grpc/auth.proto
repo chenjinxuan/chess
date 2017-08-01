@@ -14,7 +14,7 @@ service AuthService {
 
 message AuthArgs {
     int32 UserId = 1;
-    string Token = 6;
+    string Token = 2;
 }
 
 message AuthRes {

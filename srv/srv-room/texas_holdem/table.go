@@ -188,6 +188,10 @@ func (t *Table) start() {
 		if p.Chips < t.BigBlind {
 			p.Leave()
 		}
+		p.Bet = 0
+		p.Cards = nil
+		p.Action = ""
+		p.Hand.Init()
 		return true
 	})
 

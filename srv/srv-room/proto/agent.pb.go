@@ -38,6 +38,8 @@ It has these top-level messages:
 	TableInfo
 	CardInfo
 	PlayerInfo
+	AuthArgs
+	AuthRes
 	TokenInfoArgs
 	TokenInfoRes
 	RefreshTokenArgs
