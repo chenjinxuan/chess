@@ -3,6 +3,54 @@
 	"ignore": "test",
 	"package": [
 		{
+			"checksumSHA1": "yeUzomyKQqxYrYBIBV2t4uM7JAc=",
+			"path": "chess/common/auth",
+			"revision": "319091b36e1cb4ddbe4f5f345dbf56571591d585",
+			"revisionTime": "2017-08-01T09:47:27Z"
+		},
+		{
+			"checksumSHA1": "Un+/N5CAosu/FOr4o7FWz+OSENE=",
+			"path": "chess/common/config",
+			"revision": "319091b36e1cb4ddbe4f5f345dbf56571591d585",
+			"revisionTime": "2017-08-01T09:47:27Z"
+		},
+		{
+			"checksumSHA1": "JkR6BYU470mrFHo6AXukFtqNzZc=",
+			"path": "chess/common/consul",
+			"revision": "319091b36e1cb4ddbe4f5f345dbf56571591d585",
+			"revisionTime": "2017-08-01T09:47:27Z"
+		},
+		{
+			"checksumSHA1": "9Df8KJEWl6chpbkz9m693dCogZc=",
+			"path": "chess/common/db",
+			"revision": "319091b36e1cb4ddbe4f5f345dbf56571591d585",
+			"revisionTime": "2017-08-01T09:47:27Z"
+		},
+		{
+			"checksumSHA1": "0k/i/H80KX+SI2ndREcq0Og/f+U=",
+			"path": "chess/common/define",
+			"revision": "319091b36e1cb4ddbe4f5f345dbf56571591d585",
+			"revisionTime": "2017-08-01T09:47:27Z"
+		},
+		{
+			"checksumSHA1": "Y+us1CJfgnPsZixZzxqHKD89k0o=",
+			"path": "chess/common/log",
+			"revision": "319091b36e1cb4ddbe4f5f345dbf56571591d585",
+			"revisionTime": "2017-08-01T09:47:27Z"
+		},
+		{
+			"checksumSHA1": "tuq055Z49XKU0Iz1gYl5V2Jy7pY=",
+			"path": "chess/common/services",
+			"revision": "319091b36e1cb4ddbe4f5f345dbf56571591d585",
+			"revisionTime": "2017-08-01T09:47:27Z"
+		},
+		{
+			"checksumSHA1": "y0d515i1xq8NAes2nxZQbZOgVO4=",
+			"path": "chess/models",
+			"revision": "319091b36e1cb4ddbe4f5f345dbf56571591d585",
+			"revisionTime": "2017-08-01T09:47:27Z"
+		},
+		{
 			"checksumSHA1": "h5Q1o+kA7VMAR5QpBzVJZbBEgC0=",
 			"path": "github.com/Sirupsen/logrus",
 			"revision": "881bee4e20a5d11a6a88a5667c6f292072ac1963",
