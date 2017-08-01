@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"math/big"
+	"time"
 
 	"golang.org/x/net/context"
 	"google.golang.org/grpc/metadata"
@@ -106,15 +107,22 @@ func P_user_login_req(sess *Session, data []byte) []byte {
 	sess.GSID = DEFAULT_GSID
 
 	// 连接到已选定Room服务器
-	conn := services.GetServiceWithId(sess.GSID, "room")
+	conn, serviceId := services.GetService2(DEFAULT_GSNAME)
 	if conn == nil {
-		log.Error("cannot get game service:", sess.GSID)
+		log.Error("cannot get game service:", serviceId)
 		return nil
 	}
 	cli := pb.NewRoomServiceClient(conn)
 
 	// 开启到游戏服的流
-	ctx := metadata.NewContext(context.Background(), metadata.New(map[string]string{"userid": fmt.Sprint(sess.UserId)}))
+	ctx := metadata.NewContext(
+		context.Background(),
+		metadata.New(map[string]string{
+			"userid": fmt.Sprint(sess.UserId),
+			"service_name": DEFAULT_GSNAME,
+			"service_id": serviceId,
+		}),
+	)
 	stream, err := cli.Stream(ctx)
 	if err != nil {
 		log.Error(err)
@@ -141,5 +149,28 @@ func P_user_login_req(sess *Session, data []byte) []byte {
 		}
 	}
 	go fetcher_task(sess)
+
+	// ping
+	go func(sess *Session) {
+		for {
+			frame := &pb.Room_Frame{
+				Type:    pb.Room_Ping,
+				Message: []byte{},
+			}
+
+			// check stream
+			if sess.Stream == nil {
+				return
+			}
+
+			if err := sess.Stream.Send(frame); err != nil {
+				log.Error("Send room ping frame error:", err)
+				return
+			}
+
+			time.Sleep(5 * time.Second)
+		}
+	}(sess)
+
 	return packet.Pack(Code["user_login_ack"], &pb.UserLoginAck{&pb.BaseAck{Ret:1,Msg:"ok"}})
 }

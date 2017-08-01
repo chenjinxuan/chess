@@ -27,6 +27,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	defer conn.Close()
 	cli := pb.NewRoomServiceClient(conn)
 
 	// 开启到游戏服的流

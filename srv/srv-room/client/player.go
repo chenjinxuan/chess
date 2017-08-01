@@ -359,7 +359,7 @@ func (p *Player)CmdLoop() {
 			if p.Table == nil {
 				p.SendMessage(2101, &pb.RoomPlayerJoinReq{
 					BaseReq: &pb.BaseReq{AppFrom:"CMD"},
-					RoomId: 1,  // 写死房间id
+					RoomId: 2,  // 写死房间id
 					TableId: "", // 牌桌id为空，自动选择
 				})
 			} else {

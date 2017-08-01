@@ -55,11 +55,12 @@ func NewPlayer(id int, stream pb.RoomService_StreamServer) *Player {
 
 func (p *Player) Broadcast(code int16, msg proto.Message) {
 	if p.Table == nil {
+		log.Debug("p.Broadcast Table nil")
 		return
 	}
 
 	for _, oc := range p.Table.Players {
-		if oc != nil && oc != p {
+		if oc != nil && oc.Pos != p.Pos {
 			oc.SendMessage(code, msg)
 		}
 	}
@@ -126,11 +127,9 @@ func (p *Player) GetActionBet(timeout time.Duration) (*pb.RoomPlayerBetReq, erro
 func (p *Player) Join(rid int, tid string) (table *Table) {
 	table = GetTable(rid, tid)
 	if table == nil {
-		log.Debug("找不到房间")
+		log.Debug("找不到牌桌")
 		return
 	}
-
-	log.Debugf("(%s)玩家%d加入牌桌", table.Id, p.Id)
 
 	p.Bet = 0
 	p.Cards = nil
@@ -140,6 +139,8 @@ func (p *Player) Join(rid int, tid string) (table *Table) {
 	p.Table = nil
 
 	table.AddPlayer(p)
+
+	log.Debugf("(%s)玩家%d加入牌桌, 位置%d, 当前牌桌有%d个玩家", table.Id, p.Id, p.Pos, table.N)
 
 	// 2102, 通报加入游戏的玩家
 	p.Broadcast(define.Code["room_player_join_ack"], &pb.RoomPlayerJoinAck{

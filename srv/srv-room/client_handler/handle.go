@@ -67,7 +67,7 @@ func P_room_player_join_req(p *Player, data []byte) []byte {
 		log.Errorf("proto.Unmarshal Error: %s", err)
 		return nil
 	}
-
+	log.Debug("P_room_player_join_req: ", req)
 	table := p.Join(int(req.RoomId), req.TableId)
 	if table == nil {
 		log.Error("table not found")
