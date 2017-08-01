@@ -5,43 +5,70 @@ import (
 	"os"
 
 	"chess/common/log"
-	//"chess/common/config"
-	//"chess/common/db"
+	"chess/common/consul"
+        "chess/common/config"
+	"chess/common/db"
 	pb "chess/srv/srv-auth/proto"
 	"google.golang.org/grpc"
 	cli "gopkg.in/urfave/cli.v2"
+        "chess/models"
+        "chess/common/services"
+    "fmt"
+    "net/http"
 )
 
+const (
+    SERVICE_NAME = "authserver"
+)
 func main() {
 	app := &cli.App{
 		Name:    "auth",
 		Usage:   "auth service",
 		Version: "2.0",
 		Flags: []cli.Flag{
-			&cli.StringFlag{
+			&cli.IntFlag{
 				Name:  "port",
-				Value: ":50001",
+				Value: 50011,
 				Usage: "listening address:port",
+			},
+			&cli.StringFlag{
+			    Name:  "service-id",
+			    Value: "auth-1",
+			    Usage: "service id",
+			},
+			&cli.StringFlag{
+			    Name:  "address",
+			    Value: "192.168.60.164",
+			    Usage: "external address",
 			},
 		},
 		Action: func(c *cli.Context) error {
 			// TODO 从consul读取配置，初始化数据库连接
-			//err := config.InitConsulClientViaEnv()
-			//if err != nil {
-			//	panic(err)
-			//}
-			//err = config.Api.Import()
-			//if err != nil {
-			//	panic(err)
-			//}
-			//
-			////InitRpcWrapper()
-			//db.InitMySQL()
-			//db.InitMongo()
-			//models.Init()
+		        err := consul.InitConsulClient("127.0.0.1:8500","local","","")
+			if err != nil {
+				panic(err)
+			}
+			err = config.SrvAuth.Import()
+			if err != nil {
+				panic(err)
+			}
 
-			// 监听
-			lis, err := net.Listen("tcp", c.String("port"))
+			//InitRpcWrapper()
+			db.InitMySQL()
+			db.InitMongo()
+			models.Init()
+
+		       err = services.Register(c.String("service-id"), SERVICE_NAME, c.String("address"), c.Int("port"), c.Int("port")+10, []string{"master"})
+		    if err != nil {
+			log.Error(err)
+			os.Exit(-1)
+		    }
+		    // consul 健康检查
+		    http.HandleFunc("/check", consulCheck)
+		    go http.ListenAndServe(fmt.Sprintf(":%d", c.Int("port")+10), nil)
+		    // grpc监听
+		        laddr := fmt.Sprintf(":%d", c.Int("port"))
+			lis, err := net.Listen("tcp", laddr)
 			if err != nil {
 				log.Error(err)
 				os.Exit(-1)
@@ -58,4 +85,8 @@ func main() {
 		},
 	}
 	app.Run(os.Args)
+}
+func consulCheck(w http.ResponseWriter, r *http.Request) {
+    //log.Info("Consul Health Check!")
+    fmt.Fprintln(w, "consulCheck")
 }
