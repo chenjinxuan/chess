@@ -5,7 +5,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strings"
-	"chess/api/components/auth"
 	"chess/api/components/input"
 	//"chess/api/components/sms"
 	"chess/api/components/user_init"
@@ -13,6 +12,9 @@ import (
 	"chess/api/helper"
 	"chess/api/log"
 	"chess/models"
+    grpcServer "chess/api/grpc"
+    pb "chess/api/proto"
+    "golang.org/x/net/context"
 )
 
 var (
@@ -121,7 +123,7 @@ func LoginMobile(c *gin.Context) {
 		}
 
 		// Create login token
-		authResult, err := auth.LoginUser(userId, post.From, post.UniqueId)
+		authResult, err := grpcServer.AuthClient.RefreshToken(context.Background(), &pb.RefreshTokenArgs{UserId: int32(user.Id),AppFrom:user.AppFrom,UniqueId:post.UniqueId})
 		if err != nil {
 			result.Msg = "login failed"
 			c.JSON(http.StatusOK, result)
