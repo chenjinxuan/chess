@@ -13,13 +13,13 @@ import (
 )
 
 var (
-	target = "192.168.40.157:30001"
+	target = "192.168.40.157:20001"
 )
 
 func main() {
 	// 用户id
-	//uid := time.Now().Second()
-	uid := 12580
+	uid := time.Now().Second()
+	//uid := 12580
 
 	player := NewPlayer()
 	player.Id = int32(uid)
@@ -37,7 +37,7 @@ func main() {
 		metadata.New(map[string]string{
 			"userid":       fmt.Sprint(uid),
 			"service_name": "room",
-			"service_id":   "room-2",
+			"service_id":   "room-1",
 			"unique_id":    fmt.Sprintf("xxxx-xxxxx-%d", time.Now().Unix()),
 		}),
 	)
