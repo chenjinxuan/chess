@@ -27,16 +27,16 @@
 			"revisionTime": "2017-07-27T02:26:46Z"
 		},
 		{
-			"checksumSHA1": "9Df8KJEWl6chpbkz9m693dCogZc=",
+			"checksumSHA1": "uZGWax/EPi/DYfTNtli2N6Uw5x4=",
 			"path": "chess/common/db",
-			"revision": "3fe7722bb2f8b24fbaf377b15443817c801fadca",
-			"revisionTime": "2017-07-27T02:26:46Z"
+			"revision": "66c37ffd87bc33943e75028cf2bf2b18795640a8",
+			"revisionTime": "2017-08-01T10:00:18Z"
 		},
 		{
-			"checksumSHA1": "rqPZ+HCiIoOJTs7QvC6wFU11lIE=",
+			"checksumSHA1": "rIzqqpe9fz93UpyZY2/8c9dqFzo=",
 			"path": "chess/common/define",
-			"revision": "3fe7722bb2f8b24fbaf377b15443817c801fadca",
-			"revisionTime": "2017-07-27T02:26:46Z"
+			"revision": "66c37ffd87bc33943e75028cf2bf2b18795640a8",
+			"revisionTime": "2017-08-01T10:00:18Z"
 		},
 		{
 			"checksumSHA1": "rvlXBnDsgwG/PAnNAN7ucHaZFrI=",

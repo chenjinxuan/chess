@@ -8,6 +8,7 @@ var Code = map[string]int16{
 	"user_login_ack": 11, // 登陆成功
 	"get_seed_req":   30, // socket通信加密使用
 	"get_seed_ack":   31, // socket通信加密使用
+	"kicked_out_ack": 40, // 踢出通知
 
 	"centre_ping_req": 1001, //  ping
 	"centre_ping_ack": 1002, //  pong
@@ -40,6 +41,7 @@ var RCode = map[int16]string{
 	11: "user_login_ack", // 登陆成功
 	30: "get_seed_req",   // socket通信加密使用
 	31: "get_seed_ack",   // socket通信加密使用
+	40: "kicked_out_ack", // 踢出通知
 
 	1001: "centre_ping_req", //  ping
 	1002: "centre_ping_ack", //  pong
@@ -66,8 +68,8 @@ var RCode = map[int16]string{
 }
 
 const (
-	SALT         = "CHESS_DH"
+	SALT = "CHESS_DH"
 
-	AUTH_FAIL = -999
+	AUTH_FAIL    = -999
 	SYSTEM_ERROR = -500
 )

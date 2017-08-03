@@ -39,6 +39,11 @@ message UserLoginAck{
     BaseAck base_ack = 1;
 }
 
+// 40, 用户踢出通知
+message KickedOutAck{
+    BaseAck base_ack = 1;
+}
+
 // 2003, 创建牌桌
 message RoomSetTableReq{
     BaseReq base_req = 1;

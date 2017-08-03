@@ -66,6 +66,15 @@ func (p *Player) SendMessage(tos int16, msg proto.Message) error {
 
 func (p *Player)HandleMQ(tos int16, data []byte) {
 	switch tos {
+	case 40:
+		ack := &pb.KickedOutAck{}
+		err := proto.Unmarshal(data, ack)
+		if err != nil {
+			log.Errorf("proto.Unmarshal Error: %s", err)
+			return
+		}
+		fmt.Print("您的账号在另一地点登录！！\n",)
+
 	case 2006: // 加入游戏，获取牌桌信息
 		ack := &pb.RoomGetTableAck{}
 		err := proto.Unmarshal(data, ack)

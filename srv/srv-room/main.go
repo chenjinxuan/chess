@@ -1,10 +1,10 @@
 package main
 
 import (
-	"chess/common/consul"
-	"chess/common/log"
 	"chess/common/config"
+	"chess/common/consul"
 	"chess/common/db"
+	"chess/common/log"
 	"chess/models"
 	"net"
 	"net/http"
@@ -12,10 +12,19 @@ import (
 	//"chess/common/db"
 	"chess/common/services"
 	pb "chess/srv/srv-room/proto"
+	"chess/srv/srv-room/redis"
 	"fmt"
 	"google.golang.org/grpc"
 	cli "gopkg.in/urfave/cli.v2"
 )
+
+var Cfg = new(Config)
+
+type Config struct {
+	ServiceId string
+	Address   string
+	Port      int
+}
 
 func main() {
 	app := &cli.App{
@@ -40,6 +49,10 @@ func main() {
 			},
 		},
 		Action: func(c *cli.Context) error {
+			Cfg.ServiceId = c.String("service-id")
+			Cfg.Address = c.String("address")
+			Cfg.Port = c.Int("port")
+
 			// TODO 从consul读取配置，初始化数据库连接
 			err := consul.InitConsulClientViaEnv()
 			if err != nil {
@@ -52,8 +65,10 @@ func main() {
 			}
 
 			db.InitMySQL()
+			db.InitRedis()
 			//db.InitMongo()
 			models.Init()
+			redis.Init()
 
 			// consul 服务注册
 			err = services.Register(c.String("service-id"), SERVICE_NAME, c.String("address"), c.Int("port"), c.Int("port")+10, []string{"master"})
