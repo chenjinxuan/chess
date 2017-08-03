@@ -21,7 +21,6 @@ func forward(sess *Session, p []byte) error {
 		Type:    pb.Room_Message,
 		Message: p,
 	}
-	log.Debug(string(p))
 
 	// check stream
 	if sess.Stream == nil {

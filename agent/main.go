@@ -59,7 +59,7 @@ func main() {
 			},
 			&cli.StringSliceFlag{
 				Name:  "services",
-				Value: cli.NewStringSlice("room"),
+				Value: cli.NewStringSlice("room", "auth"),
 				Usage: "auto-discovering services",
 			},
 			&cli.DurationFlag{

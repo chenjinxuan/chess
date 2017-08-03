@@ -8,6 +8,7 @@ import (
 	pb "chess/agent/proto"
 	. "chess/agent/types"
 	"chess/agent/utils"
+	"chess/common/log"
 )
 
 // PIPELINE #2: agent
@@ -68,6 +69,7 @@ func agent(sess *Session, in chan []byte, out *Buffer) {
 
 		// see if the player should be kicked out.
 		if sess.Flag&SESS_KICKED_OUT != 0 {
+			log.Debug("player should be kicked out.")
 			return
 		}
 	}

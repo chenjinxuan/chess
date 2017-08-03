@@ -55,6 +55,7 @@ func (s *server) recv(stream pb.RoomService_StreamServer, sess_die chan struct{}
 			select {
 			case ch <- in:
 			case <-sess_die:
+				return
 			}
 		}
 	}()
@@ -147,7 +148,7 @@ func (s *server) Stream(stream pb.RoomService_StreamServer) error {
 					log.Error(err)
 					return err
 				}
-				log.Debug("pong")
+				log.Debugf("玩家%d pong...", player.Id)
 			default:
 				log.Error("incorrect frame type:", frame.Type)
 				return ERROR_INCORRECT_FRAME_TYPE

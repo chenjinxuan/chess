@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"math/big"
+	"time"
 
 	"golang.org/x/net/context"
 	"google.golang.org/grpc/metadata"
@@ -97,24 +98,47 @@ func P_user_login_req(sess *Session, data []byte) []byte {
 
 	log.Debug("P_user_login_req: ", req)
 
-	// TODO: 登陆鉴权
+	// 登陆鉴权
 	// 简单鉴权可以在agent直接完成，通常公司都存在一个用户中心服务器用于鉴权
+	authConn, serviceId := services.GetService2(SRV_NAME_AUTH)
+	if authConn == nil {
+		log.Error("cannot get auth service:", serviceId)
+		return nil
+	}
+	authCli := pb.NewAuthServiceClient(authConn)
+	authRes, err := authCli.Auth(context.Background(), &pb.AuthArgs{UserId:req.UserId, Token:req.Token})
+	if err != nil {
+		log.Error("authCli.Auth: ",err)
+		return packet.Pack(Code["user_login_ack"], &pb.UserLoginAck{&pb.BaseAck{Ret:SYSTEM_ERROR,Msg:"system error."}})
+	}
+	if authRes.Ret != 1 {
+		return packet.Pack(Code["user_login_ack"], &pb.UserLoginAck{&pb.BaseAck{Ret:AUTH_FAIL,Msg:"Auth fail."}})
+	}
+
+
 	sess.UserId = req.UserId
 
-	// TODO: 选择Room服务器
+	// 选择Room服务器
 	// 选服策略依据业务进行，比如小服可以固定选取某台，大服可以采用HASH或一致性HASH
-	sess.GSID = DEFAULT_GSID
+	sess.GSID = DEFAULT_SRV_ID_ROOM
 
 	// 连接到已选定Room服务器
-	conn := services.GetServiceWithId(sess.GSID, "room")
+	conn, serviceId := services.GetService2(SRV_NAME_ROOM)
 	if conn == nil {
-		log.Error("cannot get game service:", sess.GSID)
+		log.Error("cannot get room service:", serviceId)
 		return nil
 	}
 	cli := pb.NewRoomServiceClient(conn)
 
 	// 开启到游戏服的流
-	ctx := metadata.NewContext(context.Background(), metadata.New(map[string]string{"userid": fmt.Sprint(sess.UserId)}))
+	ctx := metadata.NewContext(
+		context.Background(),
+		metadata.New(map[string]string{
+			"userid": fmt.Sprint(sess.UserId),
+			"service_name": SRV_NAME_ROOM,
+			"service_id": serviceId,
+		}),
+	)
 	stream, err := cli.Stream(ctx)
 	if err != nil {
 		log.Error(err)
@@ -141,5 +165,28 @@ func P_user_login_req(sess *Session, data []byte) []byte {
 		}
 	}
 	go fetcher_task(sess)
+
+	// ping
+	go func(sess *Session) {
+		for {
+			frame := &pb.Room_Frame{
+				Type:    pb.Room_Ping,
+				Message: []byte{},
+			}
+
+			// check stream
+			if sess.Stream == nil {
+				return
+			}
+
+			if err := sess.Stream.Send(frame); err != nil {
+				log.Error("Send room ping frame error:", err)
+				return
+			}
+
+			time.Sleep(5 * time.Second)
+		}
+	}(sess)
+
 	return packet.Pack(Code["user_login_ack"], &pb.UserLoginAck{&pb.BaseAck{Ret:1,Msg:"ok"}})
 }

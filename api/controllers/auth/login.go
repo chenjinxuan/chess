@@ -12,6 +12,9 @@ import (
 	"chess/api/helper"
 	"chess/api/log"
 	"chess/models"
+        grpcServer "chess/api/grpc"
+    pb "chess/api/proto"
+    "golang.org/x/net/context"
     "fmt"
 )
 
@@ -105,15 +108,12 @@ func Login(c *gin.Context) {
 			c.JSON(http.StatusOK, result)
 			return
 		}
-
 		if user.Pwd == "" {
 			result.Ret = Login_Wich_Code
 			result.Msg = "password not set,plz login with sms code"
 			c.JSON(http.StatusOK, result)
 			return
 		}
-	    fmt.Println(1)
-fmt.Println(form.Password)
 		err = auth.Passwords.Check(user.Pwd, form.Password)
 		if err != nil {
 			// fail count plus one
@@ -130,7 +130,7 @@ fmt.Println(form.Password)
 			return
 		}
 
-		authResult, err := auth.LoginUser(user.Id, form.From, form.UniqueId)
+		authResult, err := grpcServer.AuthClient.RefreshToken(context.Background(), &pb.RefreshTokenArgs{UserId: int32(user.Id),AppFrom:form.From,UniqueId:form.UniqueId})
 		if err != nil {
 			result.Ret = 0
 			result.Msg = "login failed"

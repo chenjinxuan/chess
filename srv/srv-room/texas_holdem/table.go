@@ -42,8 +42,8 @@ type Table struct {
 	MinChips int
 	remain   int
 	allin    int
-	EndChan  chan int
-	exitChan chan interface{}
+	EndChan  chan int  // 牌局结束通知
+	exitChan chan interface{}  // 销毁牌桌
 	lock     sync.Mutex
 	dm       *DealMachine
 }
@@ -188,6 +188,10 @@ func (t *Table) start() {
 		if p.Chips < t.BigBlind {
 			p.Leave()
 		}
+		p.Bet = 0
+		p.Cards = nil
+		p.Action = ""
+		p.Hand.Init()
 		return true
 	})
 
