@@ -30,7 +30,12 @@ func main() {
 	cli := pb.NewRoomServiceClient(conn)
 
 	// 开启到游戏服的流
-	ctx := metadata.NewContext(context.Background(), metadata.New(map[string]string{"userid": fmt.Sprint(uid)}))
+	ctx := metadata.NewContext(context.Background(), metadata.New(map[string]string{
+		"userid": fmt.Sprint(uid),
+		"service_name": "room",
+		"service_id": "room-2",
+		"unique_id": fmt.Sprintf("xxxx-xxxxx-%d", time.Now().Unix()),
+	}))
 	stream, err := cli.Stream(ctx)
 	if err != nil {
 		panic(err)
