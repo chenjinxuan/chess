@@ -63,10 +63,16 @@
 			"revisionTime": "2017-07-27T02:26:46Z"
 		},
 		{
+			"checksumSHA1": "TuQhPdpAJAv1P5kKia4F75atoyw=",
+			"path": "github.com/satori/go.uuid",
+			"revision": "08f0718b61e95ddba0ade3346725fe0e4bf28ca6",
+			"revisionTime": "2015-08-29T02:49:07Z"
+		},
+		{
 			"checksumSHA1": "6U8Q11i/25dl7xyq7E4Pj0LIGEc=",
 			"path": "treasure/config",
-			"revision": "7712defaff50a89a2c9f9d2b68aa5751833566c9",
-			"revisionTime": "2017-07-25T08:42:37Z"
+			"revision": "58f3bfc921b78777c1088c814ca2999365c4d7e9",
+			"revisionTime": "2017-07-28T07:38:39Z"
 		}
 	],
 	"rootPath": "chess/srv/srv-room"

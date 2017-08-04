@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"os"
 	//"chess/common/db"
+	"chess/common/define"
 	"chess/common/services"
 	pb "chess/srv/srv-room/proto"
 	"chess/srv/srv-room/redis"
@@ -71,7 +72,7 @@ func main() {
 			redis.Init()
 
 			// consul 服务注册
-			err = services.Register(c.String("service-id"), SERVICE_NAME, c.String("address"), c.Int("port"), c.Int("port")+10, []string{"master"})
+			err = services.Register(c.String("service-id"), define.SRV_NAME_ROOM, c.String("address"), c.Int("port"), c.Int("port")+10, []string{"master"})
 			if err != nil {
 				panic(err)
 			}

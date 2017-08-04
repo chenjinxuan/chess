@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"chess/common/log"
 	. "chess/srv/srv-room/texas_holdem"
+	"time"
 )
 
 const(
@@ -101,27 +102,35 @@ func (s *Session) NotifyKickedOut() error {
 	return redis.Chess.Lpush(s.kickedOutKey(), s.SrvId + s.UniqueId)
 }
 
-func (s *Session) KickedOutLoop(p *Player) {
+func (s *Session) KickedOutLoop(p *Player, sess_die chan struct{}) {
 	for {
+		log.Debugf("玩家%d 取踢出通知队列...", p.Id)
 		conn := redis.Chess.GetConn()
 
 		res, err := redislib.Strings(conn.Do("BRPOP", s.kickedOutKey(), 600))
 		if err != nil {
-			conn.Close()
 			if err == redislib.ErrNil {
-				log.Debug("KickedOutQueueTimeout...")
+				log.Debugf("玩家%d KickedOutQueueTimeout...", p.Id)
 			} else {
 				log.Errorf("Get KickedOut Info Fail(%s)", err)
 			}
-			continue
 		}
-		log.Debugf("get KickedOut info(%s)", res)
+
 		conn.Close()
 
 
-		if res[1] == s.SrvId+s.UniqueId {
+		if err == nil && res[1] == s.SrvId+s.UniqueId {
+			log.Debugf("get KickedOut info(%s)", res)
 			p.Flag |= SESS_KICKED_OUT
 			return
+		}
+
+		select {
+		case <- sess_die:
+			log.Debugf("玩家%d KickedOutQueue 退出...", p.Id)
+			return
+		case <-time.After(1*time.Second):
+			continue
 		}
 	}
 }

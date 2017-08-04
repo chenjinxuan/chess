@@ -186,6 +186,12 @@ message RoomActionAck{
 message RoomShowdownAck{
     BaseAck base_ack = 1;
     TableInfo table = 2;
+    repeated PotInfo pot_list = 3;
+}
+
+message PotInfo{
+    int32 pot = 1;
+    repeated int32 ps = 2;
 }
 
 

@@ -14,6 +14,8 @@ import (
 
 var (
 	target = "192.168.40.157:20001"
+	serviceId = "room-1"
+	//serviceId = "room-2"
 )
 
 func main() {
@@ -37,7 +39,7 @@ func main() {
 		metadata.New(map[string]string{
 			"userid":       fmt.Sprint(uid),
 			"service_name": "room",
-			"service_id":   "room-1",
+			"service_id":   serviceId,
 			"unique_id":    fmt.Sprintf("xxxx-xxxxx-%d", time.Now().Unix()),
 		}),
 	)

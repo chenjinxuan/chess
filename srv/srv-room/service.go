@@ -137,7 +137,7 @@ func (s *server) Stream(stream pb.RoomService_StreamServer) error {
 		return err
 	}
 	// 读取踢出通知
-	go sess.KickedOutLoop(player)
+	go sess.KickedOutLoop(player, sess_die)
 
 	defer func() {
 		registry.Unregister(player.Id, ch_ipc)

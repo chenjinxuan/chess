@@ -2,6 +2,7 @@ package texas_holdem
 
 import (
 	"sort"
+	pb "chess/srv/srv-room/proto"
 )
 
 type handBet struct {
@@ -24,8 +25,8 @@ func (p handBets) Swap(i, j int) {
 }
 
 type handPot struct {
-	Pot  int
-	OPos []int
+	Pot  int  // 池子筹码
+	OPos []int  // 参与池子的玩家pos
 }
 
 // main pot and side-pot calculation
@@ -55,4 +56,33 @@ func calcPot(bets []int32) (pots []handPot) {
 		}
 	}
 	return
+}
+
+// 池子计算结果
+type PotDetail struct {
+	Pot int
+	Ps []int32
+}
+
+func (c PotDetail) ToProtoMessage() *pb.PotInfo {
+	return &pb.PotInfo{
+		Pot: int32(c.Pot),
+		Ps:  c.Ps,
+	}
+}
+
+type PotDetails []*PotDetail
+
+func (pds PotDetails) ToProtoMessage() []*pb.PotInfo {
+	_pds := make([]*pb.PotInfo, len(pds))
+	for k, v := range pds {
+		if v != nil {
+			tmp := *v
+			_pd := tmp.ToProtoMessage()
+			_pds[k] = _pd
+		} else {
+			_pds[k] = &pb.PotInfo{}
+		}
+	}
+	return _pds
 }

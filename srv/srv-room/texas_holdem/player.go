@@ -11,6 +11,10 @@ import (
 )
 
 const (
+	ActStandup = "standup" // 站起
+	ActSitdown = "sitdown" // 坐下
+	ActReady = "ready" // 准备
+	ActBetting = "betting" // 下注中
 	ActCall  = "call"  // 跟注
 	ActCheck = "check" // 让牌
 	ActRaise = "raise" // 加注
@@ -91,7 +95,7 @@ func (p *Player) Betting(n int) (raised bool) {
 		n = 0
 	} else if n == 0 { // 让牌
 		p.Action = ActCheck
-	} else if n+p.Bet <= table.Bet { // 跟注
+	} else if n+p.Bet <= table.Bet { // 跟注 或者 allin  table.Bet保持不变
 		p.Action = ActCall
 		p.Chips -= n
 		p.Bet += n
@@ -134,11 +138,14 @@ func (p *Player) Join(rid int, tid string) (table *Table) {
 	p.Bet = 0
 	p.Cards = nil
 	p.Hand.Init()
-	p.Action = ""
+	p.Action = ActStandup
 	p.Pos = 0
 	p.Table = nil
 
-	table.AddPlayer(p)
+	pos := table.AddPlayer(p)
+	if pos != 0 {
+		p.Action = ActSitdown
+	}
 
 	log.Debugf("(%s)玩家%d加入牌桌, 位置%d, 当前牌桌有%d个玩家", table.Id, p.Id, p.Pos, table.N)
 
@@ -193,7 +200,7 @@ func (p *Player) Next() *Player {
 	}
 
 	for i := (p.Pos) % table.Cap(); i != p.Pos-1; i = (i + 1) % table.Cap() {
-		if table.Players[i] != nil {
+		if table.Players[i] != nil && table.Players[i].Action == ActReady {
 			return table.Players[i]
 		}
 	}

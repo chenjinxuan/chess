@@ -58,6 +58,7 @@ func agent(sess *Session, in chan []byte, out *Buffer) {
 			case pb.Room_Message:
 				out.send(sess, frame.Message)
 			case pb.Room_Kick:
+				out.send(sess, frame.Message)
 				sess.Flag |= SESS_KICKED_OUT
 			}
 		case <-min_timer: // minutes timer
