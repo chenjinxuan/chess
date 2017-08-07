@@ -36,7 +36,8 @@ type Table struct {
 	PotList PotDetails // 奖池 详细信息
 	Timeout    int
 	Button     int  // 庄家位置
-	Players    Players
+	Players    Players // 坐下的玩家
+	Bystanders Players // 站起的玩家
 	Chips      []int32 // 玩家最终下注筹码，摊牌时为玩家最终获得筹码
 	Bet        int  // 当前回合 上一玩家下注额
 	N          int // 当前牌桌玩家数
@@ -112,6 +113,40 @@ func (t *Table) Player(id int) *Player {
 	return nil
 }
 
+func (t *Table) AddBystander(p *Player) {
+	t.lock.Lock()
+	defer t.lock.Unlock()
+
+	// table not exists
+	if len(t.Id) == 0 {
+		return
+	}
+
+	for _, v := range t.Bystanders {
+		if v.Id == p.Id {
+			log.Debugf("玩家%d已在旁观列表中！", p.Id)
+			return
+		}
+	}
+	t.Bystanders = append(t.Bystanders, p)
+}
+
+func (t *Table) DelBystander(p *Player) {
+	if p == nil {
+		return
+	}
+
+	t.lock.Lock()
+	defer t.lock.Unlock()
+
+	for k, v := range t.Bystanders {
+		if v.Id == p.Id {
+			t.Bystanders = append(t.Bystanders[:k], t.Bystanders[k+1:]...)
+			return
+		}
+	}
+}
+
 // return player pos
 func (t *Table) AddPlayer(p *Player) int {
 	t.lock.Lock()
@@ -128,6 +163,7 @@ func (t *Table) AddPlayer(p *Player) int {
 			t.N++
 			p.Table = t
 			p.Pos = pos + 1
+			p.Action = ActSitdown
 			break
 		}
 	}
@@ -166,8 +202,33 @@ func (t *Table) DelPlayer(p *Player) {
 	}
 }
 
+// 广播牌桌上的玩家
 func (t *Table) Broadcast(code int16, msg proto.Message) {
 	for _, p := range t.Players {
+		if p != nil {
+			p.SendMessage(code, msg)
+		}
+	}
+}
+
+// 广播旁观的玩家
+func (t *Table) BroadcastBystanders(code int16, msg proto.Message) {
+	for _, p := range t.Bystanders {
+		if p != nil {
+			p.SendMessage(code, msg)
+		}
+	}
+}
+
+// 广播 牌桌上的玩家和旁观的玩家
+func (t *Table) BroadcastAll(code int16, msg proto.Message) {
+	for _, p := range t.Players {
+		if p != nil {
+			p.SendMessage(code, msg)
+		}
+	}
+
+	for _, p := range t.Bystanders {
 		if p != nil {
 			p.SendMessage(code, msg)
 		}
@@ -266,7 +327,7 @@ func (t *Table) start() {
 	t.lock.Unlock()
 
 	// 2107, 通报本局庄家 (服务器广播此消息，代表游戏开始并确定本局庄家)
-	t.Broadcast(define.Code["room_button_ack"], &pb.RoomButtonAck{
+	t.BroadcastAll(define.Code["room_button_ack"], &pb.RoomButtonAck{
 		BaseAck:   &pb.BaseAck{Ret: 1, Msg: "ok"},
 		TableId:   t.Id,
 		ButtonPos: int32(t.Button),
@@ -288,6 +349,13 @@ func (t *Table) start() {
 			})
 		}
 		return true
+	})
+	// 旁观玩家通报
+	t.BroadcastBystanders(define.Code["room_deal_ack"], &pb.RoomDealAck{
+		BaseAck:   &pb.BaseAck{Ret: 1, Msg: "ok"},
+		Action:    DealPreflop,
+		HandLevel: -1,
+		HandFinalValue: -1,
 	})
 
 	t.action(bbPos%t.Cap() + 1)
@@ -324,6 +392,12 @@ func (t *Table) start() {
 
 		return true
 	})
+	// 旁观玩家通报
+	t.BroadcastBystanders(define.Code["room_deal_ack"], &pb.RoomDealAck{
+		BaseAck:   &pb.BaseAck{Ret: 1, Msg: "ok"},
+		Action:    DealFlop,
+		Cards:     t.Cards.ToProtoMessage(),
+	})
 
 	t.action(0)
 
@@ -357,6 +431,13 @@ func (t *Table) start() {
 
 		return true
 	})
+	// 旁观玩家通报
+	t.BroadcastBystanders(define.Code["room_deal_ack"], &pb.RoomDealAck{
+		BaseAck:   &pb.BaseAck{Ret: 1, Msg: "ok"},
+		Action:    DealTurn,
+		Cards:     t.Cards.ToProtoMessage(),
+	})
+
 	t.action(0)
 	if t.remain <= 1 {
 		goto showdown
@@ -389,12 +470,19 @@ func (t *Table) start() {
 
 		return true
 	})
+	// 旁观玩家通报
+	t.BroadcastBystanders(define.Code["room_deal_ack"], &pb.RoomDealAck{
+		BaseAck:   &pb.BaseAck{Ret: 1, Msg: "ok"},
+		Action:    DealRiver,
+		Cards:     t.Cards.ToProtoMessage(),
+	})
+
 	t.action(0)
 
 showdown:
 	t.showdown()
 	// Final : Showdown   2111, 摊牌和比牌
-	t.Broadcast(define.Code["room_showdown_ack"], &pb.RoomShowdownAck{
+	t.BroadcastAll(define.Code["room_showdown_ack"], &pb.RoomShowdownAck{
 		BaseAck: &pb.BaseAck{Ret: 1, Msg: "ok"},
 		Table:   t.ToProtoMessage(),
 		PotList: t.PotList.ToProtoMessage(),
@@ -427,7 +515,7 @@ func (t *Table) action(pos int) {
 			p.Action = ActBetting
 
 			// 2110, 通报当前下注玩家
-			t.Broadcast(define.Code["room_action_ack"], &pb.RoomActionAck{
+			t.BroadcastAll(define.Code["room_action_ack"], &pb.RoomActionAck{
 				BaseAck: &pb.BaseAck{Ret: 1, Msg: "ok"},
 				Pos:     int32(p.Pos),
 				BaseBet: int32(t.Bet),
@@ -472,7 +560,7 @@ func (t *Table) calc() (pots []handPot) {
 	}
 
 	// 2109, 通报奖池
-	t.Broadcast(define.Code["room_pot_ack"], &pb.RoomPotAck{
+	t.BroadcastAll(define.Code["room_pot_ack"], &pb.RoomPotAck{
 		BaseAck: &pb.BaseAck{Ret: 1, Msg: "ok"},
 		Pot:     t.Pot,
 	})
@@ -553,7 +641,7 @@ func (t *Table) ready() {
 
 	t.Each(0, func(p *Player) bool {
 		p.Bet = 0
-		if p.Action == ActAllin || p.Action == ActFold {
+		if p.Action == ActAllin || p.Action == ActFold || p.Action == ActSitdown {
 			return true
 		}
 		p.Action = ActReady
@@ -592,7 +680,7 @@ func (t *Table) betting(pos, n int) (raised bool) {
 	}
 
 	// 2106， 通报玩家下注结果
-	t.Broadcast(define.Code["room_player_bet_ack"], &pb.RoomPlayerBetAck{
+	t.BroadcastAll(define.Code["room_player_bet_ack"], &pb.RoomPlayerBetAck{
 		BaseAck: &pb.BaseAck{Ret: 1, Msg: "ok"},
 		TableId: t.Id,
 		Action:  p.Action,

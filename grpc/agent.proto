@@ -189,6 +189,34 @@ message RoomShowdownAck{
     repeated PotInfo pot_list = 3;
 }
 
+// 2112, 玩家站起
+message RoomPlayerStandupReq{
+    BaseReq base_req = 1;
+    string table_id = 2;
+}
+
+// 2113, 玩家站起通报
+message RoomPlayerStandupAck{
+    BaseAck base_ack = 1;
+    string table_id = 2;
+    int32 player_id = 3;
+    int32 player_pos = 4;
+}
+
+// 2114, 玩家坐下
+message RoomPlayerSitdownReq{
+    BaseReq base_req = 1;
+    string table_id = 2;
+}
+
+// 2115, 玩家坐下通报
+message RoomPlayerSitdownAck{
+    BaseAck base_ack = 1;
+    string table_id = 2;
+    int32 player_id = 3;
+    int32 player_pos = 4;
+}
+
 message PotInfo{
     int32 pot = 1;
     repeated int32 ps = 2;

@@ -177,10 +177,13 @@ func (p *Player)HandleMQ(tos int16, data []byte) {
 		switch ack.Action {
 		case "preflop": // 发底牌
 			p.Cards = ack.Cards
-			fmt.Printf("[手牌]: %s %s.\n",
-				SUITNAME[p.Cards[0].Suit]+RANKNAME[p.Cards[0].Val],
-				SUITNAME[p.Cards[1].Suit]+RANKNAME[p.Cards[1].Val],
-			)
+			if len(p.Cards) == 2 {
+				fmt.Printf("[手牌]: %s %s.\n",
+					SUITNAME[p.Cards[0].Suit]+RANKNAME[p.Cards[0].Val],
+					SUITNAME[p.Cards[1].Suit]+RANKNAME[p.Cards[1].Val],
+				)
+			}
+
 			//fmt.Print("poker>")
 		case "flop": //  翻牌
 			for k,v := range p.Table.Players {
@@ -197,11 +200,14 @@ func (p *Player)HandleMQ(tos int16, data []byte) {
 				SUITNAME[p.Table.Cards[1].Suit]+RANKNAME[p.Table.Cards[1].Val],
 				SUITNAME[p.Table.Cards[2].Suit]+RANKNAME[p.Table.Cards[2].Val],
 			)
-			fmt.Printf("你的手牌: %s %s， 牌型:%s.\n",
-				SUITNAME[p.Cards[0].Suit]+RANKNAME[p.Cards[0].Val],
-				SUITNAME[p.Cards[1].Suit]+RANKNAME[p.Cards[1].Val],
-				Levels[ack.HandLevel],
-			)
+			if len(p.Cards) == 2 {
+				fmt.Printf("你的手牌: %s %s， 牌型:%s.\n",
+					SUITNAME[p.Cards[0].Suit]+RANKNAME[p.Cards[0].Val],
+					SUITNAME[p.Cards[1].Suit]+RANKNAME[p.Cards[1].Val],
+					Levels[ack.HandLevel],
+				)
+			}
+
 			//fmt.Print("poker>")
 		case "turn": // 转牌
 			for k,v := range p.Table.Players {
@@ -219,11 +225,13 @@ func (p *Player)HandleMQ(tos int16, data []byte) {
 				SUITNAME[p.Table.Cards[2].Suit]+RANKNAME[p.Table.Cards[2].Val],
 				SUITNAME[p.Table.Cards[3].Suit]+RANKNAME[p.Table.Cards[3].Val],
 			)
-			fmt.Printf("你的手牌: %s %s， 牌型:%s.\n",
-				SUITNAME[p.Cards[0].Suit]+RANKNAME[p.Cards[0].Val],
-				SUITNAME[p.Cards[1].Suit]+RANKNAME[p.Cards[1].Val],
-				Levels[ack.HandLevel],
-			)
+			if len(p.Cards) == 2 {
+				fmt.Printf("你的手牌: %s %s， 牌型:%s.\n",
+					SUITNAME[p.Cards[0].Suit]+RANKNAME[p.Cards[0].Val],
+					SUITNAME[p.Cards[1].Suit]+RANKNAME[p.Cards[1].Val],
+					Levels[ack.HandLevel],
+				)
+			}
 			//fmt.Print("poker>")
 		case "river": // 河牌
 			for k,v := range p.Table.Players {
@@ -243,11 +251,13 @@ func (p *Player)HandleMQ(tos int16, data []byte) {
 				SUITNAME[p.Table.Cards[3].Suit]+RANKNAME[p.Table.Cards[3].Val],
 				SUITNAME[p.Table.Cards[4].Suit]+RANKNAME[p.Table.Cards[4].Val],
 			)
-			fmt.Printf("你的手牌: %s %s， 牌型:%s.\n",
-				SUITNAME[p.Cards[0].Suit]+RANKNAME[p.Cards[0].Val],
-				SUITNAME[p.Cards[1].Suit]+RANKNAME[p.Cards[1].Val],
-				Levels[ack.HandLevel],
-			)
+			if len(p.Cards) == 2 {
+				fmt.Printf("你的手牌: %s %s， 牌型:%s.\n",
+					SUITNAME[p.Cards[0].Suit] + RANKNAME[p.Cards[0].Val],
+					SUITNAME[p.Cards[1].Suit] + RANKNAME[p.Cards[1].Val],
+					Levels[ack.HandLevel],
+				)
+			}
 			//fmt.Print("poker>")
 		}
 
@@ -372,7 +382,26 @@ func (p *Player)HandleMQ(tos int16, data []byte) {
 			)
 		}
 		//fmt.Print("poker>")
+	case 2113: // 站起通知
+		ack := &pb.RoomPlayerStandupAck{}
+		err := proto.Unmarshal(data, ack)
+		if err != nil {
+			log.Errorf("proto.Unmarshal Error: %s", err)
+			return
+		}
+		fmt.Printf("\n[玩家站起广播]\n")
+		fmt.Printf("\t玩家%d站起\n",ack.PlayerId)
 
+	case 2115: // 坐下通知
+		ack := &pb.RoomPlayerSitdownAck{}
+		err := proto.Unmarshal(data, ack)
+		if err != nil {
+			log.Errorf("proto.Unmarshal Error: %s", err)
+			return
+		}
+
+		fmt.Printf("\n[玩家坐下广播]\n")
+		fmt.Printf("\t玩家%d坐下，位置：%d\n",ack.PlayerId, ack.PlayerPos)
 	}
 
 }
@@ -383,6 +412,8 @@ func (p *Player)CmdLoop() {
 	fmt.Println("指令提示：")
 	fmt.Println("    j - 加入牌桌 [ Ex: j1-6/a1-6 ]")
 	fmt.Println("    l - 离开牌桌")
+	fmt.Println("    u - 站起")
+	fmt.Println("    d - 坐下")
 	fmt.Println("    c - 查看手牌和公共牌")
 	fmt.Println("    q - 退出命令行")
 	fmt.Println("    h - 帮助")
@@ -424,7 +455,20 @@ func (p *Player)CmdLoop() {
 			} else {
 				fmt.Print("poker>")
 			}
-
+		case 'u': // 站起
+			if p.Table != nil {
+				p.SendMessage(2112, &pb.RoomPlayerStandupReq{
+					BaseReq: &pb.BaseReq{AppFrom:"CMD"},
+					TableId: p.Table.Id,
+				})
+			}
+		case 'd': // 坐下
+			if p.Table != nil {
+				p.SendMessage(2114, &pb.RoomPlayerSitdownReq{
+					BaseReq: &pb.BaseReq{AppFrom:"CMD"},
+					TableId: p.Table.Id,
+				})
+			}
 		case 'l': // 离开游戏
 			if p.Table != nil {
 				p.SendMessage(2103, &pb.RoomPlayerGoneReq{
@@ -468,6 +512,8 @@ func (p *Player)CmdLoop() {
 			fmt.Println("指令提示：")
 			fmt.Println("    j - 加入牌桌 [ Ex: j1-6/a1-6 ]")
 			fmt.Println("    l - 离开牌桌")
+			fmt.Println("    u - 站起")
+			fmt.Println("    d - 坐下")
 			fmt.Println("    c - 查看手牌和公共牌")
 			fmt.Println("    q - 退出命令行")
 			fmt.Println("    h - 帮助")

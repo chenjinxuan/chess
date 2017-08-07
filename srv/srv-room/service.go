@@ -1,8 +1,8 @@
 package main
 
 import (
-	"chess/common/helper"
 	"chess/common/define"
+	"chess/common/helper"
 	"chess/common/log"
 	"chess/srv/srv-room/client_handler"
 	"chess/srv/srv-room/misc/packet"
@@ -16,6 +16,8 @@ import (
 	"io"
 	"strconv"
 	//"chess/models"
+	"fmt"
+	"time"
 )
 
 const (
@@ -91,8 +93,8 @@ func (s *server) Stream(stream pb.RoomService_StreamServer) error {
 		log.Error(err)
 		return ERROR_INCORRECT_FRAME_TYPE
 	}
-	uniqueId:=md["unique_id"][0]
-	serviceId:=md["service_id"][0]
+	uniqueId := md["unique_id"][0]
+	serviceId := md["service_id"][0]
 
 	// 是否已登录
 	sess := NewSession(userid)
@@ -128,6 +130,7 @@ func (s *server) Stream(stream pb.RoomService_StreamServer) error {
 	log.Debugf("玩家%d登录成功，设备号：%s", player.Id, uniqueId)
 
 	// 保存当前登录状态
+	sess.TraceId = helper.Md5(fmt.Sprintf("%d-%d", userid, time.Now().Unix()))
 	sess.SrvId = serviceId
 	sess.UniqueId = uniqueId
 	sess.Status = SESSION_STATUS_LOGIN
@@ -201,7 +204,7 @@ func (s *server) Stream(stream pb.RoomService_StreamServer) error {
 				Type: pb.Room_Kick,
 				Message: packet.Pack(
 					define.Code["kicked_out_ack"],
-					&pb.KickedOutAck{BaseAck: &pb.BaseAck{Ret:1}},
+					&pb.KickedOutAck{BaseAck: &pb.BaseAck{Ret: 1}},
 				),
 			}); err != nil {
 				log.Error(err)

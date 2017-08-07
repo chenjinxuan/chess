@@ -110,7 +110,7 @@ func InitRoomList() {
 
 func DelTable(tid string) {
 	tmp := strings.Split(tid, "-")
-	if len(tmp) != 2 {
+	if len(tmp) < 2 {
 		return
 	}
 

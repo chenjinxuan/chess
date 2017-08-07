@@ -32,6 +32,10 @@ var Code = map[string]int16{
 	"room_pot_ack":         2109, // 通报奖池
 	"room_action_ack":      2110, // 通报当前下注玩家
 	"room_showdown_ack":    2111, // 摊牌和比牌
+	"room_player_standup_req": 2112, // 玩家站起
+	"room_player_standup_ack": 2113, // 玩家站起通报
+	"room_player_sitdown_req": 2114, // 玩家坐下
+	"room_player_sitdown_ack": 2115, // 玩家坐下通报
 }
 
 var RCode = map[int16]string{
@@ -65,6 +69,10 @@ var RCode = map[int16]string{
 	2109: "room_pot_ack",         // 通报奖池
 	2110: "room_action_ack",      // 通报当前下注玩家
 	2111: "room_showdown_ack",    // 摊牌和比牌
+	2112: "room_player_standup_req", // 玩家站起
+	2113: "room_player_standup_ack", // 玩家站起通报
+	2114: "room_player_sitdown_req", // 玩家坐下
+	2115: "room_player_sitdown_ack", // 玩家坐下通报
 }
 
 const (
