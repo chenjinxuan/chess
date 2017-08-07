@@ -12,7 +12,6 @@ import (
     "flag"
     "net/http"
     "fmt"
-   grpcServer "chess/api/grpc"
 )
 
 const (
@@ -34,7 +33,7 @@ func main() {
 	}
 
 
-	// TODO 换皮配置分发，可存储到mongodb
+	// TODO 换皮配置分发，CONSUL
 	err = config.Api.Import()
 	if err != nil {
 		panic(err)
@@ -58,7 +57,7 @@ func main() {
     // consul 健康检查
     http.HandleFunc("/check", consulCheck)
     go http.ListenAndServe(fmt.Sprintf(":%d", *port+10), nil)
-    grpcServer.Init()
+    services.Discover(config.C.GrpcServer)
     InitRouter()
 }
 

@@ -7,12 +7,15 @@ import (
     "chess/api/components/auth"
     //"chess/api/components/broker"
     "chess/api/components/input"
-    "chess/api/components/sms"
+    //"chess/api/components/sms"
     "chess/api/components/user_init"
     "chess/common/config"
     "chess/api/helper"
     "chess/api/log"
     "chess/models"
+    grpcServer "chess/api/grpc"
+    pb "chess/api/proto"
+    "golang.org/x/net/context"
 )
 
 const (
@@ -22,16 +25,22 @@ const (
 
 type RegisterMobileParams struct {
     // @todo email...
-    MobileNumber string                 `json:"mobile_number" form:"mobile_number" binding:"required"`
-    Password     string                 `json:"password" form:"password"`
-    Gender       int                    `json:"gender" form:"gender"` // 性别，可以不传，默认为0
-    Code         string                 `json:"code" form:"code" binding:"required" `
-    From         string                 `json:"from" form:"from"`
-    UniqueId     string                 `json:"unique_id" form:"unique_id"`
-    Channel      string                 `json:"channel"`
+    MobileNumber string                 `json:"mobile_number" binding:"required" description:"手机号"`
+    Password     string                 `json:"password" description:"密码"`
+    Gender       int                    `json:"gender" description:"性别0未知 1男 2女(可以不传，默认为0)"` // 性别，可以不传，默认为0
+    Code         string                 `json:"code" binding:"required" description:"验证码"`
+    From         string                 `json:"from" description:"来源"`
+    UniqueId     string                 `json:"unique_id"description:"唯一标识0" `
+    Channel      string                 `json:"channel" description:"渠道"`
    // BindingParam broker.CheckCodeParams `json:"binding_param"`
 }
-
+// @Title 手机号注册
+// @Description 手机注册
+// @Summary 手机号注册
+// @Accept json
+// @Param   body     body    c_auth.RegisterMobileParams  true        "post 数据"
+// @Success 200 {object} c_auth.LoginResult
+// @router /auth/register/mobile [post]
 func RegisterMobile(c *gin.Context) {
     var result LoginResult
     var post RegisterMobileParams
@@ -70,13 +79,12 @@ func RegisterMobile(c *gin.Context) {
 	    c.JSON(http.StatusOK, result)
 	    return
 	}
-
-	result.Ret, result.Msg, err = sms.CheckCode(post.MobileNumber, post.Code, sms.SMS_REGISTER, cConf)
-	if err != nil {
-	    // 验证不通过
-	    c.JSON(http.StatusOK, result)
-	    return
-	}
+	//result.Ret, result.Msg, err = sms.CheckCode(post.MobileNumber, post.Code, sms.SMS_REGISTER, cConf)
+	//if err != nil {
+	//    // 验证不通过
+	//    c.JSON(http.StatusOK, result)
+	//    return
+	//}
 
 	pwdRet := auth.Passwords.CheckPasswordStrong(post.Password)
 	if pwdRet != 1 {
@@ -129,7 +137,6 @@ func RegisterMobile(c *gin.Context) {
 	if err != nil {
 	    log.Log.Error(err)
 	}
-
 	go func() {
 	    //更新设备信息
 	    err = user_init.DeviceInit(user.Id, user.AppFrom, post.UniqueId, c.Query("idfv"), c.Query("idfa"))
@@ -139,7 +146,10 @@ func RegisterMobile(c *gin.Context) {
 	}()
 
 	// Create login token
-	authResult, err := auth.LoginUser(userId, post.From, post.UniqueId)
+	// Create login token
+	AuthClient:=grpcServer.GetAuthGrpc()
+	authResult, err := AuthClient.RefreshToken(context.Background(), &pb.RefreshTokenArgs{UserId: int32(user.Id),AppFrom:user.AppFrom,UniqueId:post.UniqueId})
+	//authResult, err := auth.LoginUser(userId, post.From, post.UniqueId)
 	if err != nil {
 	    result.Msg = "login failed"
 	    c.JSON(http.StatusOK, result)

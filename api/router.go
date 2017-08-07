@@ -15,6 +15,7 @@ import (
     "github.com/gin-gonic/gin"
     "time"
     "chess/api/controllers"
+    "chess/api/controllers/room"
 )
 
 func InitRouter() {
@@ -71,7 +72,11 @@ func InitRouter() {
 		authRouter.POST("/password/reset", c_auth.PasswordReset)
 	    authRouter.GET("/test", c_auth.Ttest)
 	}
-
+        // @SubApi /room -房间相关 [/room/]
+        roomRouter :=router.Group("/room")
+	{
+	    roomRouter.GET("/list",c_room.RoomsList)
+	}
 	// @SubApi /verify - 验证码相关 [/verify/]
 	verifyRouter := router.Group("/verify")
 	{

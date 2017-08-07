@@ -5,12 +5,12 @@ import (
     "chess/common/config"
     "chess/common/services"
 )
-var (
-    AuthClient pb.AuthServiceClient
-)
+//var (
+//    AuthClient pb.AuthServiceClient
+//)
 
-func Init()  {
-    services.Discover(config.C.GrpcServer)
+func GetAuthGrpc() (AuthClient pb.AuthServiceClient) {
     auth:=services.GetService(config.C.GrpcServer[0])
     AuthClient= pb.NewAuthServiceClient(auth)
+    return AuthClient
 }

@@ -29,24 +29,29 @@ const (
 
 type LoginParams struct {
 	LoginBy      string `json:"loginby" form:"loginby"`
-	MobileNumber string `json:"mobile_number" form:"mobile_number" binding:"required"`
-	Password     string `json:"password" form:"password" binding:"required"`
-	From         string `json:"from" form:"from"`
-	UniqueId     string `json:"unique_id" form:"unique_id"`
-	Captcha      string `json:"captcha"`
+	MobileNumber string `json:"mobile_number" form:"mobile_number" binding:"required" description:"手机号"`
+	Password     string `json:"password" form:"password" binding:"required" description:"密码"`
+	From         string `json:"from" form:"from" description:"请求来源"`
+	UniqueId     string `json:"unique_id" form:"unique_id" description:"唯一标识"`
+	Captcha      string `json:"captcha" description:"验证码"`
 }
 
 type LoginResult struct {
 	define.BaseResult
-	NeedCaptcha  bool   `json:"need_captcha"`
-	UserId       int    `json:"user_id"`
-	IsFresh      int    `json:"fresh"`
-	Token        string `json:"token"`
-	Expire       int64  `json:"expire"`
-	RefreshToken string `json:"refresh_token"`
+	NeedCaptcha  bool   `json:"need_captcha" description:"是否需要验证码"`
+	UserId       int    `json:"user_id" description:"用户Id"`
+	IsFresh      int    `json:"fresh" description:"是否是新用户"`
+	Token        string `json:"token" description:"请求授权的token"`
+	Expire       int64  `json:"expire" description:"token过期时间"`
+	RefreshToken string `json:"refresh_token" description:"当 Token 过期时，使用该 Token 获取一个新的"`
 }
-
-// 手机号 + 密码登录
+// @Title 手机号 + 密码登录
+// @Description 手机号 + 密码登录
+// @Summary 手机号 + 密码登录
+// @Accept json
+// @Param   body     body    c_auth.LoginParams  true        "post 数据"
+// @Success 200 {object} c_auth.LoginResult
+// @router /auth/login [post]
 func Login(c *gin.Context) {
 	var result LoginResult
 	var form LoginParams
@@ -129,8 +134,8 @@ func Login(c *gin.Context) {
 			c.JSON(http.StatusOK, result)
 			return
 		}
-
-		authResult, err := grpcServer.AuthClient.RefreshToken(context.Background(), &pb.RefreshTokenArgs{UserId: int32(user.Id),AppFrom:form.From,UniqueId:form.UniqueId})
+                AuthClient:=grpcServer.GetAuthGrpc()
+		authResult, err := AuthClient.RefreshToken(context.Background(), &pb.RefreshTokenArgs{UserId: int32(user.Id),AppFrom:form.From,UniqueId:form.UniqueId})
 		if err != nil {
 			result.Ret = 0
 			result.Msg = "login failed"

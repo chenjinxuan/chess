@@ -22,21 +22,24 @@ var (
 )
 
 type LoginMobileParams struct {
-	MobileNumber string                 `json:"mobile_number" form:"mobile_num" binding:"required"`
-	Password     string                 `json:"password" binding:"required" `
-	From         string                 `json:"from" form:"from"`
-	UniqueId     string                 `json:"unique_id" form:"unique_id"`
-	Channel      string                 `json:"channel"`
-	Q            string                 `json:"q"`
+	MobileNumber string                 `json:"mobile_number" form:"mobile_num" binding:"required" description:"手机号"`
+	Password     string                 `json:"password" binding:"required" description:"密码"`
+	From         string                 `json:"from" description:"来源"`
+	UniqueId     string                 `json:"unique_id"  description:"唯一标识"`
+	Channel      string                 `json:"channel" description:"渠道"`
+	//Q            string                 `json:"q"`
 	//BindingParam broker.CheckCodeParams `json:"binding_param"`
 }
 
-type LoginMobileResult struct {
-	LoginResult
-}
-
+// @Title 手机号注册
+// @Description 手机注册
+// @Summary 手机号注册
+// @Accept json
+// @Param   body     body    c_auth.LoginMobileParams  true        "post 数据"
+// @Success 200 {object} c_auth.LoginResult
+// @router /auth/quick [post]
 func LoginMobile(c *gin.Context) {
-	var result LoginMobileResult
+	var result LoginResult
 	var post LoginMobileParams
 
 	_conf, ok1 := c.Get("config")
@@ -123,7 +126,8 @@ func LoginMobile(c *gin.Context) {
 		}
 
 		// Create login token
-		authResult, err := grpcServer.AuthClient.RefreshToken(context.Background(), &pb.RefreshTokenArgs{UserId: int32(user.Id),AppFrom:user.AppFrom,UniqueId:post.UniqueId})
+	    AuthClient:=grpcServer.GetAuthGrpc()
+	    authResult, err := AuthClient.RefreshToken(context.Background(), &pb.RefreshTokenArgs{UserId: int32(user.Id),AppFrom:user.AppFrom,UniqueId:post.UniqueId})
 		if err != nil {
 			result.Msg = "login failed"
 			c.JSON(http.StatusOK, result)
