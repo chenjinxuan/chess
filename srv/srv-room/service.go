@@ -122,8 +122,8 @@ func (s *server) Stream(stream pb.RoomService_StreamServer) error {
 
 	// player init
 	player := NewPlayer(userid, stream)
-	//player.Chips = int(userWallet.Balance)
-	player.Chips = 10000
+	//player.TotalChips = int(userWallet.Balance)
+	player.TotalChips = 10000
 
 	// register user
 	registry.Register(player.Id, ch_ipc)

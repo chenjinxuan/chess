@@ -22,7 +22,7 @@ var (
 func main() {
 	// 用户id
 	//uid := time.Now().Second()
-	uid := 12580
+	uid := 10000001
 
 	player := NewPlayer()
 	player.Id = int32(uid)

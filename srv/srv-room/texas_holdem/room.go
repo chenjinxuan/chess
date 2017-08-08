@@ -81,6 +81,21 @@ func (r *Room) GetTable(tid string) *Table {
 	return table
 }
 
+func (r *Room) GetAnotherTable(tid string) *Table {
+	r.tables.lock.Lock()
+	defer r.tables.lock.Unlock()
+
+	for _, v := range r.tables.M {
+		if v.Id != tid && v.N < v.Max {
+			return v
+		}
+	}
+	table := NewTable(r.Id, r.Max, r.SmallBlind, r.BigBlind, r.MinCarry, r.MaxCarry)
+	r.setTable(table)
+
+	return table
+}
+
 func (r *Room) DelTable(tid string) {
 	r.tables.lock.Lock()
 	defer r.tables.lock.Unlock()
@@ -135,6 +150,22 @@ func GetTable(rid int, tid string) *Table {
 
 	if room, ok := RoomList[rid]; ok {
 		return room.GetTable(tid)
+	}
+	return nil
+}
+
+// 获取其他牌桌
+func GetAnotherTable(rid int, tid string) *Table {
+	tmp := strings.Split(tid, "-")
+	if len(tmp) == 2 { // 根据tid来获取房间ID
+		_rid, err := strconv.Atoi(tmp[0])
+		if err == nil {
+			rid = int(_rid)
+		}
+	}
+
+	if room, ok := RoomList[rid]; ok {
+		return room.GetAnotherTable(tid)
 	}
 	return nil
 }
