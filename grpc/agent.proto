@@ -212,9 +212,12 @@ message RoomPlayerSitdownReq{
 // 2115, 玩家坐下通报
 message RoomPlayerSitdownAck{
     BaseAck base_ack = 1;
-    string table_id = 2;
-    int32 player_id = 3;
-    int32 player_pos = 4;
+    PlayerInfo player = 2;
+}
+
+// 2116, 玩家换桌
+message RoomPlayerChangeTableReq{
+    BaseReq base_req = 1;
 }
 
 message PotInfo{

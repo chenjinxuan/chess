@@ -65,6 +65,7 @@ func NewTable(rid, max, sb, bb, minC, maxC int) *Table {
 
 	table := &Table{
 		Id:         genTableId(rid),
+		RoomId: 	rid,
 		Players:    make([]*Player, max, MaxN),
 		Chips:      make([]int32, max, MaxN),
 		SmallBlind: sb,
@@ -630,6 +631,16 @@ func (t *Table) showdown() {
 	for i := range t.Chips {
 		if t.Players[i] != nil {
 			t.Players[i].Chips += int(t.Chips[i])
+			if t.Players[i].Chips <= t.BigBlind { // 补筹码
+				carry := t.MaxCarry/2 - t.Players[i].Chips
+				if t.Players[i].TotalChips >= carry {
+					t.Players[i].Chips += carry
+					t.Players[i].TotalChips -= carry
+				} else {
+					t.Players[i].Chips += t.Players[i].TotalChips
+					t.Players[i].TotalChips = 0
+				}
+			}
 		}
 	}
 }

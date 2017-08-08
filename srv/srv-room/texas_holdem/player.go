@@ -28,6 +28,7 @@ type Player struct {
 	Avatar   string
 	Level    string
 	Chips    int
+	TotalChips int
 
 	Pos    int
 	Bet    int
@@ -161,6 +162,11 @@ func (p *Player) GetActionBet(timeout time.Duration) (*pb.RoomPlayerBetReq, erro
 }
 
 func (p *Player) Join(rid int, tid string) (table *Table) {
+	if p.Table!=nil{
+		log.Debugf("玩家%d已在牌桌上", p.Table.Id)
+		return
+	}
+
 	table = GetTable(rid, tid)
 	if table == nil {
 		log.Debug("找不到牌桌")
@@ -175,6 +181,11 @@ func (p *Player) Join(rid int, tid string) (table *Table) {
 	p.Table = nil
 
 	table.AddPlayer(p)
+
+	// 带入筹码
+	p.Chips = table.MaxCarry/2
+	p.TotalChips -= p.Chips
+
 
 	log.Debugf("(%s)玩家%d加入牌桌, 位置%d, 当前牌桌有%d个玩家", table.Id, p.Id, p.Pos, table.N)
 
@@ -223,6 +234,8 @@ func (p *Player) Standup() {
 	p.Hand.Init()
 	p.Action = ActStandup
 	p.Pos = 0
+	p.Chips = 0
+	p.TotalChips += p.Chips
 
 }
 
@@ -242,13 +255,35 @@ func (p *Player) Sitdown() {
 	table.DelBystander(p)
 	table.AddPlayer(p)
 
+	// 带入筹码
+	p.Chips = table.MaxCarry/2
+	p.TotalChips -= p.Chips
+
 	// 2115, 广播玩家坐下
 	table.BroadcastAll(define.Code["room_player_sitdown_ack"], &pb.RoomPlayerSitdownAck{
 		BaseAck: &pb.BaseAck{Ret: 1, Msg: "ok"},
-		TableId:  table.Id,
-		PlayerId: int32(p.Id),
-		PlayerPos: int32(p.Pos),
+		Player: p.ToProtoMessage(),
 	})
+}
+
+// 换桌
+func (p *Player) ChangeTable() {
+	table := p.Table
+	if table == nil {
+		return
+	}
+
+	if p.Cards == nil {
+		rid := table.RoomId
+		tid := table.Id
+		another := GetAnotherTable(rid, tid)
+		if another != nil {
+			p.Leave()
+			p.Join(rid, another.Id)
+		}
+	} else {
+		log.Debugf("(%s)玩家%d牌局未结束，不允许换桌", table.Id, p.Id)
+	}
 }
 
 func (p *Player) Leave() (table *Table) {

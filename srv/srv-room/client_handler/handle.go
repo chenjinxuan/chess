@@ -21,6 +21,7 @@ func init() {
 		2105: P_room_player_bet_req,
 		2112: P_room_player_standup_req,
 		2114: P_room_player_sitdown_req,
+		2116: P_room_player_change_table_req,
 	}
 }
 
@@ -129,5 +130,16 @@ func P_room_player_sitdown_req(p *Player, data []byte) []byte {
 		return nil
 	}
 	p.Sitdown()
+	return nil
+}
+
+func P_room_player_change_table_req(p *Player, data []byte) []byte {
+	req := &pb.RoomPlayerChangeTableReq{}
+	err := proto.Unmarshal(data, req)
+	if err != nil {
+		log.Errorf("proto.Unmarshal Error: %s", err)
+		return nil
+	}
+	p.ChangeTable()
 	return nil
 }

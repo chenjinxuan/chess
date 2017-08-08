@@ -401,7 +401,7 @@ func (p *Player)HandleMQ(tos int16, data []byte) {
 		}
 
 		fmt.Printf("\n[玩家坐下广播]\n")
-		fmt.Printf("\t玩家%d坐下，位置：%d\n",ack.PlayerId, ack.PlayerPos)
+		fmt.Printf("\t玩家%d坐下，位置：%d\n",ack.Player.Id, ack.Player.Pos)
 	}
 
 }
@@ -414,6 +414,7 @@ func (p *Player)CmdLoop() {
 	fmt.Println("    l - 离开牌桌")
 	fmt.Println("    u - 站起")
 	fmt.Println("    d - 坐下")
+	fmt.Println("    g - 换桌")
 	fmt.Println("    c - 查看手牌和公共牌")
 	fmt.Println("    q - 退出命令行")
 	fmt.Println("    h - 帮助")
@@ -469,6 +470,13 @@ func (p *Player)CmdLoop() {
 					TableId: p.Table.Id,
 				})
 			}
+
+		case 'g': // 换桌
+			if p.Table != nil {
+				p.SendMessage(2116, &pb.RoomPlayerChangeTableReq{
+					BaseReq: &pb.BaseReq{AppFrom:"CMD"},
+				})
+			}
 		case 'l': // 离开游戏
 			if p.Table != nil {
 				p.SendMessage(2103, &pb.RoomPlayerGoneReq{
@@ -514,6 +522,7 @@ func (p *Player)CmdLoop() {
 			fmt.Println("    l - 离开牌桌")
 			fmt.Println("    u - 站起")
 			fmt.Println("    d - 坐下")
+			fmt.Println("    g - 换桌")
 			fmt.Println("    c - 查看手牌和公共牌")
 			fmt.Println("    q - 退出命令行")
 			fmt.Println("    h - 帮助")
