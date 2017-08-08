@@ -9,8 +9,8 @@ import (
 	//"chess/api/components/sms"
 	"chess/api/components/user_init"
 	"chess/common/config"
-	"chess/api/helper"
-	"chess/api/log"
+	"chess/common/helper"
+	"chess/common/log"
 	"chess/models"
     grpcServer "chess/api/grpc"
     pb "chess/api/proto"
@@ -37,7 +37,7 @@ type LoginMobileParams struct {
 // @Accept json
 // @Param   body     body    c_auth.LoginMobileParams  true        "post 数据"
 // @Success 200 {object} c_auth.LoginResult
-// @router /auth/quick [post]
+// @router /auth/login/quick [post]
 func LoginMobile(c *gin.Context) {
 	var result LoginResult
 	var post LoginMobileParams
@@ -86,7 +86,7 @@ func LoginMobile(c *gin.Context) {
 			user.Nickname = helper.GenMobileNickname(post.MobileNumber)
 			userId, err = models.Users.Insert(user)
 			if err != nil {
-				log.Log.Error(err)
+				log.Error(err)
 				result.Ret = 0
 				result.Msg = "Could not create new user."
 				c.JSON(http.StatusOK, result)
@@ -101,7 +101,7 @@ func LoginMobile(c *gin.Context) {
 				//更新设备信息
 				err = user_init.DeviceInit(user.Id, user.AppFrom, post.UniqueId, c.Query("idfv"), c.Query("idfa"))
 				if err != nil {
-					log.Log.Error(err)
+					log.Error(err)
 				}
 
 			}()
@@ -121,8 +121,8 @@ func LoginMobile(c *gin.Context) {
 		extra["idfa"] = c.Query("idfa")
 		//user.IsFresh, err = user_init.UserInit(*user, extra, cConf)
 		if err != nil {
-			log.Log.Debugf("%+v", extra)
-			log.Log.Error(err)
+			log.Debugf("%+v", extra)
+			log.Error(err)
 		}
 
 		// Create login token

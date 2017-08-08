@@ -9,7 +9,6 @@ import (
 
 type RoomsResult struct {
     define.BaseResult
-    Bb int `json:"bb" description:"大盲注"`
     List []*RoomsInfo `json:"list"`
 }
 type RoomsInfo struct {

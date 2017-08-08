@@ -5,17 +5,19 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strings"
-	"chess/api/components/auth"
 	"chess/api/components/input"
 	"chess/api/components/tp"
 	"chess/api/components/tp/qq"
 	"chess/api/components/tp/wechat"
 	"chess/api/components/user_init"
 	"chess/common/config"
-	"chess/api/define"
-	"chess/api/helper"
-	"chess/api/log"
+	"chess/common/define"
+	"chess/common/helper"
+	"chess/common/log"
 	"chess/models"
+	grpcServer "chess/api/grpc"
+	pb "chess/api/proto"
+	"golang.org/x/net/context"
 )
 
 const (
@@ -59,7 +61,7 @@ func TpLogin(c *gin.Context) {
 	clientIp := helper.ClientIP(c)
 
 	if err := input.BindJSON(c, &form, cConf); err != nil {
-		log.Log.Error("BindJSON error: ", err)
+		log.Errorf("BindJSON error: ", err)
 		result.Msg = "wrong params"
 		c.JSON(http.StatusOK, result)
 		return
@@ -73,12 +75,12 @@ func TpLogin(c *gin.Context) {
 	form.From = strings.ToLower(form.From)
 	defer func() {
 		// Debug
-		log.Log.WithFields(logrus.Fields{
+		log.Debugf("c_auth.login.tp",logrus.Fields{
 			"key":    form.Key,
 			"type":   form.Type,
 			"form":   form.From,
 			"result": result,
-		}).Debug("c_auth.login.tp")
+		})
 	}()
 
 
@@ -96,7 +98,7 @@ func TpLogin(c *gin.Context) {
 
 		isnew, user, msg, err := tp.LoginByQQ(form.Key, clientIp, form.Channel, form.From, client)
 		if err != nil {
-			log.Log.Error("qq login failed:", err)
+			log.Errorf("qq login failed:", err)
 			result.Ret = 0
 			result.Msg = msg
 			c.JSON(http.StatusOK, result)
@@ -129,7 +131,7 @@ func TpLogin(c *gin.Context) {
 
 		isnew, user, msg, err := tp.LoginByWechat(form.Key, clientIp, form.Channel, form.From, client)
 		if err != nil {
-			log.Log.Error("wechat login failed", err)
+			log.Errorf("wechat login failed", err)
 			result.Ret = 0
 			result.Msg = msg
 			c.JSON(http.StatusOK, result)
@@ -165,14 +167,14 @@ func TpLogin(c *gin.Context) {
 		//更新设备信息
 		err := user_init.DeviceInit(userId, form.From, form.UniqueId, c.Query("idfv"), c.Query("idfa"))
 		if err != nil {
-			log.Log.Error(err)
+			log.Error(err)
 		}
 
 	} else {
 		go models.Users.UpdateLastLoginIp(userId, clientIp)
 	}
-
-	authResult, err := auth.LoginUser(userId, form.From, form.UniqueId)
+	AuthClient:=grpcServer.GetAuthGrpc()
+	authResult, err := AuthClient.RefreshToken(context.Background(), &pb.RefreshTokenArgs{UserId: int32(userId),AppFrom:form.From,UniqueId:form.UniqueId})
 	if err != nil {
 		result.Ret = 0
 		result.Msg = "login failed"
@@ -183,7 +185,7 @@ func TpLogin(c *gin.Context) {
 	result.Token = authResult.Token
 	result.Expire = authResult.Expire
 	result.RefreshToken = authResult.RefreshToken
-	result.UserId = authResult.UserId
+	result.UserId = int(authResult.UserId)
 	result.IsFresh = isfresh
 	c.JSON(http.StatusOK, result)
 	return

@@ -45,6 +45,76 @@
                 }
             }
         },
+        "/auth/login/quick": {
+            "post": {
+                "tags": [
+                    "/auth - 授权相关 "
+                ],
+                "summary": "手机号注册",
+                "description": "手机注册",
+                "operationId": ".手机号注册",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "post 数据",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/c_auth.LoginMobileParams"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/c_auth.LoginResult"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/login/tourist": {
+            "post": {
+                "tags": [
+                    "/auth - 授权相关 "
+                ],
+                "summary": "游客登录",
+                "description": "游客登录",
+                "operationId": ".游客登录",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "post 数据",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/c_auth.TouristParams"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/c_auth.LoginResult"
+                        }
+                    }
+                }
+            }
+        },
         "/auth/register/mobile": {
             "post": {
                 "tags": [
@@ -138,6 +208,10 @@
             "properties": {
                 "captcha": {
                     "description": "验证码",
+                    "type": "string"
+                },
+                "channel": {
+                    "description": "渠道",
                     "type": "string"
                 },
                 "from": {
@@ -236,6 +310,24 @@
                 }
             }
         },
+        "c_auth.TouristParams": {
+            "title": "TouristParams",
+            "type": "object",
+            "properties": {
+                "channel": {
+                    "description": "渠道",
+                    "type": "string"
+                },
+                "from": {
+                    "description": "请求来源",
+                    "type": "string"
+                },
+                "unique_id": {
+                    "description": "唯一标识",
+                    "type": "string"
+                }
+            }
+        },
         "c_room.RoomsInfo": {
             "title": "RoomsInfo",
             "type": "object",
@@ -280,11 +372,6 @@
             "title": "RoomsResult",
             "type": "object",
             "properties": {
-                "bb": {
-                    "description": "大盲注",
-                    "type": "integer",
-                    "format": "int64"
-                },
                 "list": {
                     "type": "array",
                     "items": {

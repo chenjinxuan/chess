@@ -65,6 +65,7 @@ func InitRouter() {
 		authRouter.POST("/login", c_auth.Login) // 账号密码登录
 		authRouter.POST("/login/quick", c_auth.LoginMobile) // 手机号快速登录
 		authRouter.POST("/login/tp", c_auth.TpLogin) // 第三方登录
+	        authRouter.POST("/login/tourist",c_auth.TouristLogin) // 游客登录
 		authRouter.POST("/logout", nil) // 登出，销毁token
 		authRouter.POST("/token/info", c_auth.TokenInfo) //获取token信息
 		authRouter.POST("/token/refresh", c_auth.TokenRefrash) // 刷新token

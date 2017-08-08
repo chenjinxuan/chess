@@ -34,6 +34,7 @@ type LoginParams struct {
 	From         string `json:"from" form:"from" description:"请求来源"`
 	UniqueId     string `json:"unique_id" form:"unique_id" description:"唯一标识"`
 	Captcha      string `json:"captcha" description:"验证码"`
+    	Channel      string `json:"channel" description:"渠道"`
 }
 
 type LoginResult struct {
