@@ -1,9 +1,11 @@
 package main
 
 import (
+	"chess/common/define"
 	"chess/common/helper"
 	"chess/common/log"
 	"chess/srv/srv-room/client_handler"
+	"chess/srv/srv-room/misc/packet"
 	pb "chess/srv/srv-room/proto"
 	"chess/srv/srv-room/registry"
 	. "chess/srv/srv-room/texas_holdem"
@@ -13,6 +15,9 @@ import (
 	"google.golang.org/grpc/metadata"
 	"io"
 	"strconv"
+	//"chess/models"
+	"fmt"
+	"time"
 )
 
 const (
@@ -88,22 +93,63 @@ func (s *server) Stream(stream pb.RoomService_StreamServer) error {
 		log.Error(err)
 		return ERROR_INCORRECT_FRAME_TYPE
 	}
+	uniqueId := md["unique_id"][0]
+	serviceId := md["service_id"][0]
 
-	// todo get user info from mysql
+	// 是否已登录
+	sess := NewSession(userid)
+	err = sess.Get()
+	if err != nil {
+		return err
+	}
+
+	// 已登录 踢出
+	if sess.Status == SESSION_STATUS_LOGIN {
+		err = sess.NotifyKickedOut()
+		if err != nil {
+			log.Error("sess.NotifyKickedOut: ", err)
+			return err
+		}
+	}
+
+	//  get user info from mysql
+	//var userWallet models.UsersWalletModel
+	//err = models.UsersWallet.Get(userid, &userWallet)
+	//if err != nil {
+	//	log.Error("models.UsersWallet.Get: ", err)
+	//	return err
+	//}
 
 	// player init
 	player := NewPlayer(userid, stream)
+	//player.Chips = int(userWallet.Balance)
 	player.Chips = 10000
 
 	// register user
 	registry.Register(player.Id, ch_ipc)
-	log.Debug("userid:", player.Id, " logged in")
+	log.Debugf("玩家%d登录成功，设备号：%s", player.Id, uniqueId)
+
+	// 保存当前登录状态
+	sess.TraceId = helper.Md5(fmt.Sprintf("%d-%d", userid, time.Now().Unix()))
+	sess.SrvId = serviceId
+	sess.UniqueId = uniqueId
+	sess.Status = SESSION_STATUS_LOGIN
+	err = sess.Set()
+	if err != nil {
+		log.Error("sess.Set: ", err)
+		return err
+	}
+	// 读取踢出通知
+	go sess.KickedOutLoop(player, sess_die)
 
 	defer func() {
 		registry.Unregister(player.Id, ch_ipc)
 		close(sess_die)
 		player.Leave()
-		log.Debug("stream end userid:", player.Id)
+		// 注销登录状态
+		sess.Reset()
+		sess.DelKickedOutQueue()
+		log.Debugf("玩家%d登出，设备号：%s", player.Id, uniqueId)
 	}()
 
 	// >> main message loop <<
@@ -135,20 +181,12 @@ func (s *server) Stream(stream pb.RoomService_StreamServer) error {
 					}
 				}
 
-				// session control by logic
-				if player.Flag&SESS_KICKED_OUT != 0 { // logic kick out
-					if err := stream.Send(&pb.Room_Frame{Type: pb.Room_Kick}); err != nil {
-						log.Error(err)
-						return err
-					}
-					return nil
-				}
 			case pb.Room_Ping:
 				if err := stream.Send(&pb.Room_Frame{Type: pb.Room_Ping, Message: frame.Message}); err != nil {
 					log.Error(err)
 					return err
 				}
-				log.Debugf("玩家%d pong...", player.Id)
+				//log.Debugf("玩家%d pong...", player.Id)
 			default:
 				log.Error("incorrect frame type:", frame.Type)
 				return ERROR_INCORRECT_FRAME_TYPE
@@ -158,6 +196,22 @@ func (s *server) Stream(stream pb.RoomService_StreamServer) error {
 				log.Error(err)
 				return err
 			}
+		}
+
+		// session control by logic
+		if player.Flag&SESS_KICKED_OUT != 0 { // logic kick out
+			if err := stream.Send(&pb.Room_Frame{
+				Type: pb.Room_Kick,
+				Message: packet.Pack(
+					define.Code["kicked_out_ack"],
+					&pb.KickedOutAck{BaseAck: &pb.BaseAck{Ret: 1}},
+				),
+			}); err != nil {
+				log.Error(err)
+				return err
+			}
+			log.Debugf("玩家%d被踢出.", player.Id)
+			return nil
 		}
 	}
 }

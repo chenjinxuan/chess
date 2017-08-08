@@ -91,7 +91,7 @@ func (r *Redis) Set(key string, value string) error {
 	return err
 }
 
-func (r *Redis) Setex(key string, value string, time int64,) error {
+func (r *Redis) Setex(key string, value string, time int64) error {
 	conn := r.GetConn()
 	defer conn.Close()
 
@@ -177,4 +177,12 @@ func (r *Redis) ScanWalk(keypattern string, f func(string, int) bool) {
 	}
 
 	return
+}
+
+func (r *Redis) Lpush(key string, val string) error {
+	conn := r.GetConn()
+	defer conn.Close()
+
+	_, err := conn.Do("LPUSH", key, val)
+	return err
 }

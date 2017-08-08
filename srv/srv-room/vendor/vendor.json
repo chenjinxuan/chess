@@ -27,16 +27,16 @@
 			"revisionTime": "2017-07-27T02:26:46Z"
 		},
 		{
-			"checksumSHA1": "9Df8KJEWl6chpbkz9m693dCogZc=",
+			"checksumSHA1": "uZGWax/EPi/DYfTNtli2N6Uw5x4=",
 			"path": "chess/common/db",
-			"revision": "3fe7722bb2f8b24fbaf377b15443817c801fadca",
-			"revisionTime": "2017-07-27T02:26:46Z"
+			"revision": "66c37ffd87bc33943e75028cf2bf2b18795640a8",
+			"revisionTime": "2017-08-01T10:00:18Z"
 		},
 		{
-			"checksumSHA1": "rqPZ+HCiIoOJTs7QvC6wFU11lIE=",
+			"checksumSHA1": "XwWdJyG7tR5ptrO6W4znZZfHEfg=",
 			"path": "chess/common/define",
-			"revision": "3fe7722bb2f8b24fbaf377b15443817c801fadca",
-			"revisionTime": "2017-07-27T02:26:46Z"
+			"revision": "61b807c7d44c47104976487bcced2151579366a3",
+			"revisionTime": "2017-08-04T10:23:25Z"
 		},
 		{
 			"checksumSHA1": "rvlXBnDsgwG/PAnNAN7ucHaZFrI=",
@@ -63,10 +63,16 @@
 			"revisionTime": "2017-07-27T02:26:46Z"
 		},
 		{
+			"checksumSHA1": "TuQhPdpAJAv1P5kKia4F75atoyw=",
+			"path": "github.com/satori/go.uuid",
+			"revision": "08f0718b61e95ddba0ade3346725fe0e4bf28ca6",
+			"revisionTime": "2015-08-29T02:49:07Z"
+		},
+		{
 			"checksumSHA1": "6U8Q11i/25dl7xyq7E4Pj0LIGEc=",
 			"path": "treasure/config",
-			"revision": "7712defaff50a89a2c9f9d2b68aa5751833566c9",
-			"revisionTime": "2017-07-25T08:42:37Z"
+			"revision": "58f3bfc921b78777c1088c814ca2999365c4d7e9",
+			"revisionTime": "2017-07-28T07:38:39Z"
 		}
 	],
 	"rootPath": "chess/srv/srv-room"

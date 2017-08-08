@@ -11,6 +11,10 @@ import (
 )
 
 const (
+	ActStandup = "standup" // 站起
+	ActSitdown = "sitdown" // 坐下
+	ActReady = "ready" // 准备
+	ActBetting = "betting" // 下注中
 	ActCall  = "call"  // 跟注
 	ActCheck = "check" // 让牌
 	ActRaise = "raise" // 加注
@@ -60,7 +64,39 @@ func (p *Player) Broadcast(code int16, msg proto.Message) {
 	}
 
 	for _, oc := range p.Table.Players {
-		if oc != nil && oc.Pos != p.Pos {
+		if oc != nil && oc.Id != p.Id {
+			oc.SendMessage(code, msg)
+		}
+	}
+}
+
+func (p *Player) BroadcastBystanders(code int16, msg proto.Message) {
+	if p.Table == nil {
+		log.Debug("p.Broadcast Table nil")
+		return
+	}
+
+	for _, oc := range p.Table.Bystanders {
+		if oc != nil && oc.Id != p.Id {
+			oc.SendMessage(code, msg)
+		}
+	}
+}
+
+func (p *Player) BroadcastAll(code int16, msg proto.Message) {
+	if p.Table == nil {
+		log.Debug("p.Broadcast Table nil")
+		return
+	}
+
+	for _, oc := range p.Table.Players {
+		if oc != nil && oc.Id != p.Id {
+			oc.SendMessage(code, msg)
+		}
+	}
+
+	for _, oc := range p.Table.Bystanders {
+		if oc != nil && oc.Id != p.Id {
 			oc.SendMessage(code, msg)
 		}
 	}
@@ -91,7 +127,7 @@ func (p *Player) Betting(n int) (raised bool) {
 		n = 0
 	} else if n == 0 { // 让牌
 		p.Action = ActCheck
-	} else if n+p.Bet <= table.Bet { // 跟注
+	} else if n+p.Bet <= table.Bet { // 跟注 或者 allin  table.Bet保持不变
 		p.Action = ActCall
 		p.Chips -= n
 		p.Bet += n
@@ -134,7 +170,7 @@ func (p *Player) Join(rid int, tid string) (table *Table) {
 	p.Bet = 0
 	p.Cards = nil
 	p.Hand.Init()
-	p.Action = ""
+	p.Action = ActStandup
 	p.Pos = 0
 	p.Table = nil
 
@@ -143,7 +179,7 @@ func (p *Player) Join(rid int, tid string) (table *Table) {
 	log.Debugf("(%s)玩家%d加入牌桌, 位置%d, 当前牌桌有%d个玩家", table.Id, p.Id, p.Pos, table.N)
 
 	// 2102, 通报加入游戏的玩家
-	p.Broadcast(define.Code["room_player_join_ack"], &pb.RoomPlayerJoinAck{
+	p.BroadcastAll(define.Code["room_player_join_ack"], &pb.RoomPlayerJoinAck{
 		BaseAck: &pb.BaseAck{Ret: 1, Msg: "ok"},
 		Player:  p.ToProtoMessage(),
 	})
@@ -158,6 +194,63 @@ func (p *Player) Join(rid int, tid string) (table *Table) {
 	return
 }
 
+// 站起
+func (p *Player) Standup() {
+	table := p.Table
+	if table == nil {
+		log.Errorf("玩家%d不在牌桌上！", p.Id)
+		return
+	}
+
+	if table.N == 1 {
+		log.Errorf("牌桌上只剩一位玩家，不允许站起操作！", p.Id)
+		return
+	}
+
+	table.DelPlayer(p)
+	table.AddBystander(p)
+
+	// 2113, 广播玩家站起
+	table.BroadcastAll(define.Code["room_player_standup_ack"], &pb.RoomPlayerStandupAck{
+		BaseAck: &pb.BaseAck{Ret: 1, Msg: "ok"},
+		TableId:  table.Id,
+		PlayerId: int32(p.Id),
+		PlayerPos: int32(p.Pos),
+	})
+
+	p.Bet = 0
+	p.Cards = nil
+	p.Hand.Init()
+	p.Action = ActStandup
+	p.Pos = 0
+
+}
+
+// 坐下
+func (p *Player) Sitdown() {
+	table := p.Table
+	if table == nil {
+		log.Errorf("玩家%d不在牌桌上！", p.Id)
+		return
+	}
+
+	if table.N == table.Max {
+		log.Errorf("牌桌上无空位，不允许坐下操作！", p.Id)
+		return
+	}
+
+	table.DelBystander(p)
+	table.AddPlayer(p)
+
+	// 2115, 广播玩家坐下
+	table.BroadcastAll(define.Code["room_player_sitdown_ack"], &pb.RoomPlayerSitdownAck{
+		BaseAck: &pb.BaseAck{Ret: 1, Msg: "ok"},
+		TableId:  table.Id,
+		PlayerId: int32(p.Id),
+		PlayerPos: int32(p.Pos),
+	})
+}
+
 func (p *Player) Leave() (table *Table) {
 	table = p.Table
 	if table == nil {
@@ -166,12 +259,14 @@ func (p *Player) Leave() (table *Table) {
 
 	log.Debugf("(%s)玩家%d离开牌桌", table.Id, p.Id)
 
-	// 2104, 广播离开房间的玩家
-	table.Broadcast(define.Code["room_player_gone_ack"], &pb.RoomPlayerGoneAck{
-		BaseAck: &pb.BaseAck{Ret: 1, Msg: "ok"},
-		Player:  p.ToProtoMessage(),
-	})
-	table.DelPlayer(p)
+	if p.Action != ActStandup {
+		// 2104, 广播离开房间的玩家
+		table.BroadcastAll(define.Code["room_player_gone_ack"], &pb.RoomPlayerGoneAck{
+			BaseAck: &pb.BaseAck{Ret: 1, Msg: "ok"},
+			Player:  p.ToProtoMessage(),
+		})
+		table.DelPlayer(p)
+	}
 
 	p.Bet = 0
 	p.Cards = nil
@@ -193,7 +288,7 @@ func (p *Player) Next() *Player {
 	}
 
 	for i := (p.Pos) % table.Cap(); i != p.Pos-1; i = (i + 1) % table.Cap() {
-		if table.Players[i] != nil {
+		if table.Players[i] != nil && table.Players[i].Action == ActReady {
 			return table.Players[i]
 		}
 	}

@@ -18,8 +18,8 @@ type Card struct {
 
 func (c Card) ToProtoMessage() *pb.CardInfo {
 	return &pb.CardInfo{
-		Suit:  int32(c.Suit),
-		Val: int32(c.Value),
+		Suit: int32(c.Suit),
+		Val:  int32(c.Value),
 	}
 }
 

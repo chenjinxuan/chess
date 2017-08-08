@@ -19,6 +19,8 @@ func init() {
 		2101: P_room_player_join_req,
 		2103: P_room_player_gone_req,
 		2105: P_room_player_bet_req,
+		2112: P_room_player_standup_req,
+		2114: P_room_player_sitdown_req,
 	}
 }
 
@@ -103,5 +105,29 @@ func P_room_player_bet_req(p *Player, data []byte) []byte {
 
 	p.ActBet <- req
 
+	return nil
+}
+
+// 玩家站起
+func P_room_player_standup_req(p *Player, data []byte) []byte {
+	req := &pb.RoomPlayerStandupReq{}
+	err := proto.Unmarshal(data, req)
+	if err != nil {
+		log.Errorf("proto.Unmarshal Error: %s", err)
+		return nil
+	}
+	p.Standup()
+	return nil
+}
+
+// 玩家站起
+func P_room_player_sitdown_req(p *Player, data []byte) []byte {
+	req := &pb.RoomPlayerSitdownReq{}
+	err := proto.Unmarshal(data, req)
+	if err != nil {
+		log.Errorf("proto.Unmarshal Error: %s", err)
+		return nil
+	}
+	p.Sitdown()
 	return nil
 }
