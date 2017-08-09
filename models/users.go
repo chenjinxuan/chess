@@ -14,6 +14,7 @@ const (
 	TYPE_QQ                 = 3
 	TYPE_WEIBO              = 4
 	TYPE_WECHAT             = 5
+        TYPE_TOURIST            = -1
 
 	IS_FRESH_FALSE = 0 // 走完新手引导
 	IS_FRESH_TRUE  = 1
@@ -411,14 +412,14 @@ func (m *UsersModel) Save() error {
 }
 
 // Update Nickname
-func (m *UsersModel) UpdateNickname(nickname string) error {
+func (m *UsersModel) UpdateNickname(id int,nickname string) error {
     sqlString := `UPDATE users SET
 		 nickname = ?
 		WHERE id = ?`
     _, err := Mysql.Chess.Exec(
 	sqlString,
 	nickname,
-	m.Id,
+	id,
     )
 
     // Debug
@@ -427,9 +428,6 @@ func (m *UsersModel) UpdateNickname(nickname string) error {
 	"Error": err,
     })
 
-    if err != nil {
-	return err
-    }
     return err
 }
 

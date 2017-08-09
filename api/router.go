@@ -15,6 +15,7 @@ import (
     "github.com/gin-gonic/gin"
     "time"
     "chess/api/controllers"
+    "chess/api/controllers/room"
 )
 
 func InitRouter() {
@@ -64,6 +65,7 @@ func InitRouter() {
 		authRouter.POST("/login", c_auth.Login) // 账号密码登录
 		authRouter.POST("/login/quick", c_auth.LoginMobile) // 手机号快速登录
 		authRouter.POST("/login/tp", c_auth.TpLogin) // 第三方登录
+	        authRouter.POST("/login/tourist",c_auth.TouristLogin) // 游客登录
 		authRouter.POST("/logout", nil) // 登出，销毁token
 		authRouter.POST("/token/info", c_auth.TokenInfo) //获取token信息
 		authRouter.POST("/token/refresh", c_auth.TokenRefrash) // 刷新token
@@ -71,7 +73,11 @@ func InitRouter() {
 		authRouter.POST("/password/reset", c_auth.PasswordReset)
 	    authRouter.GET("/test", c_auth.Ttest)
 	}
-
+        // @SubApi /room -房间相关 [/room/]
+        roomRouter :=router.Group("/room")
+	{
+	    roomRouter.GET("/list",c_room.RoomsList)
+	}
 	// @SubApi /verify - 验证码相关 [/verify/]
 	verifyRouter := router.Group("/verify")
 	{
