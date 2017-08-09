@@ -9,6 +9,7 @@ import (
 	"chess/api/helper"
 	"chess/api/log"
 	"chess/models"
+    "fmt"
 )
 
 const (
@@ -300,6 +301,7 @@ func LoginByWechat(code string, ip, channel, from string, client *wechat.Client)
         user.AppFrom = from
 	userid, err := models.Users.Insert(&user)
 	if err != nil {
+	    fmt.Println(err)
 		msg = "Could not create new user."
 		return
 	}
