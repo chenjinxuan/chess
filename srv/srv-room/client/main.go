@@ -10,6 +10,7 @@ import (
 	"google.golang.org/grpc/metadata"
 	"io"
 	"time"
+	"flag"
 )
 
 var (
@@ -17,12 +18,18 @@ var (
 	//serviceId = "room-1"
 	target    = "192.168.40.157:30001"
 	serviceId = "room-2"
+	userId = flag.Int("uid", 0, "user id")
 )
 
 func main() {
+	flag.Parse()
 	// 用户id
-	//uid := time.Now().Second()
-	uid := 10000002
+	uid := 0
+	if *userId == 0 {
+		uid = time.Now().Second()
+	} else {
+		uid = *userId
+	}
 
 	player := NewPlayer()
 	player.Id = int32(uid)

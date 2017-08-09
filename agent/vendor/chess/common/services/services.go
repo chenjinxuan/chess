@@ -4,7 +4,6 @@ import (
 	"strings"
 	"sync"
 	"sync/atomic"
-
 	. "chess/common/consul"
 	"chess/common/log"
 	"fmt"

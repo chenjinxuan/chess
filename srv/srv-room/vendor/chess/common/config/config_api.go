@@ -8,7 +8,7 @@ import (
 
     "github.com/gin-gonic/gin"
     "strings"
-    "fmt"
+
 )
 
 var Api = new(ApiConfig)
@@ -41,6 +41,7 @@ type ApiConfig struct {
 	Pay         []map[string]interface{}       `json:"pay"`
 	Feedback    *Feedback                       `json:"feedback"`
 	Steer       *Steer `json:"steer"`
+        GrpcServer     []string
 
 }
 var (
@@ -242,7 +243,14 @@ func (c *ApiConfig) Import() error {
 	}
 	ConsulClient.KeyWatch("api/post_des_key", &c.PostDesKey)
 
-
+       grpcvalue,err:=ConsulClient.Key("api/grpc_server","")
+	if err != nil {
+	    return err
+	    }
+	var g []string
+	err = json.Unmarshal([]byte(grpcvalue),&g)
+        c.GrpcServer=g
+        C=c
         //defaultStr,err:=ConsulClient.Key("api/default","")
 	//if err != nil {
 	//    return err
@@ -293,7 +301,7 @@ func InitConfig() {
     //if err != nil {
 	//return err
     //}
-fmt.Println(C.Login.FailLimit )
+
     diffStr ,err := ConsulClient.KeyList("api/diff")
     Cs = make(map[string]*ApiConfig)
     defaultBytes, err := json.Marshal(&C)
