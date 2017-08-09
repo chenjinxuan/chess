@@ -8,6 +8,7 @@ import (
 	"github.com/golang/protobuf/proto"
 	"time"
 	"chess/common/log"
+	"chess/models"
 )
 
 const (
@@ -27,8 +28,9 @@ type Player struct {
 	Nickname string
 	Avatar   string
 	Level    string
-	Chips    int
-	TotalChips int
+	Chips    int  // 带入牌桌的筹码
+	TotalChips int  // 原有筹码
+	CurrChips int // 牌桌上以外的筹码
 
 	Pos    int
 	Bet    int
@@ -184,7 +186,7 @@ func (p *Player) Join(rid int, tid string) (table *Table) {
 
 	// 带入筹码
 	p.Chips = table.MaxCarry/2
-	p.TotalChips -= p.Chips
+	p.CurrChips -= p.Chips
 
 
 	log.Debugf("(%s)玩家%d加入牌桌, 位置%d, 当前牌桌有%d个玩家", table.Id, p.Id, p.Pos, table.N)
@@ -234,8 +236,8 @@ func (p *Player) Standup() {
 	p.Hand.Init()
 	p.Action = ActStandup
 	p.Pos = 0
+	p.CurrChips += p.Chips
 	p.Chips = 0
-	p.TotalChips += p.Chips
 
 }
 
@@ -257,7 +259,7 @@ func (p *Player) Sitdown() {
 
 	// 带入筹码
 	p.Chips = table.MaxCarry/2
-	p.TotalChips -= p.Chips
+	p.CurrChips -= p.Chips
 
 	// 2115, 广播玩家坐下
 	table.BroadcastAll(define.Code["room_player_sitdown_ack"], &pb.RoomPlayerSitdownAck{
@@ -294,6 +296,16 @@ func (p *Player) Leave() (table *Table) {
 
 	log.Debugf("(%s)玩家%d离开牌桌", table.Id, p.Id)
 
+	// 持久化
+	go func (total, curr int) {
+		add := curr - total
+
+		err := models.UsersWallet.Checkout(p.Id, add)
+		if err != nil {
+			log.Errorf("models.UsersWallet.Checkout(%d, %d) Error: %s",p.Id, add, err)
+		}
+	}(p.TotalChips, p.CurrChips+p.Chips)
+
 	if p.Action != ActStandup {
 		// 2104, 广播离开房间的玩家
 		table.BroadcastAll(define.Code["room_player_gone_ack"], &pb.RoomPlayerGoneAck{
@@ -308,6 +320,9 @@ func (p *Player) Leave() (table *Table) {
 	p.Hand.Init()
 	p.Action = ""
 	p.Pos = 0
+	p.CurrChips += p.Chips
+	p.TotalChips = p.CurrChips
+	p.Chips = 0
 	p.Table = nil
 	if p.timer != nil {
 		p.timer.Reset(0)

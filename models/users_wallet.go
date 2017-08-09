@@ -108,3 +108,12 @@ func (m *UsersWalletModel) AddVirBalance(uid, amount int) error {
 	}
 	return tx.Commit()
 }
+
+func (m *UsersWalletModel) Checkout(uid, add int) error {
+	sqlStr := `UPDATE users_wallet
+		SET balance = balance + ?
+		WHERE user_id = ?`
+
+	_, err := Mysql.Chess.Exec(sqlStr, add, uid)
+	return err
+}

@@ -15,7 +15,7 @@ import (
 	"google.golang.org/grpc/metadata"
 	"io"
 	"strconv"
-	//"chess/models"
+	"chess/models"
 	"fmt"
 	"time"
 )
@@ -113,17 +113,19 @@ func (s *server) Stream(stream pb.RoomService_StreamServer) error {
 	}
 
 	//  get user info from mysql
-	//var userWallet models.UsersWalletModel
-	//err = models.UsersWallet.Get(userid, &userWallet)
-	//if err != nil {
-	//	log.Error("models.UsersWallet.Get: ", err)
-	//	return err
-	//}
+	var userWallet models.UsersWalletModel
+	err = models.UsersWallet.Get(userid, &userWallet)
+	if err != nil {
+		log.Error("models.UsersWallet.Get: ", err)
+		return err
+	}
 
 	// player init
 	player := NewPlayer(userid, stream)
-	//player.TotalChips = int(userWallet.Balance)
-	player.TotalChips = 10000
+	player.TotalChips = int(userWallet.Balance)
+	player.CurrChips = int(userWallet.Balance)
+	//player.TotalChips = 10000
+	//player.CurrChips = 10000
 
 	// register user
 	registry.Register(player.Id, ch_ipc)

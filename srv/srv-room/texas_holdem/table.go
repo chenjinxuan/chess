@@ -633,12 +633,12 @@ func (t *Table) showdown() {
 			t.Players[i].Chips += int(t.Chips[i])
 			if t.Players[i].Chips <= t.BigBlind { // 补筹码
 				carry := t.MaxCarry/2 - t.Players[i].Chips
-				if t.Players[i].TotalChips >= carry {
+				if t.Players[i].CurrChips >= carry {
 					t.Players[i].Chips += carry
-					t.Players[i].TotalChips -= carry
+					t.Players[i].CurrChips -= carry
 				} else {
-					t.Players[i].Chips += t.Players[i].TotalChips
-					t.Players[i].TotalChips = 0
+					t.Players[i].Chips += t.Players[i].CurrChips
+					t.Players[i].CurrChips = 0
 				}
 			}
 		}

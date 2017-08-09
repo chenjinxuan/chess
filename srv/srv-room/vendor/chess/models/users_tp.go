@@ -2,7 +2,7 @@ package models
 
 import (
 	"github.com/Sirupsen/logrus"
-	"chess/api/log"
+	"chess/common/log"
 )
 
 var UsersTp = new(UsersTpModel)
@@ -56,10 +56,10 @@ func (m *UsersTpModel) Insert(user *UsersTpModel) (int, error) {
 	)
 
 	// Debug
-	log.Log.WithFields(logrus.Fields{
+	log.Debugf("UsersTpModel.Insert",logrus.Fields{
 		"sql":   sqlString,
 		"Error": err,
-	}).Debug("UsersTpModel.Insert")
+	})
 
 	if err != nil {
 		return 0, err
@@ -78,10 +78,10 @@ func (m *UsersTpModel) UpdateWxUnionIdByUid(uid int, wxUnionId string) error {
 	)
 
 	// Debug
-	log.Log.WithFields(logrus.Fields{
+	log.Debugf("UsersTpModelUpdateWxUnionId",logrus.Fields{
 		"sql":   sqlString,
 		"Error": err,
-	}).Debug("UsersTpModelUpdateWxUnionId")
+	})
 	return err
 }
 
@@ -92,10 +92,10 @@ func (m *UsersTpModel) UpdateOpenidIdById(id int, openid string) error {
 		sqlString, openid, id,
 	)
 	// Debug
-	log.Log.WithFields(logrus.Fields{
+	log.Debugf("UsersTpModelUpdateWxUnionId",logrus.Fields{
 		"sql":   sqlString,
 		"Error": err,
-	}).Debug("UsersTpModelUpdateWxUnionId")
+	})
 	return err
 }
 
