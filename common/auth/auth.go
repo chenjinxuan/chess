@@ -21,7 +21,7 @@ type AuthResult struct {
 func LoginUser(userid int, from, uniqueId string) (AuthResult, error) {
 	var result AuthResult
 	expire := time.Now().Add(time.Second * time.Duration(config.CAuth.Login.TokenExpire)).Unix()
-	tokenString, err := CreateLoginToken(strconv.Itoa(userid), expire, define.JwtSecret)
+	tokenString, err := CreateLoginToken(strconv.Itoa(userid), expire, config.CAuth.TokenSecret)
 	if err != nil {
 		result.Msg = "Could not generate token."
 		return result, err
@@ -54,24 +54,4 @@ func LoginUser(userid int, from, uniqueId string) (AuthResult, error) {
 	return result, nil
 }
 
-// verify login with password
-func VerifyLogin(loginType uint8, user *models.UsersModel, password string) bool {
-	switch loginType {
-	case 0: // mobile number login
-		err := models.Users.GetByMobileNumber(user.MobileNumber, user)
-		if err != nil {
-			return false
-		}
 
-		err = Passwords.Check(user.Pwd, password)
-		if err != nil {
-			return false
-		}
-
-		return true
-
-	default:
-	}
-
-	return false
-}

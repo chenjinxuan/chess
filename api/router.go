@@ -16,6 +16,8 @@ import (
     "time"
     "chess/api/controllers"
     "chess/api/controllers/room"
+    "chess/api/controllers/user"
+    "chess/api/components/auth"
 )
 
 func InitRouter() {
@@ -78,6 +80,12 @@ func InitRouter() {
 	{
 	    roomRouter.GET("/list",c_room.RoomsList)
 	}
+
+    // @SubApi /user/:user_id - 用户相关 [/user/{user_id}/]
+        userRouter :=router.Group("/user/:user_id")
+    	{
+	    userRouter.GET("/info",auth.Login(config.C.TokenSecret),c_user.GetUserInfo)
+    	}
 	// @SubApi /verify - 验证码相关 [/verify/]
 	verifyRouter := router.Group("/verify")
 	{

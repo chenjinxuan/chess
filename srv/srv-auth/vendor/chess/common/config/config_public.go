@@ -12,6 +12,7 @@ type PublicConfig struct {
         SmsSendLimit            int
         SmsCheckLimit           int
         SmsTime                 int
+        TokenSecret             string
 }
 
 func (c *PublicConfig) Import() error {
@@ -35,6 +36,10 @@ func (c *PublicConfig) Import() error {
 	    return err
 	}
 	c.SmsTime, err = ConsulClient.KeyInt("public/sms_time", 600)
+	if err != nil {
+	    return err
+	}
+	c.TokenSecret, err = ConsulClient.Key("public/tokensecret", "rewrqwerq")
 	if err != nil {
 	    return err
 	}

@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"strconv"
 	"time"
-	"chess/api/components/auth"
+	"chess/common/auth"
 	"chess/api/components/input"
 	"chess/common/config"
 	"chess/api/define"

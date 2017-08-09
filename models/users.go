@@ -46,7 +46,7 @@ type UsersModel struct {
 func (m *UsersModel) Get(id int, user *UsersModel) error {
 	sqlString := `SELECT
 					id, email, pwd, nickname,
-					mobile_number,contact_mobile, gender,avatar, reg_ip,
+					mobile_number, gender,avatar, reg_ip,
 					last_login_ip, channel,type,status, is_fresh,updated, created
 				FROM users WHERE id = ?`
 	return Mysql.Chess.QueryRow(
@@ -57,7 +57,6 @@ func (m *UsersModel) Get(id int, user *UsersModel) error {
 		&user.Pwd,
 		&user.Nickname,
 		&user.MobileNumber,
-		&user.ContactMobile,
 		&user.Gender,
 		&user.Avatar,
 		&user.RegIp,
@@ -142,35 +141,35 @@ func (m *UsersModel) UpdateFresh(id int, is_fresh int) (err error) {
 	return err
 }
 
-func (m *UsersModel) GetDetail(id int, user *UsersModel) error {
-	sqlString := `SELECT
-					u.id, u.email, u.pwd, u.nickname,
-					u.mobile_number,u.contact_mobile, u.gender, u.avatar, u.reg_ip,
-					u.last_login_ip, u.channel, u.type, u.status, u.is_fresh, IFNULL(ui.device_from, ''), u.updated, u.created
-				FROM users AS u LEFT JOIN users_info AS ui ON u.id = ui.user_id
-				WHERE u.id = ?`
-	return Mysql.Chess.QueryRow(
-		sqlString, id,
-	).Scan(
-		&user.Id,
-		&user.Email,
-		&user.Pwd,
-		&user.Nickname,
-		&user.MobileNumber,
-		&user.ContactMobile,
-		&user.Gender,
-		&user.Avatar,
-		&user.RegIp,
-		&user.LastLoginIp,
-		&user.Channel,
-		&user.Type,
-		&user.Status,
-		&user.IsFresh,
-		&user.AppFrom,
-		&user.Updated,
-		&user.Created,
-	)
-}
+//func (m *UsersModel) GetDetail(id int, user *UsersModel) error {
+//	sqlString := `SELECT
+//					u.id, u.email, u.pwd, u.nickname,
+//					u.mobile_number,u.contact_mobile, u.gender, u.avatar, u.reg_ip,
+//					u.last_login_ip, u.channel, u.type, u.status, u.is_fresh, IFNULL(ui.device_from, ''), u.updated, u.created
+//				FROM users AS u LEFT JOIN users_info AS ui ON u.id = ui.user_id
+//				WHERE u.id = ?`
+//	return Mysql.Chess.QueryRow(
+//		sqlString, id,
+//	).Scan(
+//		&user.Id,
+//		&user.Email,
+//		&user.Pwd,
+//		&user.Nickname,
+//		&user.MobileNumber,
+//		&user.ContactMobile,
+//		&user.Gender,
+//		&user.Avatar,
+//		&user.RegIp,
+//		&user.LastLoginIp,
+//		&user.Channel,
+//		&user.Type,
+//		&user.Status,
+//		&user.IsFresh,
+//		&user.AppFrom,
+//		&user.Updated,
+//		&user.Created,
+//	)
+//}
 
 func (m *UsersModel) GetPwdByMobile(mobile string) (pwd string, err error) {
 	sqlStr := `SELECT pwd FROM users WHERE mobile_number = ?`
