@@ -18,6 +18,7 @@ import (
 	"chess/models"
 	"fmt"
 	"time"
+	"chess/srv/srv-room/signal"
 )
 
 const (
@@ -71,6 +72,7 @@ func (s *server) recv(stream pb.RoomService_StreamServer, sess_die chan struct{}
 // the center of room logic
 func (s *server) Stream(stream pb.RoomService_StreamServer) error {
 	defer helper.PrintPanicStack()
+	signal.SessWg.Add(1)
 
 	sess_die := make(chan struct{})
 	ch_agent := s.recv(stream, sess_die)
@@ -152,6 +154,7 @@ func (s *server) Stream(stream pb.RoomService_StreamServer) error {
 		sess.Reset()
 		sess.DelKickedOutQueue()
 		log.Debugf("玩家%d登出，设备号：%s", player.Id, uniqueId)
+		signal.SessWg.Done()
 	}()
 
 	// >> main message loop <<
@@ -198,6 +201,9 @@ func (s *server) Stream(stream pb.RoomService_StreamServer) error {
 				log.Error(err)
 				return err
 			}
+		case <-signal.SessDie:
+			log.Debug("Receive signal.SessDie")
+			return nil
 		}
 
 		// session control by logic

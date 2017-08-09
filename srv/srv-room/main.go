@@ -88,8 +88,7 @@ func main() {
 			laddr := fmt.Sprintf(":%d", c.Int("port"))
 			lis, err := net.Listen("tcp", laddr)
 			if err != nil {
-				log.Error(err)
-				os.Exit(-1)
+				panic(err)
 			}
 			log.Info("listening on ", lis.Addr())
 

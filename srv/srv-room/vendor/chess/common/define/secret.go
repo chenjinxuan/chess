@@ -1,7 +1,7 @@
 package define
 
 import (
-	"treasure/config"
+	"chess/common/config"
 )
 
 var (

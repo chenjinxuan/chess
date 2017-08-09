@@ -220,6 +220,11 @@ message RoomPlayerChangeTableReq{
     BaseReq base_req = 1;
 }
 
+// 2117, 关闭牌桌，服务进行维护时通报
+message RoomShutdownTableAck{
+    BaseAck base_ack = 1;
+}
+
 message PotInfo{
     int32 pot = 1;
     repeated int32 ps = 2;

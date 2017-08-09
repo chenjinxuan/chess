@@ -402,6 +402,14 @@ func (p *Player)HandleMQ(tos int16, data []byte) {
 
 		fmt.Printf("\n[玩家坐下广播]\n")
 		fmt.Printf("\t玩家%d坐下，位置：%d\n",ack.Player.Id, ack.Player.Pos)
+	case 2117:// 服务器关闭
+		ack := &pb.RoomShutdownTableAck{}
+		err := proto.Unmarshal(data, ack)
+		if err != nil {
+			log.Errorf("proto.Unmarshal Error: %s", err)
+			return
+		}
+		fmt.Print("\n[服务器维护中...]\n")
 	}
 
 }

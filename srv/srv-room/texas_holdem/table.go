@@ -9,6 +9,7 @@ import (
 	"time"
 	"github.com/satori/go.uuid"
 	"chess/common/log"
+	"chess/srv/srv-room/signal"
 )
 
 const (
@@ -83,8 +84,9 @@ func NewTable(rid, max, sb, bb, minC, maxC int) *Table {
 
 	// 初始化发牌器
 	table.dm.Init()
-
+	signal.TableWg.Add(1)
 	go func() {
+		defer signal.TableWg.Done()
 		timer := time.NewTimer(time.Second * 6)
 		for {
 			select {
@@ -92,6 +94,10 @@ func NewTable(rid, max, sb, bb, minC, maxC int) *Table {
 				table.start()
 				timer.Reset(time.Second * 6)
 			case <-table.exitChan:
+				return
+			case <-signal.TableDie: // server is shuting down...
+				log.Debug("------Receive signal.TableDie")
+				table.shutdown()
 				return
 			}
 		}
@@ -569,6 +575,25 @@ func (t *Table) calc() (pots []handPot) {
 	return
 }
 
+// 关闭桌子
+func (t *Table) shutdown() {
+	t.BroadcastAll(define.Code["room_shutdown_table_ack"], &pb.RoomShutdownTableAck{
+		BaseAck: &pb.BaseAck{Ret: 1, Msg: "ok"},
+	})
+	for _, p := range t.Players {
+		if p != nil {
+			p.Leave()
+		}
+	}
+
+	for _, p := range t.Bystanders {
+		if p != nil {
+			p.Leave()
+		}
+	}
+}
+
+// 摊牌
 func (t *Table) showdown() {
 	pots := t.calc()
 

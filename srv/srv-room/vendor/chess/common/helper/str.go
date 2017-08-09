@@ -11,7 +11,12 @@ import (
 )
 
 func GenMobileNickname(mobilenum string) string {
+    if len(mobilenum) == 11 {
 	return mobilenum[:3] + "***" + mobilenum[8:]
+    }else {
+	return mobilenum
+    }
+
 }
 
 func IsMobileNumber(mobile string) bool {
