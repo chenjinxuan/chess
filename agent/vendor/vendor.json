@@ -9,6 +9,12 @@
 			"revisionTime": "2017-07-12T07:33:52Z"
 		},
 		{
+			"checksumSHA1": "XwWdJyG7tR5ptrO6W4znZZfHEfg=",
+			"path": "chess/common/define",
+			"revision": "2549b707af1d3608ff839aaf4bcce9601ee5f63a",
+			"revisionTime": "2017-08-08T05:43:38Z"
+		},
+		{
 			"checksumSHA1": "Y+us1CJfgnPsZixZzxqHKD89k0o=",
 			"path": "chess/common/log",
 			"revision": "dc76a4376e10e11a8255b8106cc90ac2e75f9059",

@@ -117,11 +117,12 @@ func P_room_player_standup_req(p *Player, data []byte) []byte {
 		log.Errorf("proto.Unmarshal Error: %s", err)
 		return nil
 	}
+	log.Debug("P_room_player_standup_req", req)
 	p.Standup()
 	return nil
 }
 
-// 玩家站起
+// 玩家坐下
 func P_room_player_sitdown_req(p *Player, data []byte) []byte {
 	req := &pb.RoomPlayerSitdownReq{}
 	err := proto.Unmarshal(data, req)
@@ -133,6 +134,7 @@ func P_room_player_sitdown_req(p *Player, data []byte) []byte {
 	return nil
 }
 
+// 换桌
 func P_room_player_change_table_req(p *Player, data []byte) []byte {
 	req := &pb.RoomPlayerChangeTableReq{}
 	err := proto.Unmarshal(data, req)
