@@ -220,6 +220,11 @@ func (p *Player) Standup() {
 		return
 	}
 
+	if p.Action == ActStandup {
+		log.Errorf("玩家%d当前已是站起状态！", p.Id)
+		return
+	}
+
 	table.DelPlayer(p)
 	table.AddBystander(p)
 
@@ -251,6 +256,11 @@ func (p *Player) Sitdown() {
 
 	if table.N == table.Max {
 		log.Errorf("牌桌上无空位，不允许坐下操作！", p.Id)
+		return
+	}
+
+	if p.Action != ActStandup {
+		log.Errorf("玩家%d当前不是站起状态！", p.Id)
 		return
 	}
 

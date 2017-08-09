@@ -14,6 +14,7 @@ import (
 	"chess/common/services"
 	pb "chess/srv/srv-room/proto"
 	"chess/srv/srv-room/redis"
+	"chess/srv/srv-room/signal"
 	"fmt"
 	"google.golang.org/grpc"
 	cli "gopkg.in/urfave/cli.v2"
@@ -76,6 +77,8 @@ func main() {
 			if err != nil {
 				panic(err)
 			}
+
+			go signal.Handler()
 
 			// consul 健康检查
 			http.HandleFunc("/check", consulCheck)

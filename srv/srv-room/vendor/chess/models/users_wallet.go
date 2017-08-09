@@ -28,7 +28,7 @@ func (m *UsersWalletModel) Init(userId int) error {
 
 func (m *UsersWalletModel) Get(userId int, data *UsersWalletModel) error {
 	sqlString := `SELECT
-					user_id, balance, total, vir_balance, vir_total, vir_is_new, status
+					user_id, balance, total, status
 				FROM users_wallet
 				WHERE user_id = ?`
 
@@ -38,9 +38,6 @@ func (m *UsersWalletModel) Get(userId int, data *UsersWalletModel) error {
 		&data.UserId,
 		&data.Balance,
 		&data.Total,
-		&data.VirBalance,
-		&data.VirTotal,
-		&data.VirIsNew,
 		&data.Status,
 	)
 }

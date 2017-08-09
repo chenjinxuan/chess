@@ -4,17 +4,17 @@ import "time"
 
 var Rooms = new(RoomsModel)
 
-type RoomsModel struct {
-	Id int
-	BigBlind int
-	SmallBlind int
-	MinCarry int
-	MaxCarry int
-	Max int
-	Updated time.Time
-	Created time.Time
-}
 
+type RoomsModel struct {
+    Id int `json:"id"`
+    BigBlind int `json:"big_blind" description:"小盲注"`
+    SmallBlind int `json:"small_blind" description:"小盲注"`
+    MinCarry int `json:"min_carry" description:"最小携带筹码"`
+    MaxCarry int `json:"max_carry" description:"最大携带筹码"`
+    Max int `json:"max" description:"最大人数"`
+    Created time.Time `json:"created"`
+    Updated time.Time `json:"updated"`
+}
 func(m *RoomsModel) GetAll() (list []RoomsModel, err error) {
 	sqlStr := `SELECT id, big_blind, small_blind, min_carry, max_carry, max
 		FROM rooms`
