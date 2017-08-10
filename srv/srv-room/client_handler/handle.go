@@ -22,6 +22,7 @@ func init() {
 		2112: P_room_player_standup_req,
 		2114: P_room_player_sitdown_req,
 		2116: P_room_player_change_table_req,
+		2118: P_room_player_logout_req,
 	}
 }
 
@@ -143,5 +144,18 @@ func P_room_player_change_table_req(p *Player, data []byte) []byte {
 		return nil
 	}
 	p.ChangeTable()
+	return nil
+}
+
+// 玩家登出
+func P_room_player_logout_req(p *Player, data []byte) []byte {
+	req := &pb.RoomPlayerLogoutReq{}
+	err := proto.Unmarshal(data, req)
+	if err != nil {
+		log.Errorf("proto.Unmarshal Error: %s", err)
+		return nil
+	}
+	log.Debug("P_room_player_logout_req", req)
+
 	return nil
 }

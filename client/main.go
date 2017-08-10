@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	server := "127.0.0.1:8888"
+	server := "127.0.0.1:8898"
 	tcpAddr, err := net.ResolveTCPAddr("tcp4", server)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Fatal error: %s", err.Error())

@@ -32,6 +32,7 @@ message UserLoginReq{
     int32 user_id = 2;
     string unique_id = 3;
     string token = 4;
+    int32 reconnect = 5;
 }
 
 // 11, 用户登录回复
@@ -225,6 +226,12 @@ message RoomShutdownTableAck{
     BaseAck base_ack = 1;
 }
 
+// 2118, 玩家退出游戏  type: 1注销 2杀掉进程
+message RoomPlayerLogoutReq{
+    BaseReq base_req = 1;
+    int32 type = 2;
+}
+
 message PotInfo{
     int32 pot = 1;
     repeated int32 ps = 2;
@@ -245,6 +252,7 @@ message TableInfo{
     int32 n = 10; // 当前玩家人数
     int32 max = 11; //  牌桌最大玩家人数
     repeated PlayerInfo players = 12; // 玩家列表
+    int32 status = 13; // 0已结束  1进行中
 }
 
 // 牌

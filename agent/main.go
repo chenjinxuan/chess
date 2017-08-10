@@ -186,36 +186,9 @@ func main() {
 }
 
 func wsServer() {
-	//wsSrv := websocket.Server{}
-	//wsSrv.Config.Header = http.Header{
-	//	"Access-Control-Allow-Origin": {"*"},
-	//}
-	//wsSrv.Handler = websocket.Handler(wsHandler)
-	//
-	//httpServeMux := http.NewServeMux()
-	//httpServeMux.HandleFunc("/web", wsSrv.ServeHTTP)
-	//
-	//server := &http.Server{
-	//	Handler: httpServeMux,
-	//	ReadTimeout: time.Duration(config.readDeadline) * time.Second,
-	//	WriteTimeout: time.Duration(20) * time.Second,
-	//}
-	//l, err := net.Listen("tcp", config.wslisten)
-	//if err != nil {
-	//	checkError(err)
-	//}
-	//
-	//log.Info("websocket listening on:", config.wslisten)
-	//
-	//if err := server.Serve(l); err != nil {
-	//	checkError(err)
-	//}
-
-	//http.Handle("/", http.FileServer(http.Dir("."))) // <-- note this line
-
 	http.Handle("/", websocket.Handler(wsHandler))
 
-	if err := http.ListenAndServe(":8899", nil); err != nil {
+	if err := http.ListenAndServe(config.wslisten, nil); err != nil {
 		log.Error("ListenAndServe:", err)
 	}
 }

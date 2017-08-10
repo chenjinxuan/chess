@@ -285,7 +285,7 @@ func (p *Player) ChangeTable() {
 		return
 	}
 
-	if p.Cards == nil {
+	if p.Action == ActStandup || p.Action == ActSitdown || p.Action == ActFold {
 		rid := table.RoomId
 		tid := table.Id
 		another := GetAnotherTable(rid, tid)

@@ -43,6 +43,7 @@ type Table struct {
 	Bet        int  // 当前回合 上一玩家下注额
 	N          int // 当前牌桌玩家数
 	Max        int // 牌桌最大玩家数
+	Status int // 0已结束  1进行中
 
 	MaxChips int
 	MinChips int
@@ -323,6 +324,7 @@ func (t *Table) start() {
 	t.Cards = nil
 	t.remain = 0
 	t.allin = 0
+	t.Status = 1
 	t.Each(0, func(p *Player) bool {
 		if p.Action == ActReady {
 			p.Bet = 0
@@ -668,6 +670,8 @@ func (t *Table) showdown() {
 			}
 		}
 	}
+
+	t.Status = 0
 }
 
 func (t *Table) ready() {
@@ -742,5 +746,6 @@ func (t *Table) ToProtoMessage() *pb.TableInfo {
 		N:          int32(t.N),
 		Max:        int32(t.Max),
 		Players:    t.Players.ToProtoMessage(),
+		Status: int32(t.Status),
 	}
 }
