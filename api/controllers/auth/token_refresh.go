@@ -10,7 +10,6 @@ import (
 	"chess/common/auth"
 	"chess/api/components/input"
 	"chess/common/config"
-	"chess/api/define"
 	// "treasure/log"
 	"strings"
 	"chess/models"
@@ -65,7 +64,7 @@ func TokenRefrash(c *gin.Context) {
 
 		// Generate a new login token
 		expire := time.Now().Add(time.Second * time.Duration(config.C.Login.TokenExpire)).Unix()
-		tokenString, err := auth.CreateLoginToken(strconv.Itoa(post.UserId), expire, define.JwtSecret)
+		tokenString, err := auth.CreateLoginToken(strconv.Itoa(post.UserId), expire, cConf.TokenSecret)
 		if err != nil {
 			result.Msg = "Could not generate token."
 			c.JSON(http.StatusOK, result)

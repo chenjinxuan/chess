@@ -9,8 +9,8 @@ import (
 	"chess/api/components/input"
 	"chess/api/components/tp"
 	"chess/common/config"
-	"chess/api/define"
-	"chess/api/log"
+	"chess/common/define"
+	"chess/common/log"
 	"chess/models"
 )
 
@@ -44,17 +44,17 @@ func TokenInfo(c *gin.Context) {
 		//log.Log.Info(post)
 		post.From = strings.ToLower(post.From)
 		// Check token
-		defer log.Log.Debug(result)
-		loginData, err := auth.AuthLoginToken(post.Token, define.JwtSecret)
+		defer log.Debug(result)
+		loginData, err := auth.AuthLoginToken(post.Token, cConf.TokenSecret)
 		if err != nil {
-			log.Log.Error(err)
+			log.Error(err)
 			result.Msg = auth.AuthFailed.Error()
 			c.JSON(http.StatusOK, result)
 			return
 		}
 
 		if strconv.Itoa(post.UserId) != loginData {
-			log.Log.Debug("strconv fail")
+			log.Debug("strconv fail")
 			result.Msg = auth.AuthFailed.Error()
 			c.JSON(http.StatusOK, result)
 			return
@@ -63,7 +63,7 @@ func TokenInfo(c *gin.Context) {
 		// Get the session
 		session, err := models.Session.Get(post.UserId, post.From, post.UniqueId)
 		if err != nil {
-			log.Log.Debugf("userid:%d,from:%s,uniqueId:%s", post.UserId, post.From, post.UniqueId)
+			log.Debugf("userid:%d,from:%s,uniqueId:%s", post.UserId, post.From, post.UniqueId)
 			result.Msg = auth.AuthFailed.Error()
 			c.JSON(http.StatusOK, result)
 			return
@@ -104,7 +104,7 @@ func TokenInfo(c *gin.Context) {
 		c.JSON(http.StatusOK, result)
 		return
 	} else {
-		log.Log.Debug("params invalid")
+		log.Debug("params invalid")
 	}
 
 	result.Msg = "Params invaild."

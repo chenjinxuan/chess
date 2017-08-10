@@ -19,6 +19,8 @@ type UserInfo struct {
     IsFresh int `json:"is_fresh" description:"是否新用户"`
     Balance int `json:"balance" description:"金币余额"`
     DiamondBalance int `json:"diamond_balance" description:"钻石余额"`
+    CheckinDays   int  `json:"checkin_days" description:"签到天数"`
+    LastCheckinTime string `json:"last_checkin_time" description:"上次签到时间"`
 }
 
 type UserInfoResult struct {
@@ -60,6 +62,8 @@ func GetUserInfo(c *gin.Context)  {
     result.Data.Type=user.Type
     result.Data.Status=user.Status
     result.Data.IsFresh=user.IsFresh
+    result.Data.CheckinDays = user.CheckinDays
+    result.Data.LastCheckinTime = user.LastCheckinTime.Format(define.FormatDatetime)
     //余额查询
     result.Data.Balance,result.Data.DiamondBalance,err = models.UsersWallet.GetBalance(UserId)
     if err != nil {

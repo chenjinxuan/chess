@@ -39,6 +39,8 @@ type UsersModel struct {
 	AppFrom          string
 	Status        int
 	IsFresh       int
+        CheckinDays   int
+        LastCheckinTime time.Time
 	Updated       time.Time
 	Created       time.Time
 }
@@ -47,7 +49,7 @@ func (m *UsersModel) Get(id int, user *UsersModel) error {
 	sqlString := `SELECT
 					id, email, pwd, nickname,
 					mobile_number, gender,avatar, reg_ip,
-					last_login_ip, channel,type,status, is_fresh,updated, created
+					last_login_ip, channel,type,status, is_fresh,checkin_days,last_checkin_time,updated, created
 				FROM users WHERE id = ?`
 	return Mysql.Chess.QueryRow(
 		sqlString, id,
@@ -65,6 +67,8 @@ func (m *UsersModel) Get(id int, user *UsersModel) error {
 		&user.Type,
 		&user.Status,
 		&user.IsFresh,
+	        &user.CheckinDays,
+                &user.LastCheckinTime,
 		&user.Updated,
 		&user.Created,
 	)

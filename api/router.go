@@ -14,7 +14,6 @@ import (
     "github.com/itsjamie/gin-cors"
     "github.com/gin-gonic/gin"
     "time"
-    "chess/api/controllers"
     "chess/api/controllers/room"
     "chess/api/controllers/user"
     "chess/api/components/auth"
@@ -98,6 +97,6 @@ func InitRouter() {
 	{
 		clientRouter.GET("/upgrade", nil)
 	}
-        router.GET("/testquery",controllers.Get)
+        //router.GET("/testquery",controllers.Get)
 	router.Run(config.Api.Port)
 }
