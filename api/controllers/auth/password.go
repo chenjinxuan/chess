@@ -7,7 +7,7 @@ import (
 	"chess/api/components/input"
 	"chess/api/components/sms"
 	"chess/common/config"
-	"chess/api/define"
+	"chess/common/define"
 	"chess/models"
 )
 

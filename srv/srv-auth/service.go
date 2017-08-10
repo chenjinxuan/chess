@@ -8,8 +8,8 @@ import (
 	"regexp"
 	"time"
         "chess/common/auth"
-        "chess/common/define"
         "chess/models"
+        "chess/common/config"
         "strconv"
     "fmt"
 )
@@ -31,7 +31,7 @@ func (s *server) init() {
 func (s *server) Auth(ctx context.Context, args *AuthArgs) (*AuthRes, error) {
     fmt.Println(args.Token)
 	// TODO check token
-    loginData,err :=  auth.AuthLoginToken(args.Token,define.JwtSecret)
+    loginData,err :=  auth.AuthLoginToken(args.Token,config.CAuth.TokenSecret)
     if err != nil || strconv.Itoa(int(args.UserId)) != loginData {
 	return &AuthRes{Ret:0,Msg:""},err
     }

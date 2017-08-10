@@ -8,6 +8,7 @@ var Code = map[string]int16{
 	"user_login_ack": 11, // 登陆成功
 	"get_seed_req":   30, // socket通信加密使用
 	"get_seed_ack":   31, // socket通信加密使用
+	"kicked_out_ack": 40, // 踢出通知
 
 	"centre_ping_req": 1001, //  ping
 	"centre_ping_ack": 1002, //  pong
@@ -31,6 +32,10 @@ var Code = map[string]int16{
 	"room_pot_ack":         2109, // 通报奖池
 	"room_action_ack":      2110, // 通报当前下注玩家
 	"room_showdown_ack":    2111, // 摊牌和比牌
+	"room_player_standup_req": 2112, // 玩家站起
+	"room_player_standup_ack": 2113, // 玩家站起通报
+	"room_player_sitdown_req": 2114, // 玩家坐下
+	"room_player_sitdown_ack": 2115, // 玩家坐下通报
 }
 
 var RCode = map[int16]string{
@@ -40,6 +45,7 @@ var RCode = map[int16]string{
 	11: "user_login_ack", // 登陆成功
 	30: "get_seed_req",   // socket通信加密使用
 	31: "get_seed_ack",   // socket通信加密使用
+	40: "kicked_out_ack", // 踢出通知
 
 	1001: "centre_ping_req", //  ping
 	1002: "centre_ping_ack", //  pong
@@ -63,11 +69,15 @@ var RCode = map[int16]string{
 	2109: "room_pot_ack",         // 通报奖池
 	2110: "room_action_ack",      // 通报当前下注玩家
 	2111: "room_showdown_ack",    // 摊牌和比牌
+	2112: "room_player_standup_req", // 玩家站起
+	2113: "room_player_standup_ack", // 玩家站起通报
+	2114: "room_player_sitdown_req", // 玩家坐下
+	2115: "room_player_sitdown_ack", // 玩家坐下通报
 }
 
 const (
-	SALT         = "CHESS_DH"
+	SALT = "CHESS_DH"
 
-	AUTH_FAIL = -999
+	AUTH_FAIL    = -999
 	SYSTEM_ERROR = -500
 )

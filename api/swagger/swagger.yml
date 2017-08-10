@@ -114,6 +114,34 @@ paths:
           description: ""
           schema:
             $ref: '#/definitions/c_room.RoomsResult'
+  /user/{user_id}/info:
+    get:
+      tags:
+      - '/user/:user_id - 用户相关 '
+      summary: 获取用户基本信息
+      description: 获取用户基本信息
+      operationId: .获取用户基本信息
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: query
+        name: token
+        description: token
+        required: true
+        type: string
+      - in: path
+        name: user_id
+        description: user_id
+        required: true
+        type: integer
+        format: int64
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/c_user.UserInfoResult'
 definitions:
   c_auth.LoginMobileParams:
     title: LoginMobileParams
@@ -266,6 +294,57 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/c_room.RoomsInfo'
+      msg:
+        type: string
+      ret:
+        type: integer
+        format: int64
+  c_user.UserInfo:
+    title: UserInfo
+    type: object
+    properties:
+      avatar:
+        description: 头像
+        type: string
+      balance:
+        description: 金币余额
+        type: integer
+        format: int64
+      diamond_balance:
+        description: 钻石余额
+        type: integer
+        format: int64
+      gender:
+        description: '性♂别 // 0 未知  1男2女 '
+        type: integer
+        format: int64
+      id:
+        type: integer
+        format: int64
+      is_fresh:
+        description: 是否新用户
+        type: integer
+        format: int64
+      mobile_number:
+        description: 手机号
+        type: string
+      nick_name:
+        description: 昵称
+        type: string
+      status:
+        description: 状态
+        type: integer
+        format: int64
+      type:
+        description: 用户类型
+        type: integer
+        format: int64
+  c_user.UserInfoResult:
+    title: UserInfoResult
+    type: object
+    properties:
+      data:
+        $ref: '#/definitions/c_user.UserInfo'
       msg:
         type: string
       ret:

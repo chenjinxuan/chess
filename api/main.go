@@ -41,6 +41,7 @@ func main() {
 
 	//InitRpcWrapper()
         config.InitConfig()
+
 	db.InitMySQL()
 	db.InitMongo()
         db.InitRedis()

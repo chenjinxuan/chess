@@ -8,9 +8,9 @@ import (
 	"chess/api/components/captcha"
 	"chess/api/components/input"
 	"chess/common/config"
-	"chess/api/define"
+	"chess/common/define"
 	"chess/api/helper"
-	"chess/api/log"
+	"chess/common/log"
 	"chess/models"
         grpcServer "chess/api/grpc"
     pb "chess/api/proto"
@@ -72,7 +72,7 @@ func Login(c *gin.Context) {
 		// check fail time
 		failCount, err := auth.GetFailLoginCount(form.MobileNumber)
 		if err != nil {
-			log.Log.Error(err)
+			log.Error(err)
 			result.Ret = 0
 			result.Msg = "server error"
 			c.JSON(http.StatusOK, result)

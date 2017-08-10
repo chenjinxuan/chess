@@ -14,9 +14,7 @@ import (
 	"time"
 	"chess/api/components/auth"
 	"chess/common/config"
-	//"chess/api/databases"
-	"chess/api/define"
-	"chess/api/log"
+	"chess/common/log"
 	"chess/models"
         "chess/api/redis"
 	//"chess/api/rpc"
@@ -131,7 +129,7 @@ func SendToPhone(mobileNumber, ip, content, source string) error {
 	apiUrlFmt := "http://sms.api.tongbu.com/message.ashx?SMSgxmtgame&t=%v&ip=%v&token=%v&source=%v&phone=%v&content=%v&stime="
 
 	t := strconv.Itoa(int(time.Now().Unix()))
-	tokenSource := mobileNumber + t + define.SmsSecret
+	tokenSource := mobileNumber + t + config.C.SmsSecret
 	h := md5.New()
 	io.WriteString(h, tokenSource)
 	token := fmt.Sprintf("%x", h.Sum(nil))
@@ -171,7 +169,7 @@ func SendPromotionToPhone(mobileNumber, ip, content, source string) (err error, 
 	apiUrlFmt := `http://sms.api.tongbu.com/message.ashx?SMSmt&t=%v&token=%v&source=%v&ip=%v&phone=%v&content=%v&stime=`
 
 	t := strconv.Itoa(int(time.Now().Unix()))
-	tokenSource := mobileNumber + t + define.SmsSecret
+	tokenSource := mobileNumber + t + config.C.SmsSecret
 	h := md5.New()
 	io.WriteString(h, tokenSource)
 	token := fmt.Sprintf("%x", h.Sum(nil))
@@ -194,8 +192,8 @@ func SendPromotionToPhone(mobileNumber, ip, content, source string) (err error, 
 	}
 	var data SendReponse
 	err = json.Unmarshal(body, &data)
-	log.Log.Info(apiUrl)
-	defer log.Log.Info(fmt.Sprintf("%s-sms-send-Log:  Content: %s Reponse Body: %s ", mobileNumber, content, string(body)))
+	log.Info(apiUrl)
+	defer log.Info(fmt.Sprintf("%s-sms-send-Log:  Content: %s Reponse Body: %s ", mobileNumber, content, string(body)))
 	// fmt.Printf(string(body))
 	if err != nil {
 		return err, rspStr
@@ -411,9 +409,9 @@ func CheckCodeNotUpdateStatus(mobile, code string, Type int, cSms *config.ApiCon
 func CheckChangeMobileCode(mobile string) (int, string, error) {
 	var userMobileVerify = new(models.UsersMobileVerifyModel)
 	userMobileVerify.MobileNumber = mobile
-	log.Log.Debug(userMobileVerify.MobileNumber)
+	log.Debug(userMobileVerify.MobileNumber)
 	userMobileVerify.VerifyType = SMS_CHANGE_MOBILE
-	log.Log.Debug(userMobileVerify.VerifyType)
+	log.Debug(userMobileVerify.VerifyType)
 	if err := models.UsersMobileVerify.GetCodeVerified(userMobileVerify); err != nil {
 		ret := Need_Change_Mobile_Verify
 		msg := NeedChangeMobileVerify.Error()
