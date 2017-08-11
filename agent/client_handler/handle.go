@@ -12,8 +12,8 @@ import (
 
 	"chess/agent/misc/crypto/dh"
 	"chess/agent/misc/packet"
-	"chess/common/log"
 	. "chess/common/define"
+	"chess/common/log"
 	"chess/common/services"
 
 	pb "chess/agent/proto"
@@ -32,7 +32,6 @@ func init() {
 		30: P_get_seed_req,
 	}
 }
-
 
 // 心跳包 直接把数据包发回去
 func P_heart_beat_req(sess *Session, data []byte) []byte {
@@ -100,21 +99,20 @@ func P_user_login_req(sess *Session, data []byte) []byte {
 
 	// 登陆鉴权
 	// 简单鉴权可以在agent直接完成，通常公司都存在一个用户中心服务器用于鉴权
-	//authConn, serviceId := services.GetService2(SRV_NAME_AUTH)
-	//if authConn == nil {
-	//	log.Error("cannot get auth service:", serviceId)
-	//	return nil
-	//}
-	//authCli := pb.NewAuthServiceClient(authConn)
-	//authRes, err := authCli.Auth(context.Background(), &pb.AuthArgs{UserId:req.UserId, Token:req.Token})
-	//if err != nil {
-	//	log.Error("authCli.Auth: ",err)
-	//	return packet.Pack(Code["user_login_ack"], &pb.UserLoginAck{&pb.BaseAck{Ret:SYSTEM_ERROR,Msg:"system error."}})
-	//}
-	//if authRes.Ret != 1 {
-	//	return packet.Pack(Code["user_login_ack"], &pb.UserLoginAck{&pb.BaseAck{Ret:AUTH_FAIL,Msg:"Auth fail."}})
-	//}
-
+	authConn, authServiceId := services.GetService2(SRV_NAME_AUTH)
+	if authConn == nil {
+		log.Error("cannot get auth service:", authServiceId)
+		return nil
+	}
+	authCli := pb.NewAuthServiceClient(authConn)
+	authRes, err := authCli.Auth(context.Background(), &pb.AuthArgs{UserId:req.UserId, Token:req.Token})
+	if err != nil {
+		log.Error("authCli.Auth: ",err)
+		return packet.Pack(Code["user_login_ack"], &pb.UserLoginAck{&pb.BaseAck{Ret:SYSTEM_ERROR,Msg:"system error."}})
+	}
+	if authRes.Ret != 1 {
+		return packet.Pack(Code["user_login_ack"], &pb.UserLoginAck{&pb.BaseAck{Ret:AUTH_FAIL,Msg:"Auth fail."}})
+	}
 
 	sess.UserId = req.UserId
 
@@ -124,8 +122,8 @@ func P_user_login_req(sess *Session, data []byte) []byte {
 
 	// 连接到已选定Room服务器
 	//conn, serviceId := services.GetService2(SRV_NAME_ROOM)
-	serviceId:=DEFAULT_SRV_ID_ROOM
-	conn := services.GetServiceWithId(DEFAULT_SRV_ID_ROOM,SRV_NAME_ROOM)
+	serviceId := DEFAULT_SRV_ID_ROOM
+	conn := services.GetServiceWithId(DEFAULT_SRV_ID_ROOM, SRV_NAME_ROOM)
 	if conn == nil {
 		log.Error("cannot get room service:", serviceId)
 		return nil
@@ -136,10 +134,11 @@ func P_user_login_req(sess *Session, data []byte) []byte {
 	ctx := metadata.NewContext(
 		context.Background(),
 		metadata.New(map[string]string{
-			"userid": fmt.Sprint(sess.UserId),
+			"userid":       fmt.Sprint(sess.UserId),
 			"service_name": SRV_NAME_ROOM,
-			"service_id": serviceId,
-			"unique_id": req.UniqueId,
+			"service_id":   serviceId,
+			"unique_id":    req.UniqueId,
+			"reconnect": fmt.Sprint(req.Reconnect),
 		}),
 	)
 	stream, err := cli.Stream(ctx)
@@ -191,5 +190,5 @@ func P_user_login_req(sess *Session, data []byte) []byte {
 		}
 	}(sess)
 
-	return packet.Pack(Code["user_login_ack"], &pb.UserLoginAck{&pb.BaseAck{Ret:1,Msg:"ok"}})
+	return packet.Pack(Code["user_login_ack"], &pb.UserLoginAck{&pb.BaseAck{Ret: 1, Msg: "ok"}})
 }

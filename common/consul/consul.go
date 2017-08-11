@@ -329,8 +329,15 @@ func (c *ConsulCliWrap) DeregisterService(serviceID string) error {
 	return c.cli.Agent().ServiceDeregister(serviceID)
 }
 
-func (c *ConsulCliWrap) Services() (map[string]*api.AgentService, error) {
+// 返回当前节点注册的服务列表
+func (c *ConsulCliWrap) LocalServices() (map[string]*api.AgentService, error) {
 	return c.cli.Agent().Services()
+}
+
+// 根据服务名返回所有节点上注册的服务
+func (c *ConsulCliWrap) Service(name string) ([]*api.CatalogService,  error) {
+	cs, _, err := c.cli.Catalog().Service(name, "", &api.QueryOptions{})
+	return cs, err
 }
 
 func (c *ConsulCliWrap) ServiceWatch(service string, handler func(idx uint64, raw interface{})) error {

@@ -12,8 +12,8 @@ type UsersWalletModel struct {
 	UserId     int
 	Balance    uint
 	Total      int
-	VirBalance uint
-	VirTotal   int
+	DiamondBalance uint
+    	DiamondTotal   int
 	VirIsNew   int
 	Status     int
 }
@@ -41,6 +41,15 @@ func (m *UsersWalletModel) Get(userId int, data *UsersWalletModel) error {
 		&data.Status,
 	)
 }
+func (m *UsersWalletModel) GetBalance(userId int) (balance,diamondBalance int, err error) {
+    sqlString := `SELECT
+					 balance,diamond_balance
+				FROM users_wallet
+				WHERE user_id = ?`
+
+    err = Mysql.Chess.QueryRow(sqlString, userId).Scan(&balance,&diamondBalance)
+    return
+}
 
 func (m *UsersWalletModel) GetBalanceByMobile(mobile string) (balance int, err error) {
 	sqlString := `SELECT balance 
@@ -57,7 +66,7 @@ func (m *UsersWalletModel) SendImitPresent(uid, amount int) error {
 	}
 
 	sqlStr := `UPDATE users_wallet
-		SET vir_balance = vir_balance + ?, vir_total = vir_total + ?, vir_is_new = 0
+		SET diamond_balance = diamond_balance + ?, diamond_total = diamond_total + ?
 		WHERE user_id = ?`
 
 	_, err = tx.Exec(sqlStr, amount, amount, uid)
@@ -70,7 +79,7 @@ func (m *UsersWalletModel) SendImitPresent(uid, amount int) error {
 		(user_id,amount,status,tag,comment)
 		VALUES
 		(?,?,?,?,?)`
-	_, err = tx.Exec(sqlStr, uid, amount, 1, "add vir_balance", "imitation present")
+	_, err = tx.Exec(sqlStr, uid, amount, 1, "add diamond_balance", "imitation present")
 	if err != nil {
 		tx.Rollback()
 		return err
@@ -85,7 +94,7 @@ func (m *UsersWalletModel) AddVirBalance(uid, amount int) error {
 	}
 
 	sqlStr := `UPDATE users_wallet
-		SET vir_balance = vir_balance + ?, vir_total = vir_total + ?
+		SET diamond_balance = diamond_balance + ?, diamond_total = diamond_total + ?
 		WHERE user_id = ?`
 
 	_, err = tx.Exec(sqlStr, amount, amount, uid)
@@ -98,7 +107,7 @@ func (m *UsersWalletModel) AddVirBalance(uid, amount int) error {
 		(user_id,amount,status,tag,comment)
 		VALUES
 		(?,?,?,?,?)`
-	_, err = tx.Exec(sqlStr, uid, amount, 1, "add vir_balance", "charge")
+	_, err = tx.Exec(sqlStr, uid, amount, 1, "add diamond_balance", "charge")
 	if err != nil {
 		tx.Rollback()
 		return err

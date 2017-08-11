@@ -72,7 +72,6 @@ func (s *server) recv(stream pb.RoomService_StreamServer, sess_die chan struct{}
 // the center of room logic
 func (s *server) Stream(stream pb.RoomService_StreamServer) error {
 	defer helper.PrintPanicStack()
-	signal.SessWg.Add(1)
 
 	sess_die := make(chan struct{})
 	ch_agent := s.recv(stream, sess_die)
@@ -129,10 +128,6 @@ func (s *server) Stream(stream pb.RoomService_StreamServer) error {
 	//player.TotalChips = 10000
 	//player.CurrChips = 10000
 
-	// register user
-	registry.Register(player.Id, ch_ipc)
-	log.Debugf("玩家%d登录成功，设备号：%s", player.Id, uniqueId)
-
 	// 保存当前登录状态
 	sess.TraceId = helper.Md5(fmt.Sprintf("%d-%d", userid, time.Now().Unix()))
 	sess.SrvId = serviceId
@@ -146,6 +141,11 @@ func (s *server) Stream(stream pb.RoomService_StreamServer) error {
 	// 读取踢出通知
 	go sess.KickedOutLoop(player, sess_die)
 
+	// register user
+	registry.Register(player.Id, player)
+	log.Debugf("玩家%d登录成功，设备号：%s", player.Id, uniqueId)
+
+	signal.SessWg.Add(1)
 	defer func() {
 		registry.Unregister(player.Id, ch_ipc)
 		close(sess_die)
@@ -202,7 +202,7 @@ func (s *server) Stream(stream pb.RoomService_StreamServer) error {
 				return err
 			}
 		case <-signal.SessDie:
-			log.Debug("Receive signal.SessDie")
+			log.Debugf("玩家%d, Receive signal.SessDie", player.Id)
 			return nil
 		}
 
