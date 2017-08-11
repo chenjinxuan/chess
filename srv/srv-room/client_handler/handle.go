@@ -4,6 +4,7 @@ import (
 	. "chess/common/define"
 	"chess/common/log"
 	"chess/srv/srv-room/misc/packet"
+	"chess/srv/srv-room/registry"
 	pb "chess/srv/srv-room/proto"
 	. "chess/srv/srv-room/texas_holdem"
 	"github.com/golang/protobuf/proto"
@@ -156,6 +157,7 @@ func P_room_player_logout_req(p *Player, data []byte) []byte {
 		return nil
 	}
 	log.Debug("P_room_player_logout_req", req)
-
+	p.Leave()
+	registry.Unregister(p.Id, p)
 	return nil
 }

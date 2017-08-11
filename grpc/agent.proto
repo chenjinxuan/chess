@@ -32,7 +32,8 @@ message UserLoginReq{
     int32 user_id = 2;
     string unique_id = 3;
     string token = 4;
-    int32 reconnect = 5;
+    string connect_to = 5;
+    int32 is_reconnect = 6;
 }
 
 // 11, 用户登录回复

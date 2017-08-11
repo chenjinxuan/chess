@@ -21,10 +21,10 @@
 			"revisionTime": "2017-08-10T10:47:46Z"
 		},
 		{
-			"checksumSHA1": "K91uXij4+5xJB7alfzhPOgjX9ao=",
+			"checksumSHA1": "CRBOxrXTUbDwoi+E76oGHWmxbSw=",
 			"path": "chess/common/define",
-			"revision": "1788ab002703aa548fdf9906820bf474e9da9f61",
-			"revisionTime": "2017-08-10T10:47:46Z"
+			"revision": "18acc48ef268f6bf3582bce15c55f4d4f53c8943",
+			"revisionTime": "2017-08-11T05:46:28Z"
 		},
 		{
 			"checksumSHA1": "mpQnbVEwkM17V0eXL5uX+SoR4q0=",
@@ -45,10 +45,10 @@
 			"revisionTime": "2017-08-10T10:47:46Z"
 		},
 		{
-			"checksumSHA1": "72ga+p57SGBO4yMQFg9kHqxpDuU=",
+			"checksumSHA1": "a57tIU1XTagxWMrMmJBV0ZYeG+c=",
 			"path": "chess/models",
-			"revision": "1788ab002703aa548fdf9906820bf474e9da9f61",
-			"revisionTime": "2017-08-10T10:47:46Z"
+			"revision": "18acc48ef268f6bf3582bce15c55f4d4f53c8943",
+			"revisionTime": "2017-08-11T05:46:28Z"
 		},
 		{
 			"checksumSHA1": "tI2uUPh7qwQxNihd1LvtNTdjVks=",
