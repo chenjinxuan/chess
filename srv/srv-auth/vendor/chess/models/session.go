@@ -52,8 +52,8 @@ func (m *SessionModel) Upsert(userId int, from, uniqueId string, session *Sessio
 	return Mongo.Chess.M(MongoDBStr , MongoColSession, func(c *mgo.Collection) error {
 		query := bson.M{
 			"user_id":   userId,
-			"from":      from,
-			"unique_id": uniqueId,
+			//"from":      from,
+			//"unique_id": uniqueId,
 		}
 		changeInfo, err := c.Upsert(query, session)
 

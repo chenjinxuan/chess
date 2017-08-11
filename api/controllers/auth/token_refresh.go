@@ -16,17 +16,23 @@ import (
 )
 
 type TokenRefreshParams struct {
-	UserId       int    `json:"user_id" binding:"required"`
-	From         string `json:"from"`
-	UniqueId     string `json:"unique_id" form:"unique_id"`
-	OldToken     string `json:"token" binding:"required"`
-	RefreshToken string `json:"refresh_token" binding:"required"`
+	UserId       int    `json:"user_id" binding:"required" description:"用户id"`
+	From         string `json:"from" description:"请求来源"`
+	UniqueId     string `json:"unique_id" form:"unique_id" description:"唯一设备"`
+	OldToken     string `json:"token" binding:"required" description:"旧的token"`
+	RefreshToken string `json:"refresh_token" binding:"required" description:"旧的刷新码"`
 }
 
 type TokenRefreshResult struct {
 	LoginResult
 }
-
+// @Title 刷新token
+// @Description 刷新token
+// @Summary 刷新token
+// @Accept json
+// @Param   body     body    c_auth.TokenRefreshParams  true        "post 数据"
+// @Success 200 {object} c_auth.TokenRefreshResult
+// @router /auth/token/refresh [post]
 func TokenRefrash(c *gin.Context) {
 	var result TokenRefreshResult
 	var post TokenRefreshParams
