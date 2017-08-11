@@ -71,7 +71,7 @@ func InitRouter() {
 		authRouter.POST("/token/info", c_auth.TokenInfo) //获取token信息
 		authRouter.POST("/token/refresh", c_auth.TokenRefrash) // 刷新token
 		authRouter.POST("/register/mobile", c_auth.RegisterMobile)
-		authRouter.POST("/password/reset", c_auth.PasswordReset)
+
 	    authRouter.GET("/test", c_auth.Ttest)
 	}
         // @SubApi /room -房间相关 [/room/]
@@ -84,6 +84,9 @@ func InitRouter() {
         userRouter :=router.Group("/user/:user_id")
     	{
 	    userRouter.GET("/info",auth.Login(config.C.TokenSecret),c_user.GetUserInfo)
+	    userRouter.GET("/checkin",auth.Login(config.C.TokenSecret),c_user.Checkin)
+	    userRouter.POST("/password/reset",auth.Login(config.C.TokenSecret), c_user.PasswordReset)
+
     	}
 	// @SubApi /verify - 验证码相关 [/verify/]
 	verifyRouter := router.Group("/verify")

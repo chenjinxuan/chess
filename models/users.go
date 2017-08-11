@@ -571,3 +571,15 @@ func (m *UsersModel) UpdateGender(gender int) error {
     }
     return err
 }
+//获取签到信息
+func (m *UsersModel) CheckinInfo(userId int) (days int ,checkTime time.Time,err error){
+    sqlStr:=`SELECT checkin_days,last_checkin_time FROM users WHERE id = ?`
+    err=Mysql.Chess.QueryRow(sqlStr,userId).Scan(&days,&checkTime)
+    return
+}
+//签到
+func (m *UsersModel) Checkin(userId,days int ,checkTime string) error {
+    sqlStr :=`UPDATE users SET checkin_days =  ? ,last_checkin_time = ? WHERE id = ?`
+    _,err:=Mysql.Chess.Exec(sqlStr,days,checkTime,userId)
+    return  err
+}

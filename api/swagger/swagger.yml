@@ -98,6 +98,29 @@ paths:
           description: ""
           schema:
             $ref: '#/definitions/c_auth.LoginResult'
+  /auth/token/refresh:
+    post:
+      tags:
+      - '/auth - 授权相关 '
+      summary: 刷新token
+      description: 刷新token
+      operationId: .刷新token
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        description: post 数据
+        required: true
+        schema:
+          $ref: '#/definitions/c_auth.TokenRefreshParams'
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/c_auth.TokenRefreshResult'
   /room/list:
     get:
       tags:
@@ -114,6 +137,34 @@ paths:
           description: ""
           schema:
             $ref: '#/definitions/c_room.RoomsResult'
+  /user/{user_id}/checkin:
+    get:
+      tags:
+      - '/user/:user_id - 用户相关 '
+      summary: 用户签到
+      description: 用户签到
+      operationId: .用户签到
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: user_id
+        description: 用户id
+        required: true
+        type: integer
+        format: int64
+      - in: query
+        name: token
+        description: token
+        required: true
+        type: string
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/c_user.CheckinResult'
   /user/{user_id}/info:
     get:
       tags:
@@ -142,6 +193,40 @@ paths:
           description: ""
           schema:
             $ref: '#/definitions/c_user.UserInfoResult'
+  /user/{user_id}/password/reset:
+    post:
+      tags:
+      - '/user/:user_id - 用户相关 '
+      summary: 重置密码
+      description: 重置密码
+      operationId: .重置密码
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        description: post 数据
+        required: true
+        schema:
+          $ref: '#/definitions/c_user.PasswordResetParams'
+      - in: query
+        name: token
+        description: token
+        required: true
+        type: string
+      - in: path
+        name: user_id
+        description: user_id
+        required: true
+        type: integer
+        format: int64
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/c_user.PasswordResetResult'
 definitions:
   c_auth.LoginMobileParams:
     title: LoginMobileParams
@@ -207,6 +292,7 @@ definitions:
         description: 当 Token 过期时，使用该 Token 获取一个新的
         type: string
       ret:
+        description: 1成功 0失败
         type: integer
         format: int64
       token:
@@ -242,6 +328,57 @@ definitions:
       unique_id:
         description: 唯一标识0
         type: string
+  c_auth.TokenRefreshParams:
+    title: TokenRefreshParams
+    type: object
+    properties:
+      from:
+        description: 请求来源
+        type: string
+      refresh_token:
+        description: 旧的刷新码
+        type: string
+      token:
+        description: 旧的token
+        type: string
+      unique_id:
+        description: 唯一设备
+        type: string
+      user_id:
+        description: 用户id
+        type: integer
+        format: int64
+  c_auth.TokenRefreshResult:
+    title: LoginResult
+    type: object
+    properties:
+      expire:
+        description: token过期时间
+        type: integer
+        format: int64
+      fresh:
+        description: 是否是新用户
+        type: integer
+        format: int64
+      msg:
+        type: string
+      need_captcha:
+        description: 是否需要验证码
+        type: boolean
+      refresh_token:
+        description: 当 Token 过期时，使用该 Token 获取一个新的
+        type: string
+      ret:
+        description: 1成功 0失败
+        type: integer
+        format: int64
+      token:
+        description: 请求授权的token
+        type: string
+      user_id:
+        description: 用户Id
+        type: integer
+        format: int64
   c_auth.TouristParams:
     title: TouristParams
     type: object
@@ -297,6 +434,50 @@ definitions:
       msg:
         type: string
       ret:
+        description: 1成功 0失败
+        type: integer
+        format: int64
+  c_user.CheckinResult:
+    title: CheckinResult
+    type: object
+    properties:
+      checkin_days:
+        description: 签到天数
+        type: integer
+        format: int64
+      last_checkin_time:
+        description: 上次签到时间
+        type: string
+      msg:
+        type: string
+      ret:
+        description: 1成功 0失败
+        type: integer
+        format: int64
+  c_user.PasswordResetParams:
+    title: PasswordResetParams
+    type: object
+    properties:
+      code:
+        description: 验证码
+        type: string
+      from:
+        description: 请求来源
+        type: string
+      mobile_number:
+        description: 手机号
+        type: string
+      password:
+        description: 密码
+        type: string
+  c_user.PasswordResetResult:
+    title: PasswordResetResult
+    type: object
+    properties:
+      msg:
+        type: string
+      ret:
+        description: 1成功 0失败
         type: integer
         format: int64
   c_user.UserInfo:
@@ -308,6 +489,10 @@ definitions:
         type: string
       balance:
         description: 金币余额
+        type: integer
+        format: int64
+      checkin_days:
+        description: 签到天数
         type: integer
         format: int64
       diamond_balance:
@@ -325,6 +510,9 @@ definitions:
         description: 是否新用户
         type: integer
         format: int64
+      last_checkin_time:
+        description: 上次签到时间
+        type: string
       mobile_number:
         description: 手机号
         type: string
@@ -348,6 +536,7 @@ definitions:
       msg:
         type: string
       ret:
+        description: 1成功 0失败
         type: integer
         format: int64
   define.BaseResult:
@@ -357,5 +546,6 @@ definitions:
       msg:
         type: string
       ret:
+        description: 1成功 0失败
         type: integer
         format: int64
