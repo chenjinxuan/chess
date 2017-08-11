@@ -41,6 +41,15 @@ func (m *UsersWalletModel) Get(userId int, data *UsersWalletModel) error {
 		&data.Status,
 	)
 }
+func (m *UsersWalletModel) GetBalance(userId int) (balance,diamondBalance int, err error) {
+    sqlString := `SELECT
+					 balance,diamond_balance
+				FROM users_wallet
+				WHERE user_id = ?`
+
+    err = Mysql.Chess.QueryRow(sqlString, userId).Scan(&balance,&diamondBalance)
+    return
+}
 
 func (m *UsersWalletModel) GetBalanceByMobile(mobile string) (balance int, err error) {
 	sqlString := `SELECT balance 

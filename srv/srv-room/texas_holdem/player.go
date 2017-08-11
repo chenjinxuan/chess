@@ -45,7 +45,6 @@ type Player struct {
 
 	Flag int // 会话标记
 	stream pb.RoomService_StreamServer
-	Ipc  chan *pb.Room_Frame
 }
 
 func NewPlayer(id int, stream pb.RoomService_StreamServer) *Player {
@@ -223,6 +222,12 @@ func (p *Player) Standup() {
 	if p.Action == ActStandup {
 		log.Errorf("玩家%d当前已是站起状态！", p.Id)
 		return
+	}
+	if p.Action == ActBetting { // 弃牌
+		p.ActBet <- &pb.RoomPlayerBetReq{
+			TableId: table.Id,
+			Bet: -1,
+		}
 	}
 
 	table.DelPlayer(p)
