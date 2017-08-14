@@ -9,6 +9,7 @@ import (
 
 	"golang.org/x/net/context"
 	"google.golang.org/grpc/metadata"
+	"google.golang.org/grpc"
 
 	"chess/agent/misc/crypto/dh"
 	"chess/agent/misc/packet"
@@ -118,16 +119,19 @@ func P_user_login_req(sess *Session, data []byte) []byte {
 
 	// 选择Room服务器
 	// 选服策略依据业务进行，比如小服可以固定选取某台，大服可以采用HASH或一致性HASH
-	sess.GSID = DEFAULT_SRV_ID_ROOM
-
-	// 连接到已选定Room服务器
-	//conn, serviceId := services.GetService2(SRV_NAME_ROOM)
-	serviceId := DEFAULT_SRV_ID_ROOM
-	conn := services.GetServiceWithId(DEFAULT_SRV_ID_ROOM, SRV_NAME_ROOM)
+	var serviceId string
+	var conn *grpc.ClientConn
+	if req.ConnectTo != "" {  // 客户端指定连接的服务
+		serviceId = req.ConnectTo
+		conn = services.GetServiceWithId(serviceId, SRV_NAME_ROOM)
+	} else {
+		conn, serviceId = services.GetService2(SRV_NAME_ROOM)
+	}
 	if conn == nil {
 		log.Error("cannot get room service:", serviceId)
 		return nil
 	}
+
 	cli := pb.NewRoomServiceClient(conn)
 
 	// 开启到游戏服的流
@@ -138,7 +142,7 @@ func P_user_login_req(sess *Session, data []byte) []byte {
 			"service_name": SRV_NAME_ROOM,
 			"service_id":   serviceId,
 			"unique_id":    req.UniqueId,
-			"reconnect": fmt.Sprint(req.Reconnect),
+			"is_reconnect": fmt.Sprint(req.IsReconnect),
 		}),
 	)
 	stream, err := cli.Stream(ctx)
@@ -147,6 +151,7 @@ func P_user_login_req(sess *Session, data []byte) []byte {
 		return nil
 	}
 	sess.Stream = stream
+	sess.GSID = serviceId
 
 	// 读取GAME返回消息的goroutine
 	fetcher_task := func(sess *Session) {

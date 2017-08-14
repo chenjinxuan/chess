@@ -83,7 +83,7 @@ func (p *service_pool) init(services []string) {
 		p.names_provided = true
 	}
 
-	log.Info("all service names:", names)
+	log.Info("need service names:", names)
 	for _, v := range names {
 		name := strings.TrimSpace(v)
 		p.names[name] = true

@@ -5,6 +5,7 @@ import (
 	redislib "github.com/garyburd/redigo/redis"
 	"fmt"
 	"chess/common/log"
+	"chess/common/define"
 	. "chess/srv/srv-room/texas_holdem"
 )
 
@@ -129,7 +130,7 @@ func (s *Session) KickedOutLoop(p *Player, sess_die chan struct{}) {
 			if err == nil {
 				if res[1] == s.SrvId+s.UniqueId+s.TraceId {
 					log.Debugf("收到登录踢出通知(%s)", res)
-					p.Flag |= SESS_KICKED_OUT
+					p.Flag |= define.PLAYER_KICKED_OUT
 					return
 				}
 				if res[1] == QUIT_LOOP_MSG {
