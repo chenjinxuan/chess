@@ -3,6 +3,7 @@ package texas_holdem
 import (
 	"chess/common/define"
 	"chess/srv/srv-room/misc/packet"
+	"chess/srv/srv-room/registry"
 	pb "chess/srv/srv-room/proto"
 	"errors"
 	"github.com/golang/protobuf/proto"
@@ -44,7 +45,7 @@ type Player struct {
 	timer  *time.Timer // action timer
 
 	Flag int // 会话标记
-	stream pb.RoomService_StreamServer
+	Stream pb.RoomService_StreamServer
 }
 
 func NewPlayer(id int, stream pb.RoomService_StreamServer) *Player {
@@ -53,7 +54,7 @@ func NewPlayer(id int, stream pb.RoomService_StreamServer) *Player {
 		Hand:   NewHand(),
 		ActBet: make(chan *pb.RoomPlayerBetReq),
 		//Ipc:    ipc,
-		stream: stream,
+		Stream: stream,
 	}
 	player.Hand.Init()
 	return player
@@ -105,15 +106,17 @@ func (p *Player) BroadcastAll(code int16, msg proto.Message) {
 }
 
 func (p *Player) SendMessage(code int16, msg proto.Message) {
-	log.Debugf("SendMessage to %d --- code:%d msg:%+v", p.Id, code, msg)
-	message := &pb.Room_Frame{
-		Type:    pb.Room_Message,
-		Message: packet.Pack(code, msg),
+	if p.Flag&define.PLAYER_DISCONNECT == 0 {
+		log.Debugf("SendMessage to %d --- code:%d msg:%+v", p.Id, code, msg)
+		message := &pb.Room_Frame{
+			Type:    pb.Room_Message,
+			Message: packet.Pack(code, msg),
+		}
+		if err := p.Stream.Send(message); err != nil {
+			log.Error("p.stream.Send ", err)
+		}
 	}
-	if err := p.stream.Send(message); err != nil {
-		log.Error("p.stream.Send ", err)
-	}
-	//p.Ipc <- message
+
 }
 
 func (p *Player) Betting(n int) (raised bool) {
@@ -164,9 +167,20 @@ func (p *Player) GetActionBet(timeout time.Duration) (*pb.RoomPlayerBetReq, erro
 
 func (p *Player) Join(rid int, tid string) (table *Table) {
 	if p.Table!=nil{
-		log.Debugf("玩家%d已在牌桌上", p.Table.Id)
+		log.Debugf("玩家%d已在牌桌上", p.Id)
 		return
 	}
+
+	//  获取玩家筹码
+	var userWallet models.UsersWalletModel
+	err := models.UsersWallet.Get(p.Id, &userWallet)
+	if err != nil {
+		log.Debugf("玩家%d获取筹码失败", p.Id)
+		log.Error("models.UsersWallet.Get: ", err)
+		return
+	}
+	p.TotalChips = int(userWallet.Balance)
+	p.CurrChips = int(userWallet.Balance)
 
 	table = GetTable(rid, tid)
 	if table == nil {
@@ -328,6 +342,8 @@ func (p *Player) Leave() (table *Table) {
 			Player:  p.ToProtoMessage(),
 		})
 		table.DelPlayer(p)
+	} else {
+		table.DelBystander(p)
 	}
 
 	p.Bet = 0
@@ -344,6 +360,20 @@ func (p *Player) Leave() (table *Table) {
 	}
 
 	return
+}
+
+// 掉线处理
+func (p *Player) Disconnect() {
+
+
+	table := p.Table
+	if table == nil {// 不在牌桌上
+		log.Debugf("玩家%d掉线了(不在牌桌上)...", p.Id)
+		registry.Unregister(p.Id, p)
+	} else { // 在牌桌上
+		log.Debugf("玩家%d掉线了(在牌桌上)...", p.Id)
+		p.Flag |= define.PLAYER_DISCONNECT
+	}
 }
 
 func (p *Player) Next() *Player {

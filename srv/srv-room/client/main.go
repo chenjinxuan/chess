@@ -49,7 +49,7 @@ func main() {
 			"service_name": "room",
 			"service_id":   serviceId,
 			"unique_id":    fmt.Sprintf("xxxx-xxxxx-%d", time.Now().Unix()),
-			//"unique_id":    fmt.Sprintf("xxxx-xxxxx-%d", 123),
+			"is_reconnect":    "1",
 		}),
 	)
 
