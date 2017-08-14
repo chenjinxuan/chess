@@ -66,7 +66,7 @@ func createDispatcher(formatter *formatter, receivers []interface{}) (*dispatche
 
 		ioWriter, ok := receiver.(io.Writer)
 		if ok {
-			writer, err := NewFormattedWriter(ioWriter, disp.formatter)
+			writer, err := newFormattedWriter(ioWriter, disp.formatter)
 			if err != nil {
 				return nil, err
 			}

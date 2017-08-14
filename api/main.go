@@ -27,7 +27,7 @@ var (
 
 
 func main() {
-	err := consul.InitConsulClient("127.0.0.1:8500","local","","")
+	err := consul.InitConsulClient("192.168.40.117:8500","lan-dc1","","")
 	if err != nil {
 		panic(err)
 	}

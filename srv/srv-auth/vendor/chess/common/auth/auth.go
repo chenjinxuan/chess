@@ -40,7 +40,7 @@ func LoginUser(userid int, from, uniqueId string) (AuthResult, error) {
 	session.RefreshToken = refreshToken
 	session.Updated = time.Now()
 	session.Created = time.Now()
-	err = models.Session.Upsert(userid, from, uniqueId, session)
+	err = models.Session.Upsert(userid,from ,session)
 	if err != nil {
 		result.Msg = "Could not generate session."
 		return result, err

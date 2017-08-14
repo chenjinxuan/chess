@@ -11,11 +11,11 @@ import (
 
 type xmlBinding struct{}
 
-func (xmlBinding) Name() string {
+func (_ xmlBinding) Name() string {
 	return "xml"
 }
 
-func (xmlBinding) Bind(req *http.Request, obj interface{}) error {
+func (_ xmlBinding) Bind(req *http.Request, obj interface{}) error {
 	decoder := xml.NewDecoder(req.Body)
 	if err := decoder.Decode(obj); err != nil {
 		return err

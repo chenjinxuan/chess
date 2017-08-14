@@ -8,16 +8,16 @@ import (
 	"regexp"
 	"time"
         "chess/common/auth"
+        "chess/common/define"
         "chess/models"
         "chess/common/config"
         "strconv"
-    "fmt"
+        "chess/srv/srv-auth/redis"
 )
 
 var (
 	ERROR_METHOD_NOT_SUPPORTED = errors.New("method not supoorted")
 )
-
 var (
 	uuid_regexp = regexp.MustCompile(`^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$`)
 )
@@ -29,8 +29,12 @@ func (s *server) init() {
 }
 
 func (s *server) Auth(ctx context.Context, args *AuthArgs) (*AuthRes, error) {
-    fmt.Println(args.Token)
 	// TODO check token
+    //判断黑名单
+    msg,err:=redis.Redis.Login.Get(args.Token)
+    if err == nil {
+	return &AuthRes{Ret: define.AuthALreadyLogin, Msg: msg}, nil
+    }
     loginData,err :=  auth.AuthLoginToken(args.Token,config.CAuth.TokenSecret)
     if err != nil || strconv.Itoa(int(args.UserId)) != loginData {
 	return &AuthRes{Ret:0,Msg:""},err
@@ -43,7 +47,7 @@ func (s *server) TokenInfo(ctx context.Context, args *TokenInfoArgs) (*TokenInfo
 	log.Debugf("TokenInfoArgs(%+v)", *args)
 
 	// Get the session
-	session, err := models.Session.Get(int(args.UserId), args.AppFrom, args.UniqueId)
+	session, err := models.Session.Get(int(args.UserId))
 	if err != nil {
 	    return  &TokenInfoRes{Ret:0,Msg:"",Expire: time.Now().Unix()}, nil
 	}
@@ -52,6 +56,13 @@ func (s *server) TokenInfo(ctx context.Context, args *TokenInfoArgs) (*TokenInfo
 
 func (s *server) RefreshToken(ctx context.Context, args *RefreshTokenArgs) (*RefreshTokenRes, error) {
 	log.Debugf("RefreshTokenArgs(%+v)", *args)
+        //查出旧的token,加入没名单
+    	session, err := models.Session.Get(int(args.UserId))
+	if session != nil {
+	    now:=time.Now().Unix()
+	    redis.Redis.Login.SetexInt(session.Token.Data,define.AuthALreadyLogin,session.Token.Expire-now)
+	}
+
         result,err :=auth.LoginUser(int(args.UserId),args.AppFrom,args.UniqueId)
 	if err != nil {
 	    return &RefreshTokenRes{Ret: 0,
