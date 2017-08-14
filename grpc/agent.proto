@@ -33,12 +33,13 @@ message UserLoginReq{
     string unique_id = 3;
     string token = 4;
     string connect_to = 5;
-    int32 is_reconnect = 6;
+    int32 is_reconnect = 6;  // 1重连  0正常登录
 }
 
 // 11, 用户登录回复
 message UserLoginAck{
     BaseAck base_ack = 1;
+    string service_id = 2;
 }
 
 // 40, 用户踢出通知

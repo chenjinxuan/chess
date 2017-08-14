@@ -2,13 +2,13 @@ package main
 
 import (
 	"time"
-)
-
-import (
 	pb "chess/agent/proto"
 	. "chess/agent/types"
 	"chess/agent/utils"
 	"chess/common/log"
+	"chess/common/define"
+	"chess/common/services"
+	"golang.org/x/net/context"
 )
 
 // PIPELINE #2: agent
@@ -53,12 +53,23 @@ func agent(sess *Session, in chan []byte, out *Buffer) {
 				out.send(sess, result)
 			}
 			sess.LastPacketTime = sess.PacketTime
-		case frame := <-sess.MQ: // packets from game
+		case frame := <-sess.MQ: // packets from room
 			switch frame.Type {
 			case pb.Room_Message:
 				out.send(sess, frame.Message)
-			case pb.Room_Kick:
+			case pb.Room_Kick: // 登录踢出
 				out.send(sess, frame.Message)
+				// 拉黑token
+				authConn, authServiceId := services.GetService2(define.SRV_NAME_AUTH)
+				if authConn == nil {
+					log.Error("cannot get auth service:", authServiceId)
+				} else {
+					authCli := pb.NewAuthServiceClient(authConn)
+					_, err := authCli.Auth(context.Background(), &pb.AuthArgs{UserId: req.UserId, Token: req.Token})
+					if err != nil {
+						log.Error("authCli.Auth: ", err)
+					}
+				}
 				sess.Flag |= SESS_KICKED_OUT
 			}
 		case <-min_timer: // minutes timer
