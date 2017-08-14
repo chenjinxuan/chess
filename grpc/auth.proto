@@ -68,3 +68,12 @@ message DestroyTokenArgs{
 message DestroyTokenRes{
     int32 Ret = 1;
 }
+
+message BlackTokenArgs{
+    int32 Code = 1;
+    string Token = 2;
+}
+
+message BlackTokenRes{
+    int32 Ret = 1;
+}
