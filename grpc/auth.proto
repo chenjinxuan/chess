@@ -10,6 +10,7 @@ service AuthService {
     rpc TokenInfo(TokenInfoArgs) returns (TokenInfoRes){} // token信息
     rpc RefreshToken(RefreshTokenArgs) returns (RefreshTokenRes){} // 刷新token
     rpc DestroyToken(DestroyTokenArgs) returns (DestroyTokenRes){} // 销毁token
+    rpc BlackToken(BlackTokenArgs) returns (BlackTokenRes){} // 销毁token
 }
 
 message AuthArgs {
