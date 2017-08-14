@@ -20,7 +20,7 @@ type Session struct {
 	Encoder *rc4.Cipher                 // 加密器
 	Decoder *rc4.Cipher                 // 解密器
 	UserId  int32                       // 玩家ID
-	Token string // token
+	Token   string                      // token
 	GSID    string                      // 游戏服ID;e.g.: room-1,room-2
 	Stream  pb.RoomService_StreamClient // 后端游戏服数据流 - 双向流
 	Die     chan struct{}               // 会话关闭信号

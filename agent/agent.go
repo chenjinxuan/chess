@@ -65,7 +65,7 @@ func agent(sess *Session, in chan []byte, out *Buffer) {
 					log.Error("cannot get auth service:", authServiceId)
 				} else {
 					authCli := pb.NewAuthServiceClient(authConn)
-					_, err := authCli.Auth(context.Background(), &pb.AuthArgs{UserId: req.UserId, Token: req.Token})
+					_, err := authCli.BlackToken(context.Background(), &pb.BlackTokenArgs{Code: define.AuthKickedOut, Token: sess.Token})
 					if err != nil {
 						log.Error("authCli.Auth: ", err)
 					}
