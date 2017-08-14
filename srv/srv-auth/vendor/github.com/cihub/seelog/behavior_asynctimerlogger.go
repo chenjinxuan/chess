@@ -36,8 +36,8 @@ type asyncTimerLogger struct {
 	interval time.Duration
 }
 
-// NewAsyncLoopLogger creates a new asynchronous loop logger
-func NewAsyncTimerLogger(config *logConfig, interval time.Duration) (*asyncTimerLogger, error) {
+// newAsyncLoopLogger creates a new asynchronous loop logger
+func newAsyncTimerLogger(config *logConfig, interval time.Duration) (*asyncTimerLogger, error) {
 
 	if interval <= 0 {
 		return nil, errors.New("async logger interval should be > 0")

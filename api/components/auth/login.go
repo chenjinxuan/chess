@@ -8,11 +8,10 @@ import (
 	"net/http"
 	"chess/common/define"
 	"chess/common/log"
+        "chess/api/redis"
 )
 
-const (
-	AuthFailedStatus = -998
-)
+
 
 var (
 	UnexpectedSigningMethod = errors.New("Unexpected signing method.")
@@ -41,7 +40,15 @@ func Login(secret string) gin.HandlerFunc {
 		var result define.BaseResult
 		userId := c.Param("user_id")
 		tokenString := c.Query("token")
-
+                //判断黑名单
+	         msg,err:=redis.Redis.Login.GetInt(tokenString)
+		if err == nil {
+		    result.Ret = define.AuthALreadyLogin
+		    result.Msg = define.AuthMsgMap[msg]
+		    c.JSON(http.StatusOK, result)
+		    c.Abort()
+		    return
+		}
 		loginData, err := AuthLoginToken(tokenString, secret)
 
 		log.Debugf("Auth",logrus.Fields{
@@ -52,7 +59,7 @@ func Login(secret string) gin.HandlerFunc {
 		})
 
 		if err != nil || userId != loginData {
-			result.Ret = AuthFailedStatus
+			result.Ret = define.AuthFailedStatus
 			result.Msg = AuthFailed.Error()
 			c.JSON(http.StatusOK, result)
 			c.Abort()

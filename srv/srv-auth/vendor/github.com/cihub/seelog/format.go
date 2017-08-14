@@ -53,16 +53,16 @@ const (
 var DefaultMsgFormat = "%Ns [%Level] %Msg%n"
 
 var (
-	DefaultFormatter *formatter
+	defaultformatter *formatter
 	msgonlyformatter *formatter
 )
 
 func init() {
 	var err error
-	if DefaultFormatter, err = NewFormatter(DefaultMsgFormat); err != nil {
-		reportInternalError(fmt.Errorf("error during creating DefaultFormatter: %s", err))
+	if defaultformatter, err = newFormatter(DefaultMsgFormat); err != nil {
+		reportInternalError(fmt.Errorf("error during creating defaultformatter: %s", err))
 	}
-	if msgonlyformatter, err = NewFormatter("%Msg"); err != nil {
+	if msgonlyformatter, err = newFormatter("%Msg"); err != nil {
 		reportInternalError(fmt.Errorf("error during creating msgonlyformatter: %s", err))
 	}
 }
@@ -99,7 +99,6 @@ var formatterFuncs = map[string]FormatterFunc{
 	"UTCTime":   formatterUTCTime,
 	"Ns":        formatterNs,
 	"UTCNs":     formatterUTCNs,
-	"r":         formatterr,
 	"n":         formattern,
 	"t":         formattert,
 }
@@ -148,8 +147,8 @@ type formatter struct {
 	formatterFuncs    []FormatterFunc
 }
 
-// NewFormatter creates a new formatter using a format string
-func NewFormatter(formatString string) (*formatter, error) {
+// newFormatter creates a new formatter using a format string
+func newFormatter(formatString string) (*formatter, error) {
 	fmtr := new(formatter)
 	fmtr.fmtStringOriginal = formatString
 	if err := buildFormatterFuncs(fmtr); err != nil {
@@ -421,10 +420,6 @@ func formatterNs(message string, level LogLevel, context LogContextInterface) in
 
 func formatterUTCNs(message string, level LogLevel, context LogContextInterface) interface{} {
 	return context.CallTime().UTC().UnixNano()
-}
-
-func formatterr(message string, level LogLevel, context LogContextInterface) interface{} {
-	return "\r"
 }
 
 func formattern(message string, level LogLevel, context LogContextInterface) interface{} {

@@ -98,7 +98,13 @@ func (r *Redis) Setex(key string, value string, time int64) error {
 	_, err := conn.Do("SETEX", key, time, value)
 	return err
 }
+func (r *Redis) SetexInt(key string, value int, time int64) error {
+    conn := r.GetConn()
+    defer conn.Close()
 
+    _, err := conn.Do("SETEX", key, time, value)
+    return err
+}
 func (r *Redis) Exists(key string) (bool, error) {
 	conn := r.GetConn()
 	defer conn.Close()

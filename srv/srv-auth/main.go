@@ -14,8 +14,9 @@ import (
 	cli "gopkg.in/urfave/cli.v2"
         "chess/models"
         "chess/common/services"
-    "fmt"
-    "net/http"
+        "chess/srv/srv-auth/redis"
+	"fmt"
+	"net/http"
 )
 
 const (
@@ -45,7 +46,7 @@ func main() {
 		},
 		Action: func(c *cli.Context) error {
 			// TODO 从consul读取配置，初始化数据库连接
-		        err := consul.InitConsulClient("127.0.0.1:8500","local","","")
+		        err := consul.InitConsulClient("192.168.40.117:8500","lan-dc1","","")
 			if err != nil {
 				panic(err)
 			}
@@ -57,6 +58,8 @@ func main() {
 			//InitRpcWrapper()
 			db.InitMySQL()
 			db.InitMongo()
+		        db.InitRedis()
+		        redis.InitAuthRedis()
 			models.Init()
 
 		       err = services.Register(c.String("service-id"), define.SRV_NAME_AUTH, c.String("address"), c.Int("port"), c.Int("port")+10, []string{"master"})

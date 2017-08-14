@@ -49,8 +49,8 @@ type asyncAdaptiveLogger struct {
 	maxInterval      time.Duration
 }
 
-// NewAsyncLoopLogger creates a new asynchronous adaptive logger
-func NewAsyncAdaptiveLogger(
+// newAsyncLoopLogger creates a new asynchronous adaptive logger
+func newAsyncAdaptiveLogger(
 	config *logConfig,
 	minInterval time.Duration,
 	maxInterval time.Duration,

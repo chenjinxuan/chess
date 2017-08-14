@@ -12,11 +12,11 @@ import (
 
 type jsonBinding struct{}
 
-func (jsonBinding) Name() string {
+func (_ jsonBinding) Name() string {
 	return "json"
 }
 
-func (jsonBinding) Bind(req *http.Request, obj interface{}) error {
+func (_ jsonBinding) Bind(req *http.Request, obj interface{}) error {
 	decoder := json.NewDecoder(req.Body)
 	if err := decoder.Decode(obj); err != nil {
 		return err

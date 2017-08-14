@@ -14,6 +14,7 @@ const (
 	TYPE_QQ                 = 3
 	TYPE_WEIBO              = 4
 	TYPE_WECHAT             = 5
+        TYPE_TOURIST            = -1
 
 	IS_FRESH_FALSE = 0 // 走完新手引导
 	IS_FRESH_TRUE  = 1
@@ -38,6 +39,8 @@ type UsersModel struct {
 	AppFrom          string
 	Status        int
 	IsFresh       int
+        CheckinDays   int
+        LastCheckinTime time.Time
 	Updated       time.Time
 	Created       time.Time
 }
@@ -45,8 +48,8 @@ type UsersModel struct {
 func (m *UsersModel) Get(id int, user *UsersModel) error {
 	sqlString := `SELECT
 					id, email, pwd, nickname,
-					mobile_number,contact_mobile, gender,avatar, reg_ip,
-					last_login_ip, channel,type,status, is_fresh,updated, created
+					mobile_number, gender,avatar, reg_ip,
+					last_login_ip, channel,type,status, is_fresh,checkin_days,last_checkin_time,updated, created
 				FROM users WHERE id = ?`
 	return Mysql.Chess.QueryRow(
 		sqlString, id,
@@ -56,7 +59,6 @@ func (m *UsersModel) Get(id int, user *UsersModel) error {
 		&user.Pwd,
 		&user.Nickname,
 		&user.MobileNumber,
-		&user.ContactMobile,
 		&user.Gender,
 		&user.Avatar,
 		&user.RegIp,
@@ -65,6 +67,8 @@ func (m *UsersModel) Get(id int, user *UsersModel) error {
 		&user.Type,
 		&user.Status,
 		&user.IsFresh,
+	        &user.CheckinDays,
+                &user.LastCheckinTime,
 		&user.Updated,
 		&user.Created,
 	)
@@ -141,35 +145,35 @@ func (m *UsersModel) UpdateFresh(id int, is_fresh int) (err error) {
 	return err
 }
 
-func (m *UsersModel) GetDetail(id int, user *UsersModel) error {
-	sqlString := `SELECT
-					u.id, u.email, u.pwd, u.nickname,
-					u.mobile_number,u.contact_mobile, u.gender, u.avatar, u.reg_ip,
-					u.last_login_ip, u.channel, u.type, u.status, u.is_fresh, IFNULL(ui.device_from, ''), u.updated, u.created
-				FROM users AS u LEFT JOIN users_info AS ui ON u.id = ui.user_id
-				WHERE u.id = ?`
-	return Mysql.Chess.QueryRow(
-		sqlString, id,
-	).Scan(
-		&user.Id,
-		&user.Email,
-		&user.Pwd,
-		&user.Nickname,
-		&user.MobileNumber,
-		&user.ContactMobile,
-		&user.Gender,
-		&user.Avatar,
-		&user.RegIp,
-		&user.LastLoginIp,
-		&user.Channel,
-		&user.Type,
-		&user.Status,
-		&user.IsFresh,
-		&user.AppFrom,
-		&user.Updated,
-		&user.Created,
-	)
-}
+//func (m *UsersModel) GetDetail(id int, user *UsersModel) error {
+//	sqlString := `SELECT
+//					u.id, u.email, u.pwd, u.nickname,
+//					u.mobile_number,u.contact_mobile, u.gender, u.avatar, u.reg_ip,
+//					u.last_login_ip, u.channel, u.type, u.status, u.is_fresh, IFNULL(ui.device_from, ''), u.updated, u.created
+//				FROM users AS u LEFT JOIN users_info AS ui ON u.id = ui.user_id
+//				WHERE u.id = ?`
+//	return Mysql.Chess.QueryRow(
+//		sqlString, id,
+//	).Scan(
+//		&user.Id,
+//		&user.Email,
+//		&user.Pwd,
+//		&user.Nickname,
+//		&user.MobileNumber,
+//		&user.ContactMobile,
+//		&user.Gender,
+//		&user.Avatar,
+//		&user.RegIp,
+//		&user.LastLoginIp,
+//		&user.Channel,
+//		&user.Type,
+//		&user.Status,
+//		&user.IsFresh,
+//		&user.AppFrom,
+//		&user.Updated,
+//		&user.Created,
+//	)
+//}
 
 func (m *UsersModel) GetPwdByMobile(mobile string) (pwd string, err error) {
 	sqlStr := `SELECT pwd FROM users WHERE mobile_number = ?`
@@ -411,14 +415,14 @@ func (m *UsersModel) Save() error {
 }
 
 // Update Nickname
-func (m *UsersModel) UpdateNickname(nickname string) error {
+func (m *UsersModel) UpdateNickname(id int,nickname string) error {
     sqlString := `UPDATE users SET
 		 nickname = ?
 		WHERE id = ?`
     _, err := Mysql.Chess.Exec(
 	sqlString,
 	nickname,
-	m.Id,
+	id,
     )
 
     // Debug
@@ -427,9 +431,6 @@ func (m *UsersModel) UpdateNickname(nickname string) error {
 	"Error": err,
     })
 
-    if err != nil {
-	return err
-    }
     return err
 }
 
@@ -569,4 +570,16 @@ func (m *UsersModel) UpdateGender(gender int) error {
 	return err
     }
     return err
+}
+//获取签到信息
+func (m *UsersModel) CheckinInfo(userId int) (days int ,checkTime time.Time,err error){
+    sqlStr:=`SELECT checkin_days,last_checkin_time FROM users WHERE id = ?`
+    err=Mysql.Chess.QueryRow(sqlStr,userId).Scan(&days,&checkTime)
+    return
+}
+//签到
+func (m *UsersModel) Checkin(userId,days int ,checkTime string) error {
+    sqlStr :=`UPDATE users SET checkin_days =  ? ,last_checkin_time = ? WHERE id = ?`
+    _,err:=Mysql.Chess.Exec(sqlStr,days,checkTime,userId)
+    return  err
 }

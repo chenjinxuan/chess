@@ -1,7 +1,5 @@
 package models
 
-
-
 var Device = new(DeviceModel)
 
 type DeviceModel struct {
