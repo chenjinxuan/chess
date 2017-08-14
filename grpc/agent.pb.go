@@ -55,6 +55,8 @@ It has these top-level messages:
 	RefreshTokenRes
 	DestroyTokenArgs
 	DestroyTokenRes
+	BlackTokenArgs
+	BlackTokenRes
 	GameListArgs
 	GameListRes
 	GamePlaygroundArgs

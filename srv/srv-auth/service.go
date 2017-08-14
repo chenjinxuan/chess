@@ -83,3 +83,12 @@ func (s *server) DestroyToken(ctx context.Context, args *DestroyTokenArgs) (*Des
 
 	return &DestroyTokenRes{Ret: 1}, nil
 }
+
+func (s *server) BlackToken(ctx context.Context,args *BlackTokenArgs) (*BlackTokenRes,error){
+	log.Debugf("BlackTokenArgs(%+v)", *args)
+	err:=redis.Redis.Login.SetexInt(args.Token,int(args.Code),86400*7)
+	if err != nil {
+	    return &BlackTokenRes{Ret:0},err
+	}
+	return &BlackTokenRes{Ret:1},nil
+}
