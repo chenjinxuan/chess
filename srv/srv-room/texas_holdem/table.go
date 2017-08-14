@@ -263,15 +263,10 @@ func (t *Table) start() {
 	var dealer *Player
 
 	t.Each(0, func(p *Player) bool {
-		if p.Chips < t.BigBlind { // 筹码不足
+		if p.Chips < t.BigBlind || p.Flag&define.PLAYER_DISCONNECT != 0 { // 筹码不足 或 掉线
 			p.Leave()
 			return true
 		}
-		if p.Flag&define.PLAYER_DISCONNECT != 0 {// 掉线
-			p.Leave()
-			return true
-		}
-
 
 		p.Bet = 0
 		p.Cards = nil
