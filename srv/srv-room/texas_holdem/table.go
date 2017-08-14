@@ -10,6 +10,7 @@ import (
 	"github.com/satori/go.uuid"
 	"chess/common/log"
 	"chess/srv/srv-room/signal"
+	"chess/srv/srv-room/registry"
 )
 
 const (
@@ -111,6 +112,11 @@ func NewTable(rid, max, sb, bb, minC, maxC int) *Table {
 func (t *Table) Cap() int {
 	return len(t.Players)
 }
+// 当前站起玩家数
+func (t *Table) BystanderCap() int {
+	return len(t.Bystanders)
+}
+
 
 func (t *Table) Player(id int) *Player {
 	for _, p := range t.Players {
@@ -259,11 +265,35 @@ func (t *Table) Each(start int, f func(p *Player) bool) {
 	}
 }
 
+func (t *Table) EachBystander(start int, f func(p *Player) bool) {
+	if t.BystanderCap() == 0 {
+		return
+	}
+
+	end := (t.BystanderCap() + start - 1) % t.BystanderCap()
+	i := start
+	for ; i != end; i = (i + 1) % t.BystanderCap() {
+		if t.Bystanders[i] != nil && !f(t.Bystanders[i]) {
+			return
+		}
+	}
+
+	// end
+	if t.Bystanders[i] != nil {
+		f(t.Bystanders[i])
+	}
+}
+
 func (t *Table) start() {
 	var dealer *Player
 
 	t.Each(0, func(p *Player) bool {
 		if p.Chips < t.BigBlind || p.Flag&define.PLAYER_DISCONNECT != 0 { // 筹码不足 或 掉线
+			if p.Flag&define.PLAYER_DISCONNECT != 0 {
+				fmt.Println(p)
+				log.Debugf("玩家%d断线,踢出牌桌(%s)   %v", p.Id, t.Id)
+				registry.Unregister(p.Id, p)
+			}
 			p.Leave()
 			return true
 		}
@@ -272,6 +302,14 @@ func (t *Table) start() {
 		p.Cards = nil
 		p.Action = ActReady
 		p.Hand.Init()
+		return true
+	})
+
+	t.EachBystander(0, func(p *Player) bool {
+		if p.Flag&define.PLAYER_DISCONNECT != 0 { // 掉线
+			p.Leave()
+			registry.Unregister(p.Id, p)
+		}
 		return true
 	})
 

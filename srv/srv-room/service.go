@@ -8,16 +8,16 @@ import (
 	"chess/srv/srv-room/misc/packet"
 	pb "chess/srv/srv-room/proto"
 	"chess/srv/srv-room/registry"
+	"chess/srv/srv-room/signal"
 	. "chess/srv/srv-room/texas_holdem"
 	"encoding/binary"
 	"errors"
+	"fmt"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc/metadata"
 	"io"
 	"strconv"
-	"fmt"
 	"time"
-	"chess/srv/srv-room/signal"
 )
 
 var (
@@ -113,16 +113,19 @@ func (s *server) Stream(stream pb.RoomService_StreamServer) error {
 		if _player, ok := tmp.(*Player); ok {
 			player = _player
 			if player.Flag&define.PLAYER_DISCONNECT != 0 {
+				player.Flag = 0
 				player.Flag |= define.PLAYER_LOGIN
 				player.Stream = stream
+				fmt.Println(player)
+				log.Debugf("玩家%d断线重连成功！", player.Id)
 			}
-
 
 		} else {
 			// @todo 未找到玩家处理
 
-			log.Debug("断线重连---未找到玩家")
-			return nil
+			log.Debugf("断线重连---未找到玩家%d", userid)
+			player = NewPlayer(userid, stream)
+			registry.Register(player.Id, player)
 		}
 	} else { // 正常登录
 		// player init and register
@@ -143,7 +146,6 @@ func (s *server) Stream(stream pb.RoomService_StreamServer) error {
 	}
 	// 读取踢出通知
 	go sess.KickedOutLoop(player, sess_die)
-
 
 	log.Debugf("玩家%d登录成功，设备号：%s", player.Id, uniqueId)
 

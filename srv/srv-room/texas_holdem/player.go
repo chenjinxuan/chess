@@ -167,7 +167,7 @@ func (p *Player) GetActionBet(timeout time.Duration) (*pb.RoomPlayerBetReq, erro
 
 func (p *Player) Join(rid int, tid string) (table *Table) {
 	if p.Table!=nil{
-		log.Debugf("玩家%d已在牌桌上", p.Table.Id)
+		log.Debugf("玩家%d已在牌桌上", p.Id)
 		return
 	}
 
@@ -175,7 +175,7 @@ func (p *Player) Join(rid int, tid string) (table *Table) {
 	var userWallet models.UsersWalletModel
 	err := models.UsersWallet.Get(p.Id, &userWallet)
 	if err != nil {
-		log.Debugf("玩家%d获取筹码失败", p.Table.Id)
+		log.Debugf("玩家%d获取筹码失败", p.Id)
 		log.Error("models.UsersWallet.Get: ", err)
 		return
 	}
@@ -342,6 +342,8 @@ func (p *Player) Leave() (table *Table) {
 			Player:  p.ToProtoMessage(),
 		})
 		table.DelPlayer(p)
+	} else {
+		table.DelBystander(p)
 	}
 
 	p.Bet = 0
@@ -362,12 +364,14 @@ func (p *Player) Leave() (table *Table) {
 
 // 掉线处理
 func (p *Player) Disconnect() {
-	log.Debugf("玩家%d掉线了...", p.Id)
+
 
 	table := p.Table
 	if table == nil {// 不在牌桌上
+		log.Debugf("玩家%d掉线了(不在牌桌上)...", p.Id)
 		registry.Unregister(p.Id, p)
 	} else { // 在牌桌上
+		log.Debugf("玩家%d掉线了(在牌桌上)...", p.Id)
 		p.Flag |= define.PLAYER_DISCONNECT
 	}
 }
