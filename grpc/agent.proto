@@ -228,7 +228,7 @@ message RoomShutdownTableAck{
     BaseAck base_ack = 1;
 }
 
-// 2118, 玩家退出游戏  type: 1注销 2杀掉进程
+// 2118, 玩家退出游戏  type: 1注销
 message RoomPlayerLogoutReq{
     BaseReq base_req = 1;
     int32 type = 2;

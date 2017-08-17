@@ -25,5 +25,6 @@ cp auth.pb.go $GOPATH/src/chess/srv/srv-auth/proto/
 cp agent.pb.go $GOPATH/src/chess/srv/srv-room/proto/
 cp room.pb.go $GOPATH/src/chess/srv/srv-room/proto/
 
+cp centre.pb.go $GOPATH/src/chess/srv/srv-centre/proto/
 
 cp auth.pb.go $GOPATH/src/chess/api/proto/

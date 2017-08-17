@@ -58,10 +58,11 @@ It has these top-level messages:
 	DestroyTokenRes
 	BlackTokenArgs
 	BlackTokenRes
-	GameListArgs
-	GameListRes
-	GamePlaygroundArgs
-	GamePlaygroundRes
+	BaseRes
+	UpdateRoomInfoArgs
+	RoomListArgs
+	RoomListRes
+	RoomInfo
 	Room
 	RoomInfoArgs
 	RoomInfoRes
@@ -1008,7 +1009,7 @@ func (m *RoomShutdownTableAck) GetBaseAck() *BaseAck {
 	return nil
 }
 
-// 2118, 玩家退出游戏  type: 1注销 2杀掉进程
+// 2118, 玩家退出游戏  type: 1注销
 type RoomPlayerLogoutReq struct {
 	BaseReq *BaseReq `protobuf:"bytes,1,opt,name=base_req,json=baseReq" json:"base_req,omitempty"`
 	Type    int32    `protobuf:"varint,2,opt,name=type" json:"type,omitempty"`

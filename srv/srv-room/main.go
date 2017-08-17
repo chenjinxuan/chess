@@ -30,9 +30,9 @@ type Config struct {
 
 func main() {
 	app := &cli.App{
-		Name:    "auth",
-		Usage:   "auth service",
-		Version: "2.0",
+		Name:    "room",
+		Usage:   "room service",
+		Version: "1.0",
 		Flags: []cli.Flag{
 			&cli.StringFlag{
 				Name:  "service-id",
