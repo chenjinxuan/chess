@@ -108,10 +108,10 @@ func P_user_login_req(sess *Session, data []byte) []byte {
 	authRes, err := authCli.Auth(context.Background(), &pb.AuthArgs{UserId: req.UserId, Token: req.Token})
 	if err != nil {
 		log.Error("authCli.Auth: ", err)
-		return packet.Pack(Code["user_login_ack"], &pb.UserLoginAck{&pb.BaseAck{Ret: SYSTEM_ERROR, Msg: "system error."}})
+		return packet.Pack(Code["user_login_ack"], &pb.UserLoginAck{BaseAck: &pb.BaseAck{Ret: SYSTEM_ERROR, Msg: "system error."}})
 	}
 	if authRes.Ret != 1 {
-		return packet.Pack(Code["user_login_ack"], &pb.UserLoginAck{&pb.BaseAck{Ret: AUTH_FAIL, Msg: "Auth fail."}})
+		return packet.Pack(Code["user_login_ack"], &pb.UserLoginAck{BaseAck: &pb.BaseAck{Ret: AUTH_FAIL, Msg: "Auth fail."}})
 	}
 
 	sess.UserId = req.UserId

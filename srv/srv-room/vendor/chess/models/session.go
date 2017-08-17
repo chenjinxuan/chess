@@ -29,14 +29,14 @@ type SessionToken struct {
 	Expire int64  `bson:"expire"`
 }
 
-func (m *SessionModel) Get(userId int, from, uniqueId string) (*SessionModel, error) {
+func (m *SessionModel) Get(userId int) (*SessionModel, error) {
 	var session = new(SessionModel)
 
 	err := Mongo.Chess.M(MongoDBStr ,MongoColSession, func(c *mgo.Collection) error {
 		query := bson.M{
 			"user_id":   userId,
-			"from":      from,
-			"unique_id": uniqueId,
+			//"from":      from,
+			//"unique_id": uniqueId,
 		}
 		return c.Find(query).One(&session)
 	})
@@ -47,7 +47,7 @@ func (m *SessionModel) Get(userId int, from, uniqueId string) (*SessionModel, er
 	return session, nil
 }
 
-func (m *SessionModel) Upsert(userId int, from, uniqueId string, session *SessionModel) error {
+func (m *SessionModel) Upsert(userId int, from string, session *SessionModel) error {
 	from = strings.ToLower(from) // @todo
 	return Mongo.Chess.M(MongoDBStr , MongoColSession, func(c *mgo.Collection) error {
 		query := bson.M{

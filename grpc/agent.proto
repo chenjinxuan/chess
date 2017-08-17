@@ -234,6 +234,12 @@ message RoomPlayerLogoutReq{
     int32 type = 2;
 }
 
+// 2119, 玩家断线重连 牌桌信息回复
+message RoomPlayerReconnectAck{
+    BaseAck base_ack = 1;
+    TableInfo table = 2;
+}
+
 message PotInfo{
     int32 pot = 1;
     repeated int32 ps = 2;

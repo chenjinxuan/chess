@@ -290,7 +290,6 @@ func (t *Table) start() {
 	t.Each(0, func(p *Player) bool {
 		if p.Chips < t.BigBlind || p.Flag&define.PLAYER_DISCONNECT != 0 { // 筹码不足 或 掉线
 			if p.Flag&define.PLAYER_DISCONNECT != 0 {
-				fmt.Println(p)
 				log.Debugf("玩家%d断线,踢出牌桌(%s)   %v", p.Id, t.Id)
 				registry.Unregister(p.Id, p)
 			}

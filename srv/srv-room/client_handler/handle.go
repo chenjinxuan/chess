@@ -47,9 +47,9 @@ func P_room_get_table_req(p *Player, data []byte) []byte {
 		ack.BaseAck.Msg = "wrong data"
 		return packet.Pack(Code["room_get_table_ack"], ack)
 	}
-
-	table := GetTable(int(req.RoomId), req.TableId)
-	if err == nil {
+	log.Debug("P_room_get_table_req: ", req)
+	table := GetTableExists(int(req.RoomId), req.TableId)
+	if table == nil {
 		ack.BaseAck.Msg = "table not found"
 		return packet.Pack(Code["room_get_table_ack"], ack)
 	}
