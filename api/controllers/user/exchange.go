@@ -15,7 +15,17 @@ type ExchangeParams struct {
 }
 type ExchangeResult struct {
     define.BaseResult
-} 
+}
+// @Title 钻石兑换金币
+// @Description 钻石兑换金币
+// @Summary 钻石兑换金币
+// @Accept json
+// @Param   token     query    string   true        "token"
+// @Param   user_id     path    int   true        "user_id"
+// @Param   diamonds     query    string   true        "diamonds"
+// @Param   from     query    string   true        "from"
+// @Success 200 {object} c_user.ExchangeResult
+// @router /user/{user_id}/exchange [get]
 func Exchange(c *gin.Context)  {
     var params ExchangeParams
     var result ExchangeResult
@@ -39,7 +49,7 @@ func Exchange(c *gin.Context)  {
 	c.JSON(http.StatusOK, result)
 	return
     }
-    if params.Diamonds < 0 || diamond < params.Diamonds {
+    if params.Diamonds <= 0 || diamond < params.Diamonds {
 	result.Msg = "price fail."
 	c.JSON(http.StatusOK, result)
 	return
