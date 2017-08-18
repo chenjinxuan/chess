@@ -41,7 +41,6 @@ func P_heart_beat_req(sess *Session, data []byte) []byte {
 	if err != nil {
 		log.Error("P_heart_beat_req Unmarshal ERROR", err)
 	}
-	log.Debug("heart_beat_req ", req)
 	return packet.Pack(Code["heart_beat_ack"], req)
 }
 
@@ -109,13 +108,21 @@ func P_user_login_req(sess *Session, data []byte) []byte {
 	authRes, err := authCli.Auth(context.Background(), &pb.AuthArgs{UserId: req.UserId, Token: req.Token})
 	if err != nil {
 		log.Error("authCli.Auth: ", err)
+<<<<<<< HEAD
 		return packet.Pack(Code["user_login_ack"], &pb.UserLoginAck{&pb.BaseAck{Ret: SYSTEM_ERROR, Msg: "system error."}})
 	}
 	if authRes.Ret != 1 {
 		return packet.Pack(Code["user_login_ack"], &pb.UserLoginAck{&pb.BaseAck{Ret: AUTH_FAIL, Msg: "Auth fail."}})
+=======
+		return packet.Pack(Code["user_login_ack"], &pb.UserLoginAck{BaseAck: &pb.BaseAck{Ret: SYSTEM_ERROR, Msg: "system error."}})
+	}
+	if authRes.Ret != 1 {
+		return packet.Pack(Code["user_login_ack"], &pb.UserLoginAck{BaseAck: &pb.BaseAck{Ret: AUTH_FAIL, Msg: "Auth fail."}})
+>>>>>>> 999e6aaf1c9834755c104ddec3b006f2c4c758d0
 	}
 
 	sess.UserId = req.UserId
+	sess.Token = req.Token
 
 	// 选择Room服务器
 	// 选服策略依据业务进行，比如小服可以固定选取某台，大服可以采用HASH或一致性HASH
@@ -195,5 +202,8 @@ func P_user_login_req(sess *Session, data []byte) []byte {
 		}
 	}(sess)
 
-	return packet.Pack(Code["user_login_ack"], &pb.UserLoginAck{&pb.BaseAck{Ret: 1, Msg: "ok"}})
+	return packet.Pack(Code["user_login_ack"], &pb.UserLoginAck{
+		BaseAck: &pb.BaseAck{Ret: 1, Msg: "ok"},
+		ServiceId: serviceId,
+	})
 }

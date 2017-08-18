@@ -188,6 +188,11 @@ func (p *Player) Join(rid int, tid string) (table *Table) {
 		return
 	}
 
+	if p.CurrChips < table.MinCarry {
+		log.Debugf("玩家%d筹码不足，要求筹码%d，当前筹码%d", p.Id, table.MinCarry, p.CurrChips)
+		return nil
+	}
+
 	p.Bet = 0
 	p.Cards = nil
 	p.Hand.Init()
@@ -215,6 +220,9 @@ func (p *Player) Join(rid int, tid string) (table *Table) {
 		BaseAck: &pb.BaseAck{Ret: 1, Msg: "ok"},
 		Table:   table.ToProtoMessage(),
 	})
+
+	// 在线数+1
+	go Pcounter(table.RoomId, 1)
 
 	return
 }
@@ -357,6 +365,9 @@ func (p *Player) Leave() (table *Table) {
 	if p.timer != nil {
 		p.timer.Reset(0)
 	}
+
+	// 在线数-1
+	go Pcounter(table.RoomId, -1)
 
 	return
 }

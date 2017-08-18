@@ -29,7 +29,7 @@ type server struct{}
 
 func (s *server) init() {
 	// Todo 从mysql取房间列表
-	InitRoomList()
+	InitRoomList(Cfg.ServiceId)
 }
 
 // PIPELINE #1 stream receiver
@@ -87,7 +87,7 @@ func (s *server) Stream(stream pb.RoomService_StreamServer) error {
 	}
 	uniqueId := md["unique_id"][0]
 	serviceId := md["service_id"][0]
-	isReconnect, _ := strconv.Atoi(md["is_reconnect"][0])
+	//isReconnect, _ := strconv.Atoi(md["is_reconnect"][0])
 
 	// 是否已登录
 	sess := NewSession(userid)
@@ -107,30 +107,38 @@ func (s *server) Stream(stream pb.RoomService_StreamServer) error {
 
 	var player *Player
 
-	// 断线重连
-	if isReconnect == 1 {
-		tmp := registry.Query(userid)
-		if _player, ok := tmp.(*Player); ok {
-			player = _player
-			if player.Flag&define.PLAYER_DISCONNECT != 0 {
-				player.Flag = 0
-				player.Flag |= define.PLAYER_LOGIN
-				player.Stream = stream
-				fmt.Println(player)
-				log.Debugf("玩家%d断线重连成功！", player.Id)
+	tmp := registry.Query(userid)
+	if _player, ok := tmp.(*Player); ok { // 断线进行重连
+		player = _player
+		if player.Flag&define.PLAYER_DISCONNECT != 0 {
+			player.Flag = 0
+			player.Flag |= define.PLAYER_LOGIN
+			player.Stream = stream
+			if player.Table != nil {
+				// 2119, 断线重连回复
+				player.SendMessage(define.Code["room_player_reconnect_ack"], &pb.RoomPlayerReconnectAck{
+					BaseAck:   &pb.BaseAck{Ret: 1, Msg: "ok"},
+					Table:    player.Table.ToProtoMessage(),
+				})
+			} else {
+				// 2119, 断线重连回复  退出牌桌
+				player.SendMessage(define.Code["room_player_reconnect_ack"], &pb.RoomPlayerReconnectAck{
+					BaseAck:   &pb.BaseAck{Ret: 0, Msg: "ok"},
+				})
 			}
 
-		} else {
-			// @todo 未找到玩家处理
-
-			log.Debugf("断线重连---未找到玩家%d", userid)
-			player = NewPlayer(userid, stream)
-			registry.Register(player.Id, player)
+			log.Debugf("玩家%d断线重连成功！", player.Id)
 		}
-	} else { // 正常登录
-		// player init and register
+
+	} else {// 正常登录
+
+		log.Debugf("玩家%d正常登录", userid)
 		player = NewPlayer(userid, stream)
 		registry.Register(player.Id, player)
+		// 2119, 断线重连回复  退出牌桌
+		player.SendMessage(define.Code["room_player_reconnect_ack"], &pb.RoomPlayerReconnectAck{
+			BaseAck:   &pb.BaseAck{Ret: 0, Msg: "ok"},
+		})
 	}
 
 	// 保存当前登录状态

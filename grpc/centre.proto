@@ -3,25 +3,32 @@ syntax = "proto3";
 package proto;
 
 service CentreService {
-    // 获取游戏列表
-    rpc GameList(GameListArgs) returns (GameListRes){}
-
-    // 获取游戏场，对应房间信息
-    rpc GamePlayground(GamePlaygroundArgs) returns (GamePlaygroundRes){}
+    // 获取所有房间信息
+    rpc RoomList(RoomListArgs) returns (RoomListRes){}
+    // 更新房间信息
+    rpc UpdateRoomInfo(UpdateRoomInfoArgs) returns (BaseRes){}
 }
 
-message GameListArgs{
+message BaseRes{
+    int32 ret = 1;
+    string msg = 2;
+}
+
+message UpdateRoomInfoArgs{
+    string service_id = 1;
+    int32 room_id = 2;
+    RoomInfo room_info = 3;
+}
+
+message RoomListArgs{
 
 }
 
-message GameListRes{
-
+message RoomListRes{
+    map<int32, RoomInfo> list = 1;
 }
 
-message GamePlaygroundArgs{
-
-}
-
-message GamePlaygroundRes{
-
+message RoomInfo{
+    int32 table_number = 1;
+    int32 player_number = 2;
 }
