@@ -222,6 +222,9 @@ func (p *Player) Join(rid int, tid string) (table *Table) {
 		Table:   table.ToProtoMessage(),
 	})
 
+	// 在线数+1
+	go Pcounter(table.RoomId, 1)
+
 	return
 }
 
@@ -363,6 +366,9 @@ func (p *Player) Leave() (table *Table) {
 	if p.timer != nil {
 		p.timer.Reset(0)
 	}
+
+	// 在线数-1
+	go Pcounter(table.RoomId, -1)
 
 	return
 }

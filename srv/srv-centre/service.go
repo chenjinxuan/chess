@@ -76,6 +76,8 @@ func (s *server) UpdateRoomInfo(ctx context.Context, args *pb.UpdateRoomInfoArgs
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
+	log.Debug("UpdateRoomInfo args: ", args)
+
 	if args.ServiceId == "" || args.RoomId <= 0 || args.RoomInfo == nil {
 		log.Debug("args invalid: %+v", args)
 		return &pb.BaseRes{}, ErrArgsInvalid

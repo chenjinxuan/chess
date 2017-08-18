@@ -49,6 +49,11 @@ func main() {
 				Value: 20001,
 				Usage: "listening port",
 			},
+			&cli.StringSliceFlag{
+				Name:  "services",
+				Value: cli.NewStringSlice("centre"),
+				Usage: "auto-discovering services",
+			},
 		},
 		Action: func(c *cli.Context) error {
 			Cfg.ServiceId = c.String("service-id")
@@ -77,6 +82,8 @@ func main() {
 			if err != nil {
 				panic(err)
 			}
+			// init services
+			services.Discover(c.StringSlice("services"))
 
 			go signal.Handler()
 

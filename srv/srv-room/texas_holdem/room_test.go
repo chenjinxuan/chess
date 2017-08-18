@@ -6,7 +6,7 @@ import (
 )
 
 func TestRoom_GetTable(t *testing.T) {
-	th.InitRoomList()
+	th.InitRoomList("room-1")
 
 	t1 := th.GetTable(1, "")
 	t.Log(t1)

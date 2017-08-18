@@ -3,52 +3,52 @@
 	"ignore": "",
 	"package": [
 		{
-			"checksumSHA1": "dXS44wFZAjnT+AgGaJZKPmXea+c=",
+			"checksumSHA1": "kcppmLuwKa8zzPU0B+V3SMu6hGA=",
 			"path": "chess/common/config",
-			"revision": "14bf48b3f50c2507b7036be2d6e9bd2849738e79",
-			"revisionTime": "2017-08-17T06:27:49Z"
+			"revision": "7a0cd3b77798335946278a1e4ea603b01df7ae6f",
+			"revisionTime": "2017-08-17T10:59:24Z"
 		},
 		{
 			"checksumSHA1": "TJlbggw2Oz531rs3WnpwYzxWVpc=",
 			"path": "chess/common/consul",
-			"revision": "14bf48b3f50c2507b7036be2d6e9bd2849738e79",
-			"revisionTime": "2017-08-17T06:27:49Z"
+			"revision": "7a0cd3b77798335946278a1e4ea603b01df7ae6f",
+			"revisionTime": "2017-08-17T10:59:24Z"
 		},
 		{
 			"checksumSHA1": "thu3obyFuou1ehaxnGhDUrT0IpM=",
 			"path": "chess/common/db",
-			"revision": "14bf48b3f50c2507b7036be2d6e9bd2849738e79",
-			"revisionTime": "2017-08-17T06:27:49Z"
+			"revision": "7a0cd3b77798335946278a1e4ea603b01df7ae6f",
+			"revisionTime": "2017-08-17T10:59:24Z"
 		},
 		{
-			"checksumSHA1": "/T6ZzPUcE3bqmL1VBU1U+wxiu5A=",
+			"checksumSHA1": "o3bwx03Bvm2ynn1ua/YGW2mgetY=",
 			"path": "chess/common/define",
-			"revision": "14bf48b3f50c2507b7036be2d6e9bd2849738e79",
-			"revisionTime": "2017-08-17T06:27:49Z"
+			"revision": "7a0cd3b77798335946278a1e4ea603b01df7ae6f",
+			"revisionTime": "2017-08-17T10:59:24Z"
 		},
 		{
 			"checksumSHA1": "9dLQ0zn/nZ3X84HwM2z1VGuw19U=",
 			"path": "chess/common/helper",
-			"revision": "14bf48b3f50c2507b7036be2d6e9bd2849738e79",
-			"revisionTime": "2017-08-17T06:27:49Z"
+			"revision": "7a0cd3b77798335946278a1e4ea603b01df7ae6f",
+			"revisionTime": "2017-08-17T10:59:24Z"
 		},
 		{
 			"checksumSHA1": "Y+us1CJfgnPsZixZzxqHKD89k0o=",
 			"path": "chess/common/log",
-			"revision": "14bf48b3f50c2507b7036be2d6e9bd2849738e79",
-			"revisionTime": "2017-08-17T06:27:49Z"
+			"revision": "7a0cd3b77798335946278a1e4ea603b01df7ae6f",
+			"revisionTime": "2017-08-17T10:59:24Z"
 		},
 		{
 			"checksumSHA1": "0N31vtHVCi70Sfmv+8/hQTm3GTQ=",
 			"path": "chess/common/services",
-			"revision": "14bf48b3f50c2507b7036be2d6e9bd2849738e79",
-			"revisionTime": "2017-08-17T06:27:49Z"
+			"revision": "7a0cd3b77798335946278a1e4ea603b01df7ae6f",
+			"revisionTime": "2017-08-17T10:59:24Z"
 		},
 		{
 			"checksumSHA1": "o3ULlnBW4y1AnMuHCvbMlfUC3c0=",
 			"path": "chess/models",
-			"revision": "14bf48b3f50c2507b7036be2d6e9bd2849738e79",
-			"revisionTime": "2017-08-17T06:27:49Z"
+			"revision": "7a0cd3b77798335946278a1e4ea603b01df7ae6f",
+			"revisionTime": "2017-08-17T10:59:24Z"
 		},
 		{
 			"checksumSHA1": "tI2uUPh7qwQxNihd1LvtNTdjVks=",

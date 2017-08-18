@@ -7,12 +7,19 @@ import (
 	"sync"
 	"time"
 	"chess/models"
+	pb "chess/srv/srv-room/proto"
 	"chess/common/log"
+	"chess/common/define"
+	"golang.org/x/net/context"
+	"chess/common/services"
 )
+
+var serviceId string
 
 type Tables struct {
 	M       map[string]*Table
 	counter int // 牌桌计数器
+	pcounter int // 玩家计数器
 	lock    sync.Mutex
 }
 
@@ -40,6 +47,7 @@ func NewRoom(rid, bb, sb, minC, maxC, max int) *Room {
 			tables: Tables{
 				M:       make(map[string]*Table),
 				counter: 0,
+				pcounter: 0,
 				lock:    sync.Mutex{},
 			},
 		}
@@ -61,6 +69,16 @@ func (r *Room) setTable(t *Table) {
 	log.Debugf("创建新牌桌(%s)", t.Id)
 	r.tables.M[t.Id] = t
 	r.tables.counter++
+}
+
+func (r *Room) pCounter(t int) {
+	r.tables.lock.Lock()
+	defer r.tables.lock.Unlock()
+
+	r.tables.pcounter += t
+	if r.tables.pcounter <0{
+		r.tables.pcounter = 0
+	}
 }
 
 func (r *Room) GetTableExists(tid string) *Table {
@@ -118,7 +136,8 @@ func (r *Room) Tables() map[string]*Table {
 var RoomList = make(map[int]*Room)
 
 // TODO 初始化房间列表
-func InitRoomList() {
+func InitRoomList(sid string) {
+	serviceId = sid
 	list, err := models.Rooms.GetAll()
 	if err != nil {
 		log.Errorf("models.Rooms.GetAll ERROR: %s", err)
@@ -188,4 +207,33 @@ func GetAnotherTable(rid int, tid string) *Table {
 		return room.GetAnotherTable(tid)
 	}
 	return nil
+}
+
+//
+func Pcounter(rid, t int) {
+	if room, ok := RoomList[rid]; ok {
+		room.pCounter(t)
+
+		conn, sid := services.GetService2(define.SRV_NAME_CENTRE)
+		if conn == nil {
+			log.Error("cannot get centre service:", sid)
+			return
+		}
+		cli := pb.NewCentreServiceClient(conn)
+		_, err := cli.UpdateRoomInfo(
+			context.Background(),
+			&pb.UpdateRoomInfoArgs{
+				ServiceId: serviceId,
+				RoomId: int32(rid),
+				RoomInfo: &pb.RoomInfo{
+					TableNumber: int32(room.tables.counter),
+					PlayerNumber: int32(room.tables.pcounter),
+				},
+			},
+		)
+		if err != nil {
+			log.Error("cli.UpdateRoomInfo: ", err)
+		}
+
+	}
 }
