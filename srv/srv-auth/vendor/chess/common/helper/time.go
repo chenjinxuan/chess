@@ -95,5 +95,5 @@ func Time2Int64(t int64) int64 {
 	return timeToInt
 }
 func GetYesterdayDate() string {
-    return time.Now().AddDate(0, 0, -1).Format(FormatDate)
+	return time.Now().AddDate(0, 0, -1).Format(FormatDate)
 }

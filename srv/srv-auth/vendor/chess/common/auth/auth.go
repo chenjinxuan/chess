@@ -1,12 +1,12 @@
 package auth
 
 import (
-	"github.com/satori/go.uuid"
-	"strconv"
-	"time"
 	"chess/common/config"
 	"chess/common/define"
 	"chess/models"
+	"github.com/satori/go.uuid"
+	"strconv"
+	"time"
 )
 
 type AuthResult struct {
@@ -40,7 +40,7 @@ func LoginUser(userid int, from, uniqueId string) (AuthResult, error) {
 	session.RefreshToken = refreshToken
 	session.Updated = time.Now()
 	session.Created = time.Now()
-	err = models.Session.Upsert(userid,from ,session)
+	err = models.Session.Upsert(userid, from, session)
 	if err != nil {
 		result.Msg = "Could not generate session."
 		return result, err
@@ -53,5 +53,3 @@ func LoginUser(userid int, from, uniqueId string) (AuthResult, error) {
 	result.RefreshToken = refreshToken
 	return result, nil
 }
-
-

@@ -4,8 +4,8 @@ import (
 	. "chess/common/define"
 	"chess/common/log"
 	"chess/srv/srv-room/misc/packet"
-	"chess/srv/srv-room/registry"
 	pb "chess/srv/srv-room/proto"
+	"chess/srv/srv-room/registry"
 	. "chess/srv/srv-room/texas_holdem"
 	"github.com/golang/protobuf/proto"
 )

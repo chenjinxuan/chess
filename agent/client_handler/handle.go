@@ -8,8 +8,8 @@ import (
 	"time"
 
 	"golang.org/x/net/context"
-	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/metadata"
 
 	"chess/agent/misc/crypto/dh"
 	"chess/agent/misc/packet"
@@ -106,13 +106,13 @@ func P_user_login_req(sess *Session, data []byte) []byte {
 		return nil
 	}
 	authCli := pb.NewAuthServiceClient(authConn)
-	authRes, err := authCli.Auth(context.Background(), &pb.AuthArgs{UserId:req.UserId, Token:req.Token})
+	authRes, err := authCli.Auth(context.Background(), &pb.AuthArgs{UserId: req.UserId, Token: req.Token})
 	if err != nil {
-		log.Error("authCli.Auth: ",err)
-		return packet.Pack(Code["user_login_ack"], &pb.UserLoginAck{&pb.BaseAck{Ret:SYSTEM_ERROR,Msg:"system error."}})
+		log.Error("authCli.Auth: ", err)
+		return packet.Pack(Code["user_login_ack"], &pb.UserLoginAck{&pb.BaseAck{Ret: SYSTEM_ERROR, Msg: "system error."}})
 	}
 	if authRes.Ret != 1 {
-		return packet.Pack(Code["user_login_ack"], &pb.UserLoginAck{&pb.BaseAck{Ret:AUTH_FAIL,Msg:"Auth fail."}})
+		return packet.Pack(Code["user_login_ack"], &pb.UserLoginAck{&pb.BaseAck{Ret: AUTH_FAIL, Msg: "Auth fail."}})
 	}
 
 	sess.UserId = req.UserId
@@ -121,7 +121,7 @@ func P_user_login_req(sess *Session, data []byte) []byte {
 	// 选服策略依据业务进行，比如小服可以固定选取某台，大服可以采用HASH或一致性HASH
 	var serviceId string
 	var conn *grpc.ClientConn
-	if req.ConnectTo != "" {  // 客户端指定连接的服务
+	if req.ConnectTo != "" { // 客户端指定连接的服务
 		serviceId = req.ConnectTo
 		conn = services.GetServiceWithId(serviceId, SRV_NAME_ROOM)
 	} else {

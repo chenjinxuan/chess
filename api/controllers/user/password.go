@@ -1,10 +1,10 @@
 package c_user
 
 import (
-	"github.com/gin-gonic/gin"
-	"net/http"
 	"chess/api/components/auth"
 	"chess/api/components/input"
+	"github.com/gin-gonic/gin"
+	"net/http"
 	//"chess/api/components/sms"
 	"chess/common/config"
 	"chess/common/define"
@@ -21,6 +21,7 @@ type PasswordResetParams struct {
 type PasswordResetResult struct {
 	define.BaseResult
 }
+
 // @Title 重置密码
 // @Description 重置密码
 // @Summary 重置密码

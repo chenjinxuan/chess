@@ -133,20 +133,20 @@ func (c *ConsulCliWrap) KeyInt64(key string, def int64) (int64, error) {
 	resInt64, err := strconv.ParseInt(res, 10, 64)
 	return resInt64, err
 }
-func(c *ConsulCliWrap) KeyList(prefix string) (map[string][]byte,error) {
-	if c.cli != nil  {
-	    kv := c.cli.KV()
-	    pair ,_ ,err:=kv.List(prefix,nil)
-	    if pair == nil {
-		return nil, nil
-	    }
+func (c *ConsulCliWrap) KeyList(prefix string) (map[string][]byte, error) {
+	if c.cli != nil {
+		kv := c.cli.KV()
+		pair, _, err := kv.List(prefix, nil)
+		if pair == nil {
+			return nil, nil
+		}
 
-	    val := make(map[string][]byte)
-	    log.Debugf("get key %s", prefix)
-	    for _,v := range pair {
-		val[v.Key]=v.Value
-	    }
-	    return val, err
+		val := make(map[string][]byte)
+		log.Debugf("get key %s", prefix)
+		for _, v := range pair {
+			val[v.Key] = v.Value
+		}
+		return val, err
 	}
 	return nil, ErrCliNil
 }
@@ -335,7 +335,7 @@ func (c *ConsulCliWrap) LocalServices() (map[string]*api.AgentService, error) {
 }
 
 // 根据服务名返回所有节点上注册的服务
-func (c *ConsulCliWrap) Service(name string) ([]*api.CatalogService,  error) {
+func (c *ConsulCliWrap) Service(name string) ([]*api.CatalogService, error) {
 	cs, _, err := c.cli.Catalog().Service(name, "", &api.QueryOptions{})
 	return cs, err
 }
@@ -354,4 +354,3 @@ func (c *ConsulCliWrap) ServiceWatch(service string, handler func(idx uint64, ra
 	plan.Handler = handler
 	return plan.Run(c.address)
 }
-

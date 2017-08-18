@@ -326,6 +326,47 @@
                 }
             }
         },
+        "/user/{user_id}/logout": {
+            "get": {
+                "tags": [
+                    "/user/:user_id - 用户相关 "
+                ],
+                "summary": "登出 (token过期)",
+                "description": "登出 (token过期)",
+                "operationId": ".登出 (token过期)",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "token",
+                        "description": "token",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "user_id",
+                        "description": "user_id",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/c_user.TokenOutResult"
+                        }
+                    }
+                }
+            }
+        },
         "/user/{user_id}/password/reset": {
             "post": {
                 "tags": [
@@ -600,9 +641,6 @@
                     "type": "integer",
                     "format": "int64"
                 },
-                "msg": {
-                    "type": "string"
-                },
                 "need_captcha": {
                     "description": "是否需要验证码",
                     "type": "boolean"
@@ -610,11 +648,6 @@
                 "refresh_token": {
                     "description": "当 Token 过期时，使用该 Token 获取一个新的",
                     "type": "string"
-                },
-                "ret": {
-                    "description": "1成功 0失败",
-                    "type": "integer",
-                    "format": "int64"
                 },
                 "token": {
                     "description": "请求授权的token",
@@ -752,6 +785,20 @@
         },
         "c_user.PasswordResetResult": {
             "title": "PasswordResetResult",
+            "type": "object",
+            "properties": {
+                "msg": {
+                    "type": "string"
+                },
+                "ret": {
+                    "description": "1成功 0失败",
+                    "type": "integer",
+                    "format": "int64"
+                }
+            }
+        },
+        "c_user.TokenOutResult": {
+            "title": "TokenOutResult",
             "type": "object",
             "properties": {
                 "msg": {

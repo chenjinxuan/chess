@@ -1,14 +1,14 @@
 package qqsdk
 
 import (
+	"chess/api/log"
+	"chess/common/config"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
 	"net/url"
 	"strings"
-	"chess/common/config"
-	"chess/api/log"
 )
 
 var (

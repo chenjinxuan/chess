@@ -1,8 +1,8 @@
 package user_init
 
 import (
-	"strings"
 	"chess/models"
+	"strings"
 )
 
 func DeviceInit(uId int, from, uniqueId, idfv, idfa string) error {

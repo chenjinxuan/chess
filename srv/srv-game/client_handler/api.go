@@ -34,6 +34,6 @@ var Handlers map[int16]func(*Session, *packet.Packet) []byte
 func init() {
 	Handlers = map[int16]func(*Session, *packet.Packet) []byte{
 		1001: P_proto_ping_req,
-	        1010: P_proto_poker,
+		1010: P_proto_poker,
 	}
 }

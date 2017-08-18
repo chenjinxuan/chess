@@ -1,12 +1,12 @@
 package wechat
 
 import (
+	"chess/common/config"
 	"encoding/json"
 	"errors"
 	"io/ioutil"
 	"net/http"
 	"net/url"
-	"chess/common/config"
 	//"treasure/log"
 	"fmt"
 	"strings"

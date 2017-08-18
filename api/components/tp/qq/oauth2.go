@@ -1,8 +1,8 @@
 package qqsdk
 
 import (
-	"errors"
 	"chess/api/log"
+	"errors"
 )
 
 func GetOpenId(accessToken string) (string, error) {

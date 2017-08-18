@@ -1,23 +1,23 @@
 package c_auth
 
 import (
-	"github.com/Sirupsen/logrus"
-	"github.com/gin-gonic/gin"
-	"net/http"
-	"strings"
 	"chess/api/components/input"
 	"chess/api/components/tp"
 	"chess/api/components/tp/qq"
 	"chess/api/components/tp/wechat"
 	"chess/api/components/user_init"
+	grpcServer "chess/api/grpc"
+	pb "chess/api/proto"
 	"chess/common/config"
 	"chess/common/define"
 	"chess/common/helper"
 	"chess/common/log"
 	"chess/models"
-	grpcServer "chess/api/grpc"
-	pb "chess/api/proto"
+	"github.com/Sirupsen/logrus"
+	"github.com/gin-gonic/gin"
 	"golang.org/x/net/context"
+	"net/http"
+	"strings"
 )
 
 const (
@@ -35,11 +35,11 @@ type TpLoginResult struct {
 }
 
 type TpLoginParams struct {
-	Type         int                    `json:"type" form:"type" binding:"required"`
-	Key          string                 `form:"key" json:"key" binding:"required"`
-	From         string                 `form:"from" json:"from" binding:"required"`
-	UniqueId     string                 `json:"unique_id" form:"unique_id"`
-	Channel      string                 `json:"channel"`
+	Type     int    `json:"type" form:"type" binding:"required"`
+	Key      string `form:"key" json:"key" binding:"required"`
+	From     string `form:"from" json:"from" binding:"required"`
+	UniqueId string `json:"unique_id" form:"unique_id"`
+	Channel  string `json:"channel"`
 	//BindingParam broker.CheckCodeParams `json:"binding_param"`
 }
 
@@ -75,14 +75,13 @@ func TpLogin(c *gin.Context) {
 	form.From = strings.ToLower(form.From)
 	defer func() {
 		// Debug
-		log.Debugf("c_auth.login.tp",logrus.Fields{
+		log.Debugf("c_auth.login.tp", logrus.Fields{
 			"key":    form.Key,
 			"type":   form.Type,
 			"form":   form.From,
 			"result": result,
 		})
 	}()
-
 
 	var userInfo models.UsersModel
 	switch form.Type {
@@ -108,7 +107,7 @@ func TpLogin(c *gin.Context) {
 		isNew = isnew
 		userId = user.Id
 		userInfo = user
-        //
+		//
 	//case TpWeibo:
 	//	isnew, user, msg, err := tp.LoginByWeibo(form.Key, clientIp, form.Channel, form.From, cConf)
 	//	if err != nil {
@@ -154,7 +153,7 @@ func TpLogin(c *gin.Context) {
 	extra["unique_id"] = form.UniqueId
 	extra["idfv"] = c.Query("idfv")
 	extra["idfa"] = c.Query("idfa")
-    _=userInfo
+	_ = userInfo
 	//isfresh, err := user_init.UserInit(userInfo, extra, cConf)
 	//if err != nil {
 	//	log.Log.Error(err)
@@ -173,8 +172,8 @@ func TpLogin(c *gin.Context) {
 	} else {
 		go models.Users.UpdateLastLoginIp(userId, clientIp)
 	}
-	AuthClient:=grpcServer.GetAuthGrpc()
-	authResult, err := AuthClient.RefreshToken(context.Background(), &pb.RefreshTokenArgs{UserId: int32(userId),AppFrom:form.From,UniqueId:form.UniqueId})
+	AuthClient := grpcServer.GetAuthGrpc()
+	authResult, err := AuthClient.RefreshToken(context.Background(), &pb.RefreshTokenArgs{UserId: int32(userId), AppFrom: form.From, UniqueId: form.UniqueId})
 	if err != nil {
 		result.Ret = 0
 		result.Msg = "login failed"

@@ -1,7 +1,6 @@
 package define
 
 const (
-    AuthFailedStatus = -998
-    AuthALreadyLogin = -997
+	AuthFailedStatus = -998
+	AuthALreadyLogin = -997
 )
-

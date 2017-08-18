@@ -1,23 +1,20 @@
 package auth
 
 import (
+	"chess/api/redis"
+	"chess/common/define"
+	"chess/common/log"
 	"errors"
 	"github.com/Sirupsen/logrus"
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"chess/common/define"
-	"chess/common/log"
-        "chess/api/redis"
 )
-
-
 
 var (
 	UnexpectedSigningMethod = errors.New("Unexpected signing method.")
 	AuthFailed              = errors.New("Auth failed.")
 )
-
 
 func AuthLoginToken(tokenString string, secret string) (string, error) {
 	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
@@ -40,18 +37,18 @@ func Login(secret string) gin.HandlerFunc {
 		var result define.BaseResult
 		userId := c.Param("user_id")
 		tokenString := c.Query("token")
-                //判断黑名单
-	         msg,err:=redis.Redis.Login.GetInt(tokenString)
+		//判断黑名单
+		msg, err := redis.Redis.Login.GetInt(tokenString)
 		if err == nil {
-		    result.Ret = define.AuthALreadyLogin
-		    result.Msg = define.AuthMsgMap[msg]
-		    c.JSON(http.StatusOK, result)
-		    c.Abort()
-		    return
+			result.Ret = define.AuthALreadyLogin
+			result.Msg = define.AuthMsgMap[msg]
+			c.JSON(http.StatusOK, result)
+			c.Abort()
+			return
 		}
 		loginData, err := AuthLoginToken(tokenString, secret)
 
-		log.Debugf("Auth",logrus.Fields{
+		log.Debugf("Auth", logrus.Fields{
 			"User ID":   userId,
 			"Token":     tokenString,
 			"LoginData": loginData,

@@ -2,36 +2,36 @@ package texas_holdem
 
 import (
 	"chess/common/define"
+	"chess/common/log"
+	"chess/models"
 	"chess/srv/srv-room/misc/packet"
-	"chess/srv/srv-room/registry"
 	pb "chess/srv/srv-room/proto"
+	"chess/srv/srv-room/registry"
 	"errors"
 	"github.com/golang/protobuf/proto"
 	"time"
-	"chess/common/log"
-	"chess/models"
 )
 
 const (
 	ActStandup = "standup" // 站起
 	ActSitdown = "sitdown" // 坐下
-	ActReady = "ready" // 准备
+	ActReady   = "ready"   // 准备
 	ActBetting = "betting" // 下注中
-	ActCall  = "call"  // 跟注
-	ActCheck = "check" // 让牌
-	ActRaise = "raise" // 加注
-	ActFold  = "fold"  // 弃牌
-	ActAllin = "allin" // 全押
+	ActCall    = "call"    // 跟注
+	ActCheck   = "check"   // 让牌
+	ActRaise   = "raise"   // 加注
+	ActFold    = "fold"    // 弃牌
+	ActAllin   = "allin"   // 全押
 )
 
 type Player struct {
-	Id       int
-	Nickname string
-	Avatar   string
-	Level    string
-	Chips    int  // 带入牌桌的筹码
-	TotalChips int  // 原有筹码
-	CurrChips int // 牌桌上以外的筹码
+	Id         int
+	Nickname   string
+	Avatar     string
+	Level      string
+	Chips      int // 带入牌桌的筹码
+	TotalChips int // 原有筹码
+	CurrChips  int // 牌桌上以外的筹码
 
 	Pos    int
 	Bet    int
@@ -44,7 +44,7 @@ type Player struct {
 	ActBet chan *pb.RoomPlayerBetReq
 	timer  *time.Timer // action timer
 
-	Flag int // 会话标记
+	Flag   int // 会话标记
 	Stream pb.RoomService_StreamServer
 }
 
@@ -166,7 +166,7 @@ func (p *Player) GetActionBet(timeout time.Duration) (*pb.RoomPlayerBetReq, erro
 }
 
 func (p *Player) Join(rid int, tid string) (table *Table) {
-	if p.Table!=nil{
+	if p.Table != nil {
 		log.Debugf("玩家%d已在牌桌上", p.Id)
 		return
 	}
@@ -198,9 +198,8 @@ func (p *Player) Join(rid int, tid string) (table *Table) {
 	table.AddPlayer(p)
 
 	// 带入筹码
-	p.Chips = table.MaxCarry/2
+	p.Chips = table.MaxCarry / 2
 	p.CurrChips -= p.Chips
-
 
 	log.Debugf("(%s)玩家%d加入牌桌, 位置%d, 当前牌桌有%d个玩家", table.Id, p.Id, p.Pos, table.N)
 
@@ -212,7 +211,7 @@ func (p *Player) Join(rid int, tid string) (table *Table) {
 
 	log.Debug("推送房间信息")
 	// 2006, 当玩家加入房间后，服务器会向此用户推送房间信息
-	p.SendMessage(define.Code["room_get_table_ack"],  &pb.RoomGetTableAck{
+	p.SendMessage(define.Code["room_get_table_ack"], &pb.RoomGetTableAck{
 		BaseAck: &pb.BaseAck{Ret: 1, Msg: "ok"},
 		Table:   table.ToProtoMessage(),
 	})
@@ -240,7 +239,7 @@ func (p *Player) Standup() {
 	if p.Action == ActBetting { // 弃牌
 		p.ActBet <- &pb.RoomPlayerBetReq{
 			TableId: table.Id,
-			Bet: -1,
+			Bet:     -1,
 		}
 	}
 
@@ -249,9 +248,9 @@ func (p *Player) Standup() {
 
 	// 2113, 广播玩家站起
 	table.BroadcastAll(define.Code["room_player_standup_ack"], &pb.RoomPlayerStandupAck{
-		BaseAck: &pb.BaseAck{Ret: 1, Msg: "ok"},
-		TableId:  table.Id,
-		PlayerId: int32(p.Id),
+		BaseAck:   &pb.BaseAck{Ret: 1, Msg: "ok"},
+		TableId:   table.Id,
+		PlayerId:  int32(p.Id),
 		PlayerPos: int32(p.Pos),
 	})
 
@@ -287,13 +286,13 @@ func (p *Player) Sitdown() {
 	table.AddPlayer(p)
 
 	// 带入筹码
-	p.Chips = table.MaxCarry/2
+	p.Chips = table.MaxCarry / 2
 	p.CurrChips -= p.Chips
 
 	// 2115, 广播玩家坐下
 	table.BroadcastAll(define.Code["room_player_sitdown_ack"], &pb.RoomPlayerSitdownAck{
 		BaseAck: &pb.BaseAck{Ret: 1, Msg: "ok"},
-		Player: p.ToProtoMessage(),
+		Player:  p.ToProtoMessage(),
 	})
 }
 
@@ -326,12 +325,12 @@ func (p *Player) Leave() (table *Table) {
 	log.Debugf("(%s)玩家%d离开牌桌", table.Id, p.Id)
 
 	// 持久化
-	go func (total, curr int) {
+	go func(total, curr int) {
 		add := curr - total
 
 		err := models.UsersWallet.Checkout(p.Id, add)
 		if err != nil {
-			log.Errorf("models.UsersWallet.Checkout(%d, %d) Error: %s",p.Id, add, err)
+			log.Errorf("models.UsersWallet.Checkout(%d, %d) Error: %s", p.Id, add, err)
 		}
 	}(p.TotalChips, p.CurrChips+p.Chips)
 
@@ -365,9 +364,8 @@ func (p *Player) Leave() (table *Table) {
 // 掉线处理
 func (p *Player) Disconnect() {
 
-
 	table := p.Table
-	if table == nil {// 不在牌桌上
+	if table == nil { // 不在牌桌上
 		log.Debugf("玩家%d掉线了(不在牌桌上)...", p.Id)
 		registry.Unregister(p.Id, p)
 	} else { // 在牌桌上
@@ -393,14 +391,14 @@ func (p *Player) Next() *Player {
 
 func (p *Player) ToProtoMessage() *pb.PlayerInfo {
 	return &pb.PlayerInfo{
-		Pos:      int32(p.Pos),
-		Id:       int32(p.Id),
-		Nickname: p.Nickname,
-		Avatar:   p.Avatar,
-		Chips:    int32(p.Chips),
-		Bet:      int32(p.Bet),
-		Action:   p.Action,
-		Cards:    p.Cards.ToProtoMessage(),
+		Pos:       int32(p.Pos),
+		Id:        int32(p.Id),
+		Nickname:  p.Nickname,
+		Avatar:    p.Avatar,
+		Chips:     int32(p.Chips),
+		Bet:       int32(p.Bet),
+		Action:    p.Action,
+		Cards:     p.Cards.ToProtoMessage(),
 		HandLevel: int32(p.Hand.Level),
 	}
 }

@@ -1,20 +1,20 @@
 package c_auth
 
 import (
+	"chess/api/components/input"
 	"errors"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strings"
-	"chess/api/components/input"
 	//"chess/api/components/sms"
 	"chess/api/components/user_init"
+	grpcServer "chess/api/grpc"
+	pb "chess/api/proto"
 	"chess/common/config"
 	"chess/common/helper"
 	"chess/common/log"
 	"chess/models"
-    grpcServer "chess/api/grpc"
-    pb "chess/api/proto"
-    "golang.org/x/net/context"
+	"golang.org/x/net/context"
 )
 
 var (
@@ -22,11 +22,11 @@ var (
 )
 
 type LoginMobileParams struct {
-	MobileNumber string                 `json:"mobile_number" form:"mobile_num" binding:"required" description:"手机号"`
-	Password     string                 `json:"password" binding:"required" description:"密码"`
-	From         string                 `json:"from" description:"来源"`
-	UniqueId     string                 `json:"unique_id"  description:"唯一标识"`
-	Channel      string                 `json:"channel" description:"渠道"`
+	MobileNumber string `json:"mobile_number" form:"mobile_num" binding:"required" description:"手机号"`
+	Password     string `json:"password" binding:"required" description:"密码"`
+	From         string `json:"from" description:"来源"`
+	UniqueId     string `json:"unique_id"  description:"唯一标识"`
+	Channel      string `json:"channel" description:"渠道"`
 	//Q            string                 `json:"q"`
 	//BindingParam broker.CheckCodeParams `json:"binding_param"`
 }
@@ -53,7 +53,7 @@ func LoginMobile(c *gin.Context) {
 	//var err error
 	var user = new(models.UsersModel)
 	if input.BindJSON(c, &post, cConf) == nil {
-	       clientIp := helper.ClientIP(c)
+		clientIp := helper.ClientIP(c)
 		if post.Channel == "" {
 			post.Channel = "default"
 		}
@@ -67,7 +67,6 @@ func LoginMobile(c *gin.Context) {
 		//	c.JSON(http.StatusOK, result)
 		//	return
 		//}
-
 
 		// Query the user is exists
 		var userId int
@@ -126,8 +125,8 @@ func LoginMobile(c *gin.Context) {
 		}
 
 		// Create login token
-	    AuthClient:=grpcServer.GetAuthGrpc()
-	    authResult, err := AuthClient.RefreshToken(context.Background(), &pb.RefreshTokenArgs{UserId: int32(user.Id),AppFrom:user.AppFrom,UniqueId:post.UniqueId})
+		AuthClient := grpcServer.GetAuthGrpc()
+		authResult, err := AuthClient.RefreshToken(context.Background(), &pb.RefreshTokenArgs{UserId: int32(user.Id), AppFrom: user.AppFrom, UniqueId: post.UniqueId})
 		if err != nil {
 			result.Msg = "login failed"
 			c.JSON(http.StatusOK, result)

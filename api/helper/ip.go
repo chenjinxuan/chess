@@ -1,10 +1,10 @@
 package helper
 
 import (
+	"chess/common/config"
 	"github.com/gin-gonic/gin"
 	"net"
 	"strings"
-	"chess/common/config"
 	"unicode"
 )
 

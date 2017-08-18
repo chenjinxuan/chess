@@ -1,18 +1,19 @@
 package c_auth
 
 import (
-	"github.com/gin-gonic/gin"
-	"net/http"
-	"strconv"
-	"strings"
 	"chess/api/components/auth"
 	"chess/api/components/input"
 	"chess/api/components/tp"
+	"chess/api/redis"
 	"chess/common/config"
 	"chess/common/define"
 	"chess/common/log"
 	"chess/models"
-        "chess/api/redis"
+	"github.com/gin-gonic/gin"
+	"net/http"
+	"strconv"
+	"strings"
+    "time"
 )
 
 type TokenInfoParams struct {
@@ -27,6 +28,7 @@ type TokenInfoResult struct {
 	define.BaseResult
 	Expire int64 `json:"expire,omitempty"`
 }
+
 // @Title 获取token信息
 // @Description 获取token信息
 // @Summary 获取token信息
@@ -53,16 +55,17 @@ func TokenInfo(c *gin.Context) {
 		// Check token
 		defer log.Debug(result)
 		//判断黑名单
-		msg,err:=redis.Redis.Login.Get(post.Token)
+		msg, err := redis.Redis.Login.Get(post.Token)
 		if err == nil {
-		    result.Ret = define.AuthALreadyLogin
-		    result.Msg = msg
-		    c.JSON(http.StatusOK, result)
-		    return
+			result.Ret = define.AuthALreadyLogin
+			result.Msg = msg
+			c.JSON(http.StatusOK, result)
+			return
 		}
 		loginData, err := auth.AuthLoginToken(post.Token, cConf.TokenSecret)
 		if err != nil {
 			log.Error(err)
+		    	result.Ret = define.AuthFailedStatus
 			result.Msg = auth.AuthFailed.Error()
 			c.JSON(http.StatusOK, result)
 			return
@@ -83,7 +86,14 @@ func TokenInfo(c *gin.Context) {
 			c.JSON(http.StatusOK, result)
 			return
 		}
-
+                //判断过期时间12小时
+	       now:=time.Now().Unix()
+	        if session.Token.Expire - now < 60*60*12 {
+		    result.Ret = define.AuthReToken
+		    result.Msg = define.AuthMsgMap[define.AuthReToken]
+		    c.JSON(http.StatusOK, result)
+		    return
+		}
 		// TODO: 检查黑名单
 
 		//var checkConfig config.TokenInfoCheckDetail
@@ -93,7 +103,7 @@ func TokenInfo(c *gin.Context) {
 		//if post.From == "android" {
 		//	checkConfig = config.C.TokenInfoCheck.Android
 		//}
-                //
+		//
 		//if !checkConfig.Check || post.Ver < checkConfig.Min || post.Ver > checkConfig.Max {
 		//	result.Ret = 1
 		//	result.Expire = session.Token.Expire

@@ -2,20 +2,19 @@ package signal
 
 import (
 	"chess/common/helper"
+	"fmt"
 	"os"
 	"os/signal"
 	"sync"
 	"syscall"
-	"fmt"
 )
 
 var (
 	TableWg sync.WaitGroup
-	SessWg sync.WaitGroup
+	SessWg  sync.WaitGroup
 	// server close signal
 	TableDie = make(chan struct{})
-	SessDie = make(chan struct{})
-
+	SessDie  = make(chan struct{})
 )
 
 // handle unix signals
@@ -27,7 +26,7 @@ func Handler() {
 	for {
 		msg := <-ch
 		switch msg {
-		case syscall.SIGTERM, syscall.SIGINT:// 关闭room
+		case syscall.SIGTERM, syscall.SIGINT: // 关闭room
 			close(TableDie)
 			fmt.Println("waiting for table close, please wait...")
 			TableWg.Wait()
