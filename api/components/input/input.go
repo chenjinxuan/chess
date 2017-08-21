@@ -1,14 +1,14 @@
 package input
 
 import (
+	"chess/api/helper"
+	"chess/api/log"
+	"chess/common/config"
 	"encoding/json"
 	"errors"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"io/ioutil"
-	"chess/common/config"
-	"chess/api/helper"
-	"chess/api/log"
 )
 
 func BindJSON(c *gin.Context, params interface{}, cConf *config.ApiConfig) error {

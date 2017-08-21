@@ -1,18 +1,18 @@
 package models
 
 import (
-    "chess/common/db"
-    "chess/common/log"
-    "database/sql"
+	"chess/common/db"
+	"chess/common/log"
+	"database/sql"
 )
 
 var (
-	Mysql      MySQLDB
-	Mongo      MongoDB
+	Mysql MySQLDB
+	Mongo MongoDB
 )
 
 type MySQLDB struct {
-    Chess  *sql.DB
+	Chess *sql.DB
 }
 
 type MongoDB struct {

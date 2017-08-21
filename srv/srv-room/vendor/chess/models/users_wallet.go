@@ -8,14 +8,14 @@ const (
 var UsersWallet = new(UsersWalletModel)
 
 type UsersWalletModel struct {
-	Id         int
-	UserId     int
-	Balance    uint
-	Total      int
+	Id             int
+	UserId         int
+	Balance        uint
+	Total          int
 	DiamondBalance uint
-    	DiamondTotal   int
-	VirIsNew   int
-	Status     int
+	DiamondTotal   int
+	VirIsNew       int
+	Status         int
 }
 
 func (m *UsersWalletModel) Init(userId int) error {
@@ -41,14 +41,14 @@ func (m *UsersWalletModel) Get(userId int, data *UsersWalletModel) error {
 		&data.Status,
 	)
 }
-func (m *UsersWalletModel) GetBalance(userId int) (balance,diamondBalance int, err error) {
-    sqlString := `SELECT
+func (m *UsersWalletModel) GetBalance(userId int) (balance, diamondBalance int, err error) {
+	sqlString := `SELECT
 					 balance,diamond_balance
 				FROM users_wallet
 				WHERE user_id = ?`
 
-    err = Mysql.Chess.QueryRow(sqlString, userId).Scan(&balance,&diamondBalance)
-    return
+	err = Mysql.Chess.QueryRow(sqlString, userId).Scan(&balance, &diamondBalance)
+	return
 }
 
 func (m *UsersWalletModel) GetBalanceByMobile(mobile string) (balance int, err error) {

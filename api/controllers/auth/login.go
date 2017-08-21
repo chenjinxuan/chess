@@ -1,21 +1,21 @@
 package c_auth
 
 import (
-	"github.com/gin-gonic/gin"
-	"net/http"
-	"strings"
 	"chess/api/components/auth"
 	"chess/api/components/captcha"
 	"chess/api/components/input"
+	grpcServer "chess/api/grpc"
+	"chess/api/helper"
+	pb "chess/api/proto"
 	"chess/common/config"
 	"chess/common/define"
-	"chess/api/helper"
 	"chess/common/log"
 	"chess/models"
-        grpcServer "chess/api/grpc"
-    pb "chess/api/proto"
-    "golang.org/x/net/context"
-    "fmt"
+	"fmt"
+	"github.com/gin-gonic/gin"
+	"golang.org/x/net/context"
+	"net/http"
+	"strings"
 )
 
 const (
@@ -34,7 +34,7 @@ type LoginParams struct {
 	From         string `json:"from" form:"from" description:"请求来源"`
 	UniqueId     string `json:"unique_id" form:"unique_id" description:"唯一标识"`
 	Captcha      string `json:"captcha" description:"验证码"`
-    	Channel      string `json:"channel" description:"渠道"`
+	Channel      string `json:"channel" description:"渠道"`
 }
 
 type LoginResult struct {
@@ -46,6 +46,7 @@ type LoginResult struct {
 	Expire       int64  `json:"expire" description:"token过期时间"`
 	RefreshToken string `json:"refresh_token" description:"当 Token 过期时，使用该 Token 获取一个新的"`
 }
+
 // @Title 手机号 + 密码登录
 // @Description 手机号 + 密码登录
 // @Summary 手机号 + 密码登录
@@ -85,7 +86,7 @@ func Login(c *gin.Context) {
 			c.JSON(http.StatusOK, result)
 			return
 		}
-		if failCount >=  cConf.Login.ShowCaptchaCount {
+		if failCount >= cConf.Login.ShowCaptchaCount {
 			result.NeedCaptcha = true
 			if form.Captcha == "" {
 				// 未填写验证码
@@ -135,8 +136,8 @@ func Login(c *gin.Context) {
 			c.JSON(http.StatusOK, result)
 			return
 		}
-                AuthClient:=grpcServer.GetAuthGrpc()
-		authResult, err := AuthClient.RefreshToken(context.Background(), &pb.RefreshTokenArgs{UserId: int32(user.Id),AppFrom:form.From,UniqueId:form.UniqueId})
+		AuthClient := grpcServer.GetAuthGrpc()
+		authResult, err := AuthClient.RefreshToken(context.Background(), &pb.RefreshTokenArgs{UserId: int32(user.Id), AppFrom: form.From, UniqueId: form.UniqueId})
 		if err != nil {
 			result.Ret = 0
 			result.Msg = "login failed"
@@ -162,12 +163,12 @@ func Login(c *gin.Context) {
 	c.JSON(http.StatusOK, result)
 }
 
-func Ttest(c *gin.Context)  {
-    _conf, ok1 := c.Get("apiconfig")
-    cConf, ok2 := _conf.(*config.ApiConfig)
-    if !ok1 || !ok2 {
+func Ttest(c *gin.Context) {
+	_conf, ok1 := c.Get("apiconfig")
+	cConf, ok2 := _conf.(*config.ApiConfig)
+	if !ok1 || !ok2 {
 
-    }
+	}
 
-    fmt.Println(cConf)
+	fmt.Println(cConf)
 }

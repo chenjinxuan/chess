@@ -3,13 +3,13 @@
 package tp
 
 import (
-	"errors"
 	"chess/api/components/tp/qq"
 	"chess/api/components/tp/wechat"
 	"chess/api/helper"
 	"chess/api/log"
 	"chess/models"
-    "fmt"
+	"errors"
+	"fmt"
 )
 
 const (
@@ -105,7 +105,7 @@ func LoginByQQ(token string, ip, channel, from string, client *qqsdk.Client) (is
 	user.LastLoginIp = user.RegIp
 	user.Avatar = qqUser.Figureurl_qq_2
 	user.Type = models.TYPE_QQ
-        user.AppFrom = from
+	user.AppFrom = from
 	userid, err := models.Users.Insert(&user)
 	if err != nil {
 		msg = "Could not create new user."
@@ -298,10 +298,10 @@ func LoginByWechat(code string, ip, channel, from string, client *wechat.Client)
 	user.Channel = channel
 	user.Avatar = wechatUser.HeadImageURL
 	user.Type = models.TYPE_WECHAT
-        user.AppFrom = from
+	user.AppFrom = from
 	userid, err := models.Users.Insert(&user)
 	if err != nil {
-	    fmt.Println(err)
+		fmt.Println(err)
 		msg = "Could not create new user."
 		return
 	}

@@ -1,17 +1,22 @@
 package texas_holdem
 
 import (
+	"chess/common/log"
+	"chess/models"
 	"fmt"
 	"strconv"
 	"strings"
 	"sync"
 	"time"
+<<<<<<< HEAD
+=======
 	"chess/models"
 	pb "chess/srv/srv-room/proto"
 	"chess/common/log"
 	"chess/common/define"
 	"golang.org/x/net/context"
 	"chess/common/services"
+>>>>>>> 999e6aaf1c9834755c104ddec3b006f2c4c758d0
 )
 
 var serviceId string
@@ -24,12 +29,12 @@ type Tables struct {
 }
 
 type Room struct {
-	Id     int
-	BigBlind int
+	Id         int
+	BigBlind   int
 	SmallBlind int
-	MinCarry int
-	MaxCarry int
-	Max int
+	MinCarry   int
+	MaxCarry   int
+	Max        int
 
 	tables Tables
 }
@@ -37,12 +42,12 @@ type Room struct {
 func NewRoom(rid, bb, sb, minC, maxC, max int) *Room {
 	if RoomList[rid] == nil {
 		RoomList[rid] = &Room{
-			Id: rid,
-			BigBlind: bb,
+			Id:         rid,
+			BigBlind:   bb,
 			SmallBlind: sb,
-			MinCarry: minC,
-			MaxCarry: maxC,
-			Max: max,
+			MinCarry:   minC,
+			MaxCarry:   maxC,
+			Max:        max,
 
 			tables: Tables{
 				M:       make(map[string]*Table),

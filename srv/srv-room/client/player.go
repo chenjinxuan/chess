@@ -5,59 +5,58 @@ import (
 	"fmt"
 	"github.com/golang/protobuf/proto"
 
-	"os"
 	"bufio"
-	"strings"
-	"strconv"
 	"chess/common/log"
 	"chess/srv/srv-room/misc/packet"
+	"os"
+	"strconv"
+	"strings"
 	//"time"
 	"time"
 )
 
 var (
 	Levels = map[int32]string{
-		1: "高牌",
-		2: "一对",
-		3: "两对",
-		4: "三条",
-		5: "顺子",
-		6: "同花",
-		7: "葫芦",
-		8: "四条",
-		9: "同花顺",
+		1:  "高牌",
+		2:  "一对",
+		3:  "两对",
+		4:  "三条",
+		5:  "顺子",
+		6:  "同花",
+		7:  "葫芦",
+		8:  "四条",
+		9:  "同花顺",
 		10: "皇家同花顺",
 	}
 
-	RANKNAME = []string{"2","3","4","5","6","7","8","9","10","J","Q","K","A"}
+	RANKNAME = []string{"2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"}
 	SUITNAME = []string{"黑桃", "红桃", "梅花", "方块"}
 
 	Actions = map[string]string{
-		"call":"跟注",
-		"check":"让牌",
-		"raise":"加注",
-		"fold":"弃牌",
-		"allin":"全押",
+		"call":  "跟注",
+		"check": "让牌",
+		"raise": "加注",
+		"fold":  "弃牌",
+		"allin": "全押",
 	}
 )
-
 
 type Player struct {
 	pb.PlayerInfo
 
-	HandLevel int32
+	HandLevel      int32
 	HandFinalValue int32
 
 	Table *pb.TableInfo
 
-	Stream pb.RoomService_StreamClient // 后端游戏服数据流 - 双向流
+	Stream  pb.RoomService_StreamClient // 后端游戏服数据流 - 双向流
 	Die     chan struct{}
 	autobet bool
 }
 
 func NewPlayer() *Player {
 	p := &Player{}
-	p.autobet = false;
+	p.autobet = false
 	return p
 }
 
@@ -68,7 +67,7 @@ func (p *Player) SendMessage(tos int16, msg proto.Message) error {
 	})
 }
 
-func (p *Player)HandleMQ(tos int16, data []byte) {
+func (p *Player) HandleMQ(tos int16, data []byte) {
 	switch tos {
 	case 40:
 		ack := &pb.KickedOutAck{}
@@ -77,7 +76,7 @@ func (p *Player)HandleMQ(tos int16, data []byte) {
 			log.Errorf("proto.Unmarshal Error: %s", err)
 			return
 		}
-		fmt.Print("您的账号在另一地点登录！！\n",)
+		fmt.Print("您的账号在另一地点登录！！\n")
 
 	case 2006: // 加入游戏，获取牌桌信息
 		ack := &pb.RoomGetTableAck{}
@@ -93,12 +92,12 @@ func (p *Player)HandleMQ(tos int16, data []byte) {
 		for _, v := range ack.Table.Players {
 			if v.Id == p.Id {
 				p.Pos = v.Pos
-				p.Nickname  = v.Nickname
-				p.Avatar  = v.Avatar
-				p.Level  = v.Level
-				p.Chips   = v.Chips
-				p.Bet     = v.Bet
-				p.Action  = v.Action
+				p.Nickname = v.Nickname
+				p.Avatar = v.Avatar
+				p.Level = v.Level
+				p.Chips = v.Chips
+				p.Bet = v.Bet
+				p.Action = v.Action
 			}
 			if v.Id != 0 {
 				fmt.Printf("玩家%d: 位置:%d 筹码:%d  \n", v.Id, v.Pos, v.Chips)
@@ -153,7 +152,7 @@ func (p *Player)HandleMQ(tos int16, data []byte) {
 		p.Table.Bet = 0
 		p.Table.Cards = nil
 		p.Table.Pot = make([]int32, 1)
-		for k,v := range p.Table.Players {
+		for k, v := range p.Table.Players {
 			if v != nil {
 				p.Table.Players[k].Bet = 0
 				p.Table.Players[k].Action = ""
@@ -186,7 +185,7 @@ func (p *Player)HandleMQ(tos int16, data []byte) {
 
 			//fmt.Print("poker>")
 		case "flop": //  翻牌
-			for k,v := range p.Table.Players {
+			for k, v := range p.Table.Players {
 				if v != nil {
 					p.Table.Players[k].Bet = 0
 					p.Table.Players[k].Action = ""
@@ -210,7 +209,7 @@ func (p *Player)HandleMQ(tos int16, data []byte) {
 
 			//fmt.Print("poker>")
 		case "turn": // 转牌
-			for k,v := range p.Table.Players {
+			for k, v := range p.Table.Players {
 				if v != nil {
 					p.Table.Players[k].Bet = 0
 					p.Table.Players[k].Action = ""
@@ -234,7 +233,7 @@ func (p *Player)HandleMQ(tos int16, data []byte) {
 			}
 			//fmt.Print("poker>")
 		case "river": // 河牌
-			for k,v := range p.Table.Players {
+			for k, v := range p.Table.Players {
 				if v != nil {
 					p.Table.Players[k].Bet = 0
 					p.Table.Players[k].Action = ""
@@ -253,15 +252,15 @@ func (p *Player)HandleMQ(tos int16, data []byte) {
 			)
 			if len(p.Cards) == 2 {
 				fmt.Printf("你的手牌: %s %s， 牌型:%s.\n",
-					SUITNAME[p.Cards[0].Suit] + RANKNAME[p.Cards[0].Val],
-					SUITNAME[p.Cards[1].Suit] + RANKNAME[p.Cards[1].Val],
+					SUITNAME[p.Cards[0].Suit]+RANKNAME[p.Cards[0].Val],
+					SUITNAME[p.Cards[1].Suit]+RANKNAME[p.Cards[1].Val],
 					Levels[ack.HandLevel],
 				)
 			}
 			//fmt.Print("poker>")
 		}
 
-	case  2111: // 摊牌和比牌
+	case 2111: // 摊牌和比牌
 		ack := &pb.RoomShowdownAck{}
 		err := proto.Unmarshal(data, ack)
 		if err != nil {
@@ -290,54 +289,51 @@ func (p *Player)HandleMQ(tos int16, data []byte) {
 
 		p.Table.Bet = ack.BaseBet
 		if p.Table.Players[ack.Pos-1].Id == p.Id {
-/*			fmt.Printf("\n你的手上剩余筹码：%d\n", p.Table.Players[ack.Pos - 1].Chips)
-			fmt.Printf("你的本轮下注筹码：%d\n", p.Table.Players[ack.Pos - 1].Bet)
-			fmt.Printf("上一玩家本轮下注筹码：%d\n", p.Table.Bet)*/
+			/*			fmt.Printf("\n你的手上剩余筹码：%d\n", p.Table.Players[ack.Pos - 1].Chips)
+						fmt.Printf("你的本轮下注筹码：%d\n", p.Table.Players[ack.Pos - 1].Bet)
+						fmt.Printf("上一玩家本轮下注筹码：%d\n", p.Table.Bet)*/
 			fmt.Printf("\n[当前玩家广播]\n")
-			fmt.Printf("\t你的剩余筹码:%d,最少跟注:%d\n",p.Table.Players[ack.Pos - 1].Chips,
-				p.Table.Bet-p.Table.Players[ack.Pos - 1].Bet)
-			if p.Table.Bet == 0 && p.Table.Players[ack.Pos - 1].Bet == 0 {
-				fmt.Printf("\t该你下注了: (-1:弃牌 0:让牌 大于0:加注 %d:allin)\n", p.Table.Players[ack.Pos - 1].Chips)
+			fmt.Printf("\t你的剩余筹码:%d,最少跟注:%d\n", p.Table.Players[ack.Pos-1].Chips,
+				p.Table.Bet-p.Table.Players[ack.Pos-1].Bet)
+			if p.Table.Bet == 0 && p.Table.Players[ack.Pos-1].Bet == 0 {
+				fmt.Printf("\t该你下注了: (-1:弃牌 0:让牌 大于0:加注 %d:allin)\n", p.Table.Players[ack.Pos-1].Chips)
 			}
-			if p.Table.Bet != 0 && p.Table.Bet == p.Table.Players[ack.Pos - 1].Bet {
+			if p.Table.Bet != 0 && p.Table.Bet == p.Table.Players[ack.Pos-1].Bet {
 				// 可让牌  可加注
-				fmt.Printf("\t该你下注了: (-1:弃牌 0:让牌 大于0:加注 %d:allin)\n", p.Table.Players[ack.Pos - 1].Chips)
+				fmt.Printf("\t该你下注了: (-1:弃牌 0:让牌 大于0:加注 %d:allin)\n", p.Table.Players[ack.Pos-1].Chips)
 			}
-			if p.Table.Bet != 0 && p.Table.Bet > p.Table.Players[ack.Pos - 1].Bet {
+			if p.Table.Bet != 0 && p.Table.Bet > p.Table.Players[ack.Pos-1].Bet {
 				// 不可让牌  可加注 可跟注
 				fmt.Printf("\t该你下注了: (-1:弃牌 %d:跟注 大于%d:加注 %d:allin)\n",
-					p.Table.Bet - p.Table.Players[ack.Pos - 1].Bet,
-					p.Table.Bet - p.Table.Players[ack.Pos - 1].Bet,
-					p.Table.Players[ack.Pos - 1].Chips,
+					p.Table.Bet-p.Table.Players[ack.Pos-1].Bet,
+					p.Table.Bet-p.Table.Players[ack.Pos-1].Bet,
+					p.Table.Players[ack.Pos-1].Chips,
 				)
 			}
 
 			//一直跟的策略
-			bet := p.Table.Bet - p.Table.Players[ack.Pos - 1].Bet
+			bet := p.Table.Bet - p.Table.Players[ack.Pos-1].Bet
 			if bet < 0 {
-				bet = p.Table.Players[ack.Pos - 1].Bet
+				bet = p.Table.Players[ack.Pos-1].Bet
 			}
 			//下注
-			if p.autobet  {
-				st:=time.Now().Second()%10+3
-				time.Sleep(time.Second*time.Duration(st))
-				fmt.Printf("----------->%d秒后,自动下注: %d\n\n",st,bet)
+			if p.autobet {
+				st := time.Now().Second()%10 + 3
+				time.Sleep(time.Second * time.Duration(st))
+				fmt.Printf("----------->%d秒后,自动下注: %d\n\n", st, bet)
 				p.SendMessage(2105, &pb.RoomPlayerBetReq{
-					BaseReq: &pb.BaseReq{AppFrom:"CMD"},
+					BaseReq: &pb.BaseReq{AppFrom: "CMD"},
 					TableId: p.Table.Id,
-					Bet: int32(bet),
+					Bet:     int32(bet),
 				})
-			}else {
+			} else {
 				fmt.Print("poker>")
 			}
 
-
-
 		} else {
 			fmt.Printf("\n[当前玩家广播]\n")
-			fmt.Printf("\t当前玩家,ID：%d,位置:%d\n",p.Table.Players[ack.Pos-1].Id,ack.Pos)
+			fmt.Printf("\t当前玩家,ID：%d,位置:%d\n", p.Table.Players[ack.Pos-1].Id, ack.Pos)
 		}
-
 
 	case 2109: // 通报奖池
 		ack := &pb.RoomPotAck{}
@@ -357,10 +353,10 @@ func (p *Player)HandleMQ(tos int16, data []byte) {
 			log.Errorf("proto.Unmarshal Error: %s", err)
 			return
 		}
-		if p.Table.Players[ack.Pos - 1] != nil {
-			p.Table.Players[ack.Pos - 1].Action = ack.Action
-			p.Table.Players[ack.Pos - 1].Bet = ack.Bet
-			p.Table.Players[ack.Pos - 1].Chips = ack.Chips
+		if p.Table.Players[ack.Pos-1] != nil {
+			p.Table.Players[ack.Pos-1].Action = ack.Action
+			p.Table.Players[ack.Pos-1].Bet = ack.Bet
+			p.Table.Players[ack.Pos-1].Chips = ack.Chips
 		}
 		fmt.Printf("[下注结果广播]\n")
 		if ack.Pos == p.Pos {
@@ -368,17 +364,17 @@ func (p *Player)HandleMQ(tos int16, data []byte) {
 			p.Bet = ack.Bet
 			p.Chips = ack.Chips
 			fmt.Printf("\t(You)   玩家%d %s, 当前下注筹码 %d, 手上筹码 %d\n",
-				p.Table.Players[ack.Pos - 1].Id,
-				Actions[p.Table.Players[ack.Pos - 1].Action],
-				p.Table.Players[ack.Pos - 1].Bet,
-				p.Table.Players[ack.Pos - 1].Chips,
+				p.Table.Players[ack.Pos-1].Id,
+				Actions[p.Table.Players[ack.Pos-1].Action],
+				p.Table.Players[ack.Pos-1].Bet,
+				p.Table.Players[ack.Pos-1].Chips,
 			)
 		} else {
 			fmt.Printf("\t玩家%d %s, 当前下注筹码 %d, 手上筹码 %d\n",
-				p.Table.Players[ack.Pos - 1].Id,
-				Actions[p.Table.Players[ack.Pos - 1].Action],
-				p.Table.Players[ack.Pos - 1].Bet,
-				p.Table.Players[ack.Pos - 1].Chips,
+				p.Table.Players[ack.Pos-1].Id,
+				Actions[p.Table.Players[ack.Pos-1].Action],
+				p.Table.Players[ack.Pos-1].Bet,
+				p.Table.Players[ack.Pos-1].Chips,
 			)
 		}
 		//fmt.Print("poker>")
@@ -390,7 +386,7 @@ func (p *Player)HandleMQ(tos int16, data []byte) {
 			return
 		}
 		fmt.Printf("\n[玩家站起广播]\n")
-		fmt.Printf("\t玩家%d站起\n",ack.PlayerId)
+		fmt.Printf("\t玩家%d站起\n", ack.PlayerId)
 
 	case 2115: // 坐下通知
 		ack := &pb.RoomPlayerSitdownAck{}
@@ -401,8 +397,8 @@ func (p *Player)HandleMQ(tos int16, data []byte) {
 		}
 
 		fmt.Printf("\n[玩家坐下广播]\n")
-		fmt.Printf("\t玩家%d坐下，位置：%d\n",ack.Player.Id, ack.Player.Pos)
-	case 2117:// 服务器关闭
+		fmt.Printf("\t玩家%d坐下，位置：%d\n", ack.Player.Id, ack.Player.Pos)
+	case 2117: // 服务器关闭
 		ack := &pb.RoomShutdownTableAck{}
 		err := proto.Unmarshal(data, ack)
 		if err != nil {
@@ -414,8 +410,7 @@ func (p *Player)HandleMQ(tos int16, data []byte) {
 
 }
 
-
-func (p *Player)CmdLoop() {
+func (p *Player) CmdLoop() {
 	fmt.Println("Welcome to the Texas Hold'em game!!!")
 	fmt.Println("指令提示：")
 	fmt.Println("    j - 加入牌桌 [ Ex: j1-6/a1-6 ]")
@@ -446,10 +441,10 @@ func (p *Player)CmdLoop() {
 		case 'j': // 加入游戏
 			if p.Table == nil {
 				var roomid int32
-				roomid =1
-				if len(cmd) >1 {
-					id,e := strconv.ParseInt(cmd[1:2], 10, 32)
-					if e!=nil {
+				roomid = 1
+				if len(cmd) > 1 {
+					id, e := strconv.ParseInt(cmd[1:2], 10, 32)
+					if e != nil {
 						fmt.Println(e)
 					}
 					roomid = int32(id)
@@ -457,9 +452,9 @@ func (p *Player)CmdLoop() {
 					//fmt.Printf("join room: %d,%d\n",roomid,id)
 				}
 				p.SendMessage(2101, &pb.RoomPlayerJoinReq{
-					BaseReq: &pb.BaseReq{AppFrom:"CMD"},
-					RoomId: roomid,  // 房间id
-					TableId: "", // 牌桌id为空，自动选择
+					BaseReq: &pb.BaseReq{AppFrom: "CMD"},
+					RoomId:  roomid, // 房间id
+					TableId: "",     // 牌桌id为空，自动选择
 				})
 			} else {
 				fmt.Print("poker>")
@@ -467,14 +462,14 @@ func (p *Player)CmdLoop() {
 		case 'u': // 站起
 			if p.Table != nil {
 				p.SendMessage(2112, &pb.RoomPlayerStandupReq{
-					BaseReq: &pb.BaseReq{AppFrom:"CMD"},
+					BaseReq: &pb.BaseReq{AppFrom: "CMD"},
 					TableId: p.Table.Id,
 				})
 			}
 		case 'd': // 坐下
 			if p.Table != nil {
 				p.SendMessage(2114, &pb.RoomPlayerSitdownReq{
-					BaseReq: &pb.BaseReq{AppFrom:"CMD"},
+					BaseReq: &pb.BaseReq{AppFrom: "CMD"},
 					TableId: p.Table.Id,
 				})
 			}
@@ -482,13 +477,13 @@ func (p *Player)CmdLoop() {
 		case 'g': // 换桌
 			if p.Table != nil {
 				p.SendMessage(2116, &pb.RoomPlayerChangeTableReq{
-					BaseReq: &pb.BaseReq{AppFrom:"CMD"},
+					BaseReq: &pb.BaseReq{AppFrom: "CMD"},
 				})
 			}
 		case 'l': // 离开游戏
 			if p.Table != nil {
 				p.SendMessage(2103, &pb.RoomPlayerGoneReq{
-					BaseReq: &pb.BaseReq{AppFrom:"CMD"},
+					BaseReq: &pb.BaseReq{AppFrom: "CMD"},
 					TableId: p.Table.Id,
 				})
 			}
@@ -500,20 +495,20 @@ func (p *Player)CmdLoop() {
 				cards = append(cards, p.Cards...)
 				cards = append(cards, p.Table.Cards...)
 				fmt.Println("2张手牌+公共牌信息:")
-				for  _,v := range cards {
-					fmt.Println(SUITNAME[v.Suit]+RANKNAME[v.Val])
+				for _, v := range cards {
+					fmt.Println(SUITNAME[v.Suit] + RANKNAME[v.Val])
 				}
 
 				//玩家信息
 				for _, v := range p.Table.Players {
 					if v.Id == p.Id {
 						p.Pos = v.Pos
-						p.Nickname  = v.Nickname
-						p.Avatar  = v.Avatar
-						p.Level  = v.Level
-						p.Chips   = v.Chips
-						p.Bet     = v.Bet
-						p.Action  = v.Action
+						p.Nickname = v.Nickname
+						p.Avatar = v.Avatar
+						p.Level = v.Level
+						p.Chips = v.Chips
+						p.Bet = v.Bet
+						p.Action = v.Action
 					}
 					if v.Id != 0 {
 						fmt.Printf("玩家%d: 位置:%d 筹码:%d  \n", v.Id, v.Pos, v.Chips)
@@ -545,9 +540,9 @@ func (p *Player)CmdLoop() {
 				}
 
 				p.SendMessage(2105, &pb.RoomPlayerBetReq{
-					BaseReq: &pb.BaseReq{AppFrom:"CMD"},
+					BaseReq: &pb.BaseReq{AppFrom: "CMD"},
 					TableId: p.Table.Id,
-					Bet: int32(bet),
+					Bet:     int32(bet),
 				})
 			} else {
 				fmt.Print("poker>")

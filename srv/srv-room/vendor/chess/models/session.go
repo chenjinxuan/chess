@@ -1,17 +1,19 @@
 package models
 
 import (
+	"chess/common/log"
 	"github.com/Sirupsen/logrus"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 	"strings"
 	"time"
-	"chess/common/log"
 )
+
 const (
-    MongoDBStr         = "chess"
-    MongoColSession = "session"
+	MongoDBStr      = "chess"
+	MongoColSession = "session"
 )
+
 var Session = new(SessionModel)
 
 type SessionModel struct {
@@ -32,7 +34,7 @@ type SessionToken struct {
 func (m *SessionModel) Get(userId int) (*SessionModel, error) {
 	var session = new(SessionModel)
 
-	err := Mongo.Chess.M(MongoDBStr ,MongoColSession, func(c *mgo.Collection) error {
+	err := Mongo.Chess.M(MongoDBStr, MongoColSession, func(c *mgo.Collection) error {
 		query := bson.M{
 			"user_id":   userId,
 			//"from":      from,
@@ -49,16 +51,16 @@ func (m *SessionModel) Get(userId int) (*SessionModel, error) {
 
 func (m *SessionModel) Upsert(userId int, from string, session *SessionModel) error {
 	from = strings.ToLower(from) // @todo
-	return Mongo.Chess.M(MongoDBStr , MongoColSession, func(c *mgo.Collection) error {
+	return Mongo.Chess.M(MongoDBStr, MongoColSession, func(c *mgo.Collection) error {
 		query := bson.M{
-			"user_id":   userId,
+			"user_id": userId,
 			//"from":      from,
 			//"unique_id": uniqueId,
 		}
 		changeInfo, err := c.Upsert(query, session)
 
 		// Debug
-		log.Debugf("SessionModel.Upsert",logrus.Fields{
+		log.Debugf("SessionModel.Upsert", logrus.Fields{
 			"User ID":     userId,
 			"From":        from,
 			"Query":       query,
@@ -71,12 +73,12 @@ func (m *SessionModel) Upsert(userId int, from string, session *SessionModel) er
 }
 
 func (m *SessionModel) RemoveByUid(userId int) error {
-	return Mongo.Chess.M(MongoDBStr , MongoColSession, func(c *mgo.Collection) error {
+	return Mongo.Chess.M(MongoDBStr, MongoColSession, func(c *mgo.Collection) error {
 		query := bson.M{
 			"user_id": userId,
 		}
 		changeInfo, err := c.RemoveAll(query)
-		log.Debugf("SessionModel.RemoveByUid",logrus.Fields{
+		log.Debugf("SessionModel.RemoveByUid", logrus.Fields{
 			"User ID":     userId,
 			"Change Info": changeInfo,
 			"Error":       err,

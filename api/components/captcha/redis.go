@@ -1,11 +1,10 @@
 package captcha
 
 import (
-	"github.com/dchest/captcha"
+	"chess/api/redis"
 	"chess/common/config"
-        "chess/common/db"
-        "chess/api/redis"
-
+	"chess/common/db"
+	"github.com/dchest/captcha"
 )
 
 //func init() {
@@ -33,7 +32,7 @@ func (r *RedisStore) SetRandom(id string) {
 }
 
 func (r *RedisStore) Set(id string, digits []byte) {
-    redis.Redis.Captcha.Setex(id, string(digits),config.C.Captcha.ExpireTime)
+	redis.Redis.Captcha.Setex(id, string(digits), config.C.Captcha.ExpireTime)
 }
 
 func (r *RedisStore) Get(id string, clear bool) (digits []byte) {

@@ -1,15 +1,15 @@
 package c_auth
 
 import (
-	"github.com/gin-gonic/gin"
-	"net/http"
-	"chess/common/auth"
 	"chess/api/components/input"
-	"chess/common/config"
-	"chess/models"
 	grpcServer "chess/api/grpc"
 	pb "chess/api/proto"
+	"chess/common/auth"
+	"chess/common/config"
+	"chess/models"
+	"github.com/gin-gonic/gin"
 	"golang.org/x/net/context"
+	"net/http"
 )
 
 type TokenRefreshParams struct {
@@ -23,6 +23,7 @@ type TokenRefreshParams struct {
 type TokenRefreshResult struct {
 	LoginResult
 }
+
 // @Title 刷新token
 // @Description 刷新token
 // @Summary 刷新token
@@ -66,35 +67,8 @@ func TokenRefrash(c *gin.Context) {
 		}
 
 		// Generate a new login token
-		AuthClient:=grpcServer.GetAuthGrpc()
-		authResult, err := AuthClient.RefreshToken(context.Background(), &pb.RefreshTokenArgs{UserId: int32(post.UserId),AppFrom:post.From,UniqueId:post.UniqueId})
-		//expire := time.Now().Add(time.Second * time.Duration(config.C.Login.TokenExpire)).Unix()
-		//tokenString, err := auth.CreateLoginToken(strconv.Itoa(post.UserId), expire, cConf.TokenSecret)
-		//if err != nil {
-		//	result.Msg = "Could not generate token."
-		//	c.JSON(http.StatusOK, result)
-		//	return
-		//}
-		//
-		//// Generate a new refresh token
-		//u := uuid.NewV4()
-		//refreshToken := u.String()
-		//
-		//// Update session and update database
-		//sessionUpdated := new(models.SessionModel)
-		//sessionUpdated.UserId = session.UserId
-		//sessionUpdated.From = session.From
-		//sessionUpdated.UniqueId = session.UniqueId
-		//sessionUpdated.Token = &models.SessionToken{tokenString, expire}
-		//sessionUpdated.RefreshToken = refreshToken
-		//sessionUpdated.Updated = time.Now()
-		//sessionUpdated.Created = session.Created
-		//err = models.Session.Upsert(post.UserId, post.From, post.UniqueId, sessionUpdated)
-		//if err != nil {
-		//	result.Msg = "Could not generate session."
-		//	c.JSON(http.StatusOK, result)
-		//	return
-		//}
+		AuthClient := grpcServer.GetAuthGrpc()
+		authResult, err := AuthClient.RefreshToken(context.Background(), &pb.RefreshTokenArgs{UserId: int32(post.UserId), AppFrom: post.From, UniqueId: post.UniqueId})
 
 		result.Ret = 1
 		result.UserId = post.UserId

@@ -54,12 +54,12 @@ func write() []byte {
 
 	// 写消息体
 	bBuf, _ := proto.Marshal(&pb.RoomGetTableAck{
-		BaseAck: &pb.BaseAck{Ret:20},
+		BaseAck: &pb.BaseAck{Ret: 20},
 		Table: &pb.TableInfo{
-			Id: "100",
-			Cards: []*pb.CardInfo{&pb.CardInfo{Suit:10}},
+			Id:    "100",
+			Cards: []*pb.CardInfo{&pb.CardInfo{Suit: 10}},
 			Players: []*pb.PlayerInfo{
-				&pb.PlayerInfo{Id:10},
+				&pb.PlayerInfo{Id: 10},
 			},
 		},
 	})

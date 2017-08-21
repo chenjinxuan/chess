@@ -1,12 +1,12 @@
 package main
 
 import (
+	pb "chess/srv/srv-game/proto"
 	"fmt"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"io"
 	"math/rand"
-	pb "chess/srv/srv-game/proto"
 	"testing"
 	"time"
 )

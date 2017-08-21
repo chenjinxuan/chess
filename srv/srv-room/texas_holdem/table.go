@@ -2,15 +2,15 @@ package texas_holdem
 
 import (
 	"chess/common/define"
+	"chess/common/log"
 	pb "chess/srv/srv-room/proto"
+	"chess/srv/srv-room/registry"
+	"chess/srv/srv-room/signal"
 	"fmt"
 	"github.com/golang/protobuf/proto"
+	"github.com/satori/go.uuid"
 	"sync"
 	"time"
-	"github.com/satori/go.uuid"
-	"chess/common/log"
-	"chess/srv/srv-room/signal"
-	"chess/srv/srv-room/registry"
 )
 
 const (
@@ -24,34 +24,32 @@ const (
 	DealRiver   = "river"
 )
 
-
-
 type Table struct {
 	Id         string
 	RoomId     int
 	SmallBlind int
 	BigBlind   int
-	MinCarry int  // 最大携带
-	MaxCarry int // 最小携带
+	MinCarry   int // 最大携带
+	MaxCarry   int // 最小携带
 	Cards      Cards
-	Pot        []int32 // 奖池筹码数, 第一项为主池，其他项(若存在)为边池
-	PotList PotDetails // 奖池 详细信息
+	Pot        []int32    // 奖池筹码数, 第一项为主池，其他项(若存在)为边池
+	PotList    PotDetails // 奖池 详细信息
 	Timeout    int
-	Button     int  // 庄家位置
+	Button     int     // 庄家位置
 	Players    Players // 坐下的玩家
 	Bystanders Players // 站起的玩家
 	Chips      []int32 // 玩家最终下注筹码，摊牌时为玩家最终获得筹码
-	Bet        int  // 当前回合 上一玩家下注额
-	N          int // 当前牌桌玩家数
-	Max        int // 牌桌最大玩家数
-	Status int // 0已结束  1进行中
+	Bet        int     // 当前回合 上一玩家下注额
+	N          int     // 当前牌桌玩家数
+	Max        int     // 牌桌最大玩家数
+	Status     int     // 0已结束  1进行中
 
 	MaxChips int
 	MinChips int
 	remain   int
 	allin    int
-	EndChan  chan int  // 牌局结束通知
-	exitChan chan interface{}  // 销毁牌桌
+	EndChan  chan int         // 牌局结束通知
+	exitChan chan interface{} // 销毁牌桌
 	lock     sync.Mutex
 	dm       *DealMachine
 }
@@ -68,13 +66,13 @@ func NewTable(rid, max, sb, bb, minC, maxC int) *Table {
 
 	table := &Table{
 		Id:         genTableId(rid),
-		RoomId: 	rid,
+		RoomId:     rid,
 		Players:    make([]*Player, max, MaxN),
 		Chips:      make([]int32, max, MaxN),
 		SmallBlind: sb,
 		BigBlind:   bb,
-		MinCarry: minC,
-		MaxCarry: maxC,
+		MinCarry:   minC,
+		MaxCarry:   maxC,
 		Pot:        make([]int32, 1),
 		Timeout:    actionWait,
 		Max:        max,
@@ -112,11 +110,11 @@ func NewTable(rid, max, sb, bb, minC, maxC int) *Table {
 func (t *Table) Cap() int {
 	return len(t.Players)
 }
+
 // 当前站起玩家数
 func (t *Table) BystanderCap() int {
 	return len(t.Bystanders)
 }
-
 
 func (t *Table) Player(id int) *Player {
 	for _, p := range t.Players {
@@ -389,10 +387,10 @@ func (t *Table) start() {
 		if p.Cards != nil {
 			// 2108, 发牌
 			p.SendMessage(define.Code["room_deal_ack"], &pb.RoomDealAck{
-				BaseAck:   &pb.BaseAck{Ret: 1, Msg: "ok"},
-				Action:    DealPreflop,
-				Cards:     p.Cards.ToProtoMessage(),
-				HandLevel: -1,
+				BaseAck:        &pb.BaseAck{Ret: 1, Msg: "ok"},
+				Action:         DealPreflop,
+				Cards:          p.Cards.ToProtoMessage(),
+				HandLevel:      -1,
 				HandFinalValue: -1,
 			})
 		}
@@ -400,9 +398,9 @@ func (t *Table) start() {
 	})
 	// 旁观玩家通报
 	t.BroadcastBystanders(define.Code["room_deal_ack"], &pb.RoomDealAck{
-		BaseAck:   &pb.BaseAck{Ret: 1, Msg: "ok"},
-		Action:    DealPreflop,
-		HandLevel: -1,
+		BaseAck:        &pb.BaseAck{Ret: 1, Msg: "ok"},
+		Action:         DealPreflop,
+		HandLevel:      -1,
 		HandFinalValue: -1,
 	})
 
@@ -431,10 +429,10 @@ func (t *Table) start() {
 		}
 		// 2108,  翻牌
 		p.SendMessage(define.Code["room_deal_ack"], &pb.RoomDealAck{
-			BaseAck:   &pb.BaseAck{Ret: 1, Msg: "ok"},
-			Action:    DealFlop,
-			Cards:     t.Cards.ToProtoMessage(),
-			HandLevel: int32(p.Hand.Level),
+			BaseAck:        &pb.BaseAck{Ret: 1, Msg: "ok"},
+			Action:         DealFlop,
+			Cards:          t.Cards.ToProtoMessage(),
+			HandLevel:      int32(p.Hand.Level),
 			HandFinalValue: int32(p.Hand.FinalValue),
 		})
 
@@ -442,9 +440,9 @@ func (t *Table) start() {
 	})
 	// 旁观玩家通报
 	t.BroadcastBystanders(define.Code["room_deal_ack"], &pb.RoomDealAck{
-		BaseAck:   &pb.BaseAck{Ret: 1, Msg: "ok"},
-		Action:    DealFlop,
-		Cards:     t.Cards.ToProtoMessage(),
+		BaseAck: &pb.BaseAck{Ret: 1, Msg: "ok"},
+		Action:  DealFlop,
+		Cards:   t.Cards.ToProtoMessage(),
 	})
 
 	t.action(0)
@@ -470,10 +468,10 @@ func (t *Table) start() {
 		}
 		// 2108,  转牌
 		p.SendMessage(define.Code["room_deal_ack"], &pb.RoomDealAck{
-			BaseAck:   &pb.BaseAck{Ret: 1, Msg: "ok"},
-			Action:    DealTurn,
-			Cards:     t.Cards.ToProtoMessage(),
-			HandLevel: int32(p.Hand.Level),
+			BaseAck:        &pb.BaseAck{Ret: 1, Msg: "ok"},
+			Action:         DealTurn,
+			Cards:          t.Cards.ToProtoMessage(),
+			HandLevel:      int32(p.Hand.Level),
 			HandFinalValue: int32(p.Hand.FinalValue),
 		})
 
@@ -481,9 +479,9 @@ func (t *Table) start() {
 	})
 	// 旁观玩家通报
 	t.BroadcastBystanders(define.Code["room_deal_ack"], &pb.RoomDealAck{
-		BaseAck:   &pb.BaseAck{Ret: 1, Msg: "ok"},
-		Action:    DealTurn,
-		Cards:     t.Cards.ToProtoMessage(),
+		BaseAck: &pb.BaseAck{Ret: 1, Msg: "ok"},
+		Action:  DealTurn,
+		Cards:   t.Cards.ToProtoMessage(),
 	})
 
 	t.action(0)
@@ -509,10 +507,10 @@ func (t *Table) start() {
 		}
 		// 2108,  河牌
 		p.SendMessage(define.Code["room_deal_ack"], &pb.RoomDealAck{
-			BaseAck:   &pb.BaseAck{Ret: 1, Msg: "ok"},
-			Action:    DealRiver,
-			Cards:     t.Cards.ToProtoMessage(),
-			HandLevel: int32(p.Hand.Level),
+			BaseAck:        &pb.BaseAck{Ret: 1, Msg: "ok"},
+			Action:         DealRiver,
+			Cards:          t.Cards.ToProtoMessage(),
+			HandLevel:      int32(p.Hand.Level),
 			HandFinalValue: int32(p.Hand.FinalValue),
 		})
 
@@ -520,9 +518,9 @@ func (t *Table) start() {
 	})
 	// 旁观玩家通报
 	t.BroadcastBystanders(define.Code["room_deal_ack"], &pb.RoomDealAck{
-		BaseAck:   &pb.BaseAck{Ret: 1, Msg: "ok"},
-		Action:    DealRiver,
-		Cards:     t.Cards.ToProtoMessage(),
+		BaseAck: &pb.BaseAck{Ret: 1, Msg: "ok"},
+		Action:  DealRiver,
+		Cards:   t.Cards.ToProtoMessage(),
 	})
 
 	t.action(0)
@@ -682,14 +680,14 @@ func (t *Table) showdown() {
 		}
 		potDetail := &PotDetail{
 			Pot: pot.Pot,
-			Ps: make([]int32, len(t.Chips)),
+			Ps:  make([]int32, len(t.Chips)),
 		}
 		for _, winner := range winners {
 			potDetail.Ps[winner-1] += int32(pot.Pot / len(winners))
 			t.Chips[winner-1] += int32(pot.Pot / len(winners))
 		}
 		potDetail.Ps[winners[0]-1] += int32(pot.Pot % len(winners)) // odd chips
-		t.Chips[winners[0]-1] += int32(pot.Pot % len(winners)) // odd chips
+		t.Chips[winners[0]-1] += int32(pot.Pot % len(winners))      // odd chips
 
 		t.PotList = append(t.PotList, potDetail)
 	}
@@ -744,9 +742,9 @@ func (t *Table) betting(pos, n int) (raised bool) {
 
 	// 下注合法性判断
 	if n > p.Chips || // 手上筹码不足
-		(n == 0 && p.Bet != t.Bet) ||  // 让牌
-		(n > 0 && n != p.Chips && ((n + p.Bet) < t.Bet)){
-		log.Debugf("下注筹码不合法!!！ n:%d  p.Bet:%d  p.Chips:%d  t.Bet:%d",n,p.Bet,p.Chips,t.Bet)
+		(n == 0 && p.Bet != t.Bet) || // 让牌
+		(n > 0 && n != p.Chips && ((n + p.Bet) < t.Bet)) {
+		log.Debugf("下注筹码不合法!!！ n:%d  p.Bet:%d  p.Chips:%d  t.Bet:%d", n, p.Bet, p.Chips, t.Bet)
 		return
 	}
 
@@ -765,7 +763,7 @@ func (t *Table) betting(pos, n int) (raised bool) {
 		Action:  p.Action,
 		Bet:     int32(p.Bet),
 		Chips:   int32(p.Chips),
-		Pos: int32(pos),
+		Pos:     int32(pos),
 	})
 
 	return
@@ -785,6 +783,6 @@ func (t *Table) ToProtoMessage() *pb.TableInfo {
 		N:          int32(t.N),
 		Max:        int32(t.Max),
 		Players:    t.Players.ToProtoMessage(),
-		Status: int32(t.Status),
+		Status:     int32(t.Status),
 	}
 }
