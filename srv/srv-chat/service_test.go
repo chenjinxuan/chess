@@ -1,7 +1,7 @@
 package main
 
 import (
-	. "proto"
+	. "chess/srv/srv-chat/proto"
 	"testing"
 	"time"
 
