@@ -10,6 +10,9 @@ import (
 	"errors"
 	"github.com/golang/protobuf/proto"
 	"time"
+	"golang.org/x/net/context"
+	"io"
+	"chess/common/services"
 )
 
 const (
@@ -46,6 +49,8 @@ type Player struct {
 
 	Flag   int // 会话标记
 	Stream pb.RoomService_StreamServer
+
+	chatCancleFunc context.CancelFunc
 }
 
 func NewPlayer(id int, stream pb.RoomService_StreamServer) *Player {
@@ -165,6 +170,74 @@ func (p *Player) GetActionBet(timeout time.Duration) (*pb.RoomPlayerBetReq, erro
 	}
 }
 
+// @todo chat服务异常处理
+func (p *Player) SubscribeChat() {
+	table := p.Table
+	if table == nil {
+		return
+	}
+
+	conn, sid := services.GetService2(define.SRV_NAME_CHAT)
+	if conn == nil {
+		log.Error("cannot get centre service:", sid)
+		return
+	}
+	cli := pb.NewChatServiceClient(conn)
+	ctx, cancel := context.WithCancel(context.Background())
+	stream, err := cli.Subscribe(ctx, &pb.Chat_Consumer{Id:table.Id, From:-1})
+	if err != nil {
+		log.Error("c.Subscribe error: ", err)
+		return
+	}
+
+	p.chatCancleFunc = cancel
+	for {
+		message, err := stream.Recv()
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			log.Error("Chat subscribe stream.Recv error: ", err)
+			return
+		}
+
+		p.SendMessage(define.Code["room_table_chat_ack"], &pb.RoomTableChatAck{
+			Id:   message.Id,
+			Body:message.Body,
+			Offset:message.Offset,
+		})
+	}
+}
+
+func (p *Player) UnsubscribeChat() {
+	if p.chatCancleFunc != nil {
+		p.chatCancleFunc() // close chat subscribe stream
+	}
+}
+
+func (p *Player) SendChatMessage(msg *pb.RoomTableChatReq) {
+	table := p.Table
+	if table == nil {
+		return
+	}
+
+	if msg.Id != table.Id {
+		log.Debug("SendChatMessage Invalid!!!")
+		return
+	}
+
+	conn, sid := services.GetService2(define.SRV_NAME_CHAT)
+	if conn == nil {
+		log.Error("cannot get chat service:", sid)
+		return
+	}
+	cli := pb.NewChatServiceClient(conn)
+	_, err := cli.Send(context.Background(), &pb.Chat_Message{Id: msg.Id, Body: msg.Body})
+	if err != nil {
+		log.Errorf("Chat service cli.Send: %v", err)
+	}
+}
+
 func (p *Player) Join(rid int, tid string) (table *Table) {
 	if p.Table != nil {
 		log.Debugf("玩家%d已在牌桌上", p.Id)
@@ -201,6 +274,9 @@ func (p *Player) Join(rid int, tid string) (table *Table) {
 	p.Table = nil
 
 	table.AddPlayer(p)
+
+	// 订阅牌桌聊天室
+	go p.SubscribeChat()
 
 	// 带入筹码
 	p.Chips = table.MaxCarry / 2
@@ -251,7 +327,7 @@ func (p *Player) Standup() {
 		}
 	}
 
-	table.DelPlayer(p)
+	table.DelPlayer(p, false)
 	table.AddBystander(p)
 
 	// 2113, 广播玩家站起
@@ -290,7 +366,7 @@ func (p *Player) Sitdown() {
 		return
 	}
 
-	table.DelBystander(p)
+	table.DelBystander(p, false)
 	table.AddPlayer(p)
 
 	// 带入筹码
@@ -348,9 +424,9 @@ func (p *Player) Leave() (table *Table) {
 			BaseAck: &pb.BaseAck{Ret: 1, Msg: "ok"},
 			Player:  p.ToProtoMessage(),
 		})
-		table.DelPlayer(p)
+		table.DelPlayer(p, true)
 	} else {
-		table.DelBystander(p)
+		table.DelBystander(p, true)
 	}
 
 	p.Bet = 0
@@ -368,6 +444,7 @@ func (p *Player) Leave() (table *Table) {
 
 	// 在线数-1
 	go Pcounter(table.RoomId, -1)
+	go p.UnsubscribeChat()
 
 	return
 }

@@ -40,6 +40,8 @@ var Code = map[string]int16{
 	"room_shutdown_table_ack":      2117, // 关闭牌桌，服务进行维护时通报
 	"room_player_logout_req":       2118, // 玩家退出游戏
 	"room_player_reconnect_ack":    2119, // 玩家断线重连回复
+	"room_table_chat_ack":          2120, // 聊天消息回复
+	"room_table_chat_req":          2121, // 发送聊天消息
 }
 
 var RCode = map[int16]string{
@@ -81,6 +83,8 @@ var RCode = map[int16]string{
 	2117: "room_shutdown_table_ack",      // 关闭牌桌，服务进行维护时通报
 	2118: "room_player_logout_req",       // 玩家退出游戏
 	2119: "room_player_reconnect_ack",    // 玩家断线重连回复
+	2120: "room_table_chat_ack",          // 聊天消息回复
+	2121: "room_table_chat_req",          // 发送聊天消息
 }
 
 const (

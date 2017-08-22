@@ -99,7 +99,10 @@ type Config struct {
 		Partitioner PartitionerConstructor
 
 		// Return specifies what channels will be populated. If they are set to true,
-		// you must read from the respective channels to prevent deadlock.
+		// you must read from the respective channels to prevent deadlock. If,
+		// however, this config is used to create a `SyncProducer`, both must be set
+		// to true and you shall not read from the channels since the producer does
+		// this internally.
 		Return struct {
 			// If enabled, successfully delivered messages will be returned on the
 			// Successes channel (default disabled).
@@ -305,10 +308,13 @@ func (c *Config) Validate() error {
 		Logger.Println("Producer.RequiredAcks > 1 is deprecated and will raise an exception with kafka >= 0.8.2.0.")
 	}
 	if c.Producer.MaxMessageBytes >= int(MaxRequestSize) {
-		Logger.Println("Producer.MaxMessageBytes is larger than MaxRequestSize; it will be ignored.")
+		Logger.Println("Producer.MaxMessageBytes must be smaller than MaxRequestSize; it will be ignored.")
 	}
 	if c.Producer.Flush.Bytes >= int(MaxRequestSize) {
-		Logger.Println("Producer.Flush.Bytes is larger than MaxRequestSize; it will be ignored.")
+		Logger.Println("Producer.Flush.Bytes must be smaller than MaxRequestSize; it will be ignored.")
+	}
+	if (c.Producer.Flush.Bytes > 0 || c.Producer.Flush.Messages > 0) && c.Producer.Flush.Frequency == 0 {
+		Logger.Println("Producer.Flush: Bytes or Messages are set, but Frequency is not; messages may not get flushed.")
 	}
 	if c.Producer.Timeout%time.Millisecond != 0 {
 		Logger.Println("Producer.Timeout only supports millisecond resolution; nanoseconds will be truncated.")

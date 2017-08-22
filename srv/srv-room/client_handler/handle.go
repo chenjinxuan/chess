@@ -24,6 +24,7 @@ func init() {
 		2114: P_room_player_sitdown_req,
 		2116: P_room_player_change_table_req,
 		2118: P_room_player_logout_req,
+		2121: P_room_table_chat_req,
 	}
 }
 
@@ -159,5 +160,19 @@ func P_room_player_logout_req(p *Player, data []byte) []byte {
 	log.Debug("P_room_player_logout_req", req)
 	p.Leave()
 	registry.Unregister(p.Id, p)
+	return nil
+}
+
+// 牌桌上发送聊天消息
+func P_room_table_chat_req(p *Player, data []byte) []byte {
+	req := &pb.RoomTableChatReq{}
+	err := proto.Unmarshal(data, req)
+	if err != nil {
+		log.Errorf("proto.Unmarshal Error: %s", err)
+		return nil
+	}
+	log.Debug("P_room_table_chat_req", req)
+
+	p.SendChatMessage(req)
 	return nil
 }

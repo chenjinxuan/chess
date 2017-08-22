@@ -3,52 +3,52 @@
 	"ignore": "",
 	"package": [
 		{
-			"checksumSHA1": "kcppmLuwKa8zzPU0B+V3SMu6hGA=",
+			"checksumSHA1": "/70ChMuYPcCuVz8oUVrMFFOnFj0=",
 			"path": "chess/common/config",
-			"revision": "999e6aaf1c9834755c104ddec3b006f2c4c758d0",
-			"revisionTime": "2017-08-18T03:47:56Z"
+			"revision": "26610b33989daa52d9cc5d5b62e88ac6bb4141fe",
+			"revisionTime": "2017-08-21T09:00:38Z"
 		},
 		{
-			"checksumSHA1": "TJlbggw2Oz531rs3WnpwYzxWVpc=",
+			"checksumSHA1": "MFFw/6Q/HSwsThxyKLvINybvQu0=",
 			"path": "chess/common/consul",
-			"revision": "999e6aaf1c9834755c104ddec3b006f2c4c758d0",
-			"revisionTime": "2017-08-18T03:47:56Z"
+			"revision": "26610b33989daa52d9cc5d5b62e88ac6bb4141fe",
+			"revisionTime": "2017-08-21T09:00:38Z"
 		},
 		{
-			"checksumSHA1": "thu3obyFuou1ehaxnGhDUrT0IpM=",
+			"checksumSHA1": "w99aKwZWcLEkecjenATZ1WL9Z94=",
 			"path": "chess/common/db",
-			"revision": "999e6aaf1c9834755c104ddec3b006f2c4c758d0",
-			"revisionTime": "2017-08-18T03:47:56Z"
+			"revision": "26610b33989daa52d9cc5d5b62e88ac6bb4141fe",
+			"revisionTime": "2017-08-21T09:00:38Z"
 		},
 		{
-			"checksumSHA1": "o3bwx03Bvm2ynn1ua/YGW2mgetY=",
+			"checksumSHA1": "khn7ZUnkm1hHTJatxLt/RbcVy8k=",
 			"path": "chess/common/define",
-			"revision": "999e6aaf1c9834755c104ddec3b006f2c4c758d0",
-			"revisionTime": "2017-08-18T03:47:56Z"
+			"revision": "26610b33989daa52d9cc5d5b62e88ac6bb4141fe",
+			"revisionTime": "2017-08-21T09:00:38Z"
 		},
 		{
-			"checksumSHA1": "9dLQ0zn/nZ3X84HwM2z1VGuw19U=",
+			"checksumSHA1": "3PLcIK7yhm+9L60LrpgRzczEc/Q=",
 			"path": "chess/common/helper",
-			"revision": "999e6aaf1c9834755c104ddec3b006f2c4c758d0",
-			"revisionTime": "2017-08-18T03:47:56Z"
+			"revision": "26610b33989daa52d9cc5d5b62e88ac6bb4141fe",
+			"revisionTime": "2017-08-21T09:00:38Z"
 		},
 		{
 			"checksumSHA1": "Y+us1CJfgnPsZixZzxqHKD89k0o=",
 			"path": "chess/common/log",
-			"revision": "999e6aaf1c9834755c104ddec3b006f2c4c758d0",
-			"revisionTime": "2017-08-18T03:47:56Z"
+			"revision": "26610b33989daa52d9cc5d5b62e88ac6bb4141fe",
+			"revisionTime": "2017-08-21T09:00:38Z"
 		},
 		{
-			"checksumSHA1": "0N31vtHVCi70Sfmv+8/hQTm3GTQ=",
+			"checksumSHA1": "92l9uBBdZK6rFcUuJnBu+DWZFM0=",
 			"path": "chess/common/services",
-			"revision": "999e6aaf1c9834755c104ddec3b006f2c4c758d0",
-			"revisionTime": "2017-08-18T03:47:56Z"
+			"revision": "26610b33989daa52d9cc5d5b62e88ac6bb4141fe",
+			"revisionTime": "2017-08-21T09:00:38Z"
 		},
 		{
-			"checksumSHA1": "o3ULlnBW4y1AnMuHCvbMlfUC3c0=",
+			"checksumSHA1": "a65q1kT9nXAd5vo4VF7XYIjagEM=",
 			"path": "chess/models",
-			"revision": "999e6aaf1c9834755c104ddec3b006f2c4c758d0",
-			"revisionTime": "2017-08-18T03:47:56Z"
+			"revision": "26610b33989daa52d9cc5d5b62e88ac6bb4141fe",
+			"revisionTime": "2017-08-21T09:00:38Z"
 		},
 		{
 			"checksumSHA1": "tI2uUPh7qwQxNihd1LvtNTdjVks=",
@@ -167,6 +167,12 @@
 		{
 			"checksumSHA1": "Lx2JRhnmO66Lhj6p7UXnsPb+IQs=",
 			"path": "github.com/golang/protobuf/ptypes/duration",
+			"revision": "748d386b5c1ea99658fd69fe9f03991ce86a90c1",
+			"revisionTime": "2017-07-26T21:28:29Z"
+		},
+		{
+			"checksumSHA1": "kGENkjYJ18VCC+pILfHdT/twU60=",
+			"path": "github.com/golang/protobuf/ptypes/empty",
 			"revision": "748d386b5c1ea99658fd69fe9f03991ce86a90c1",
 			"revisionTime": "2017-07-26T21:28:29Z"
 		},
@@ -436,6 +442,24 @@
 			"path": "golang.org/x/text/unicode/rangetable",
 			"revision": "3bd178b88a8180be2df394a1fbb81313916f0e7b",
 			"revisionTime": "2017-07-29T23:24:55Z"
+		},
+		{
+			"checksumSHA1": "B22iMMY2vi1Q9kseWb/ZznpW8lQ=",
+			"path": "google.golang.org/genproto/googleapis/api/annotations",
+			"revision": "09f6ed296fc66555a25fe4ce95173148778dfa85",
+			"revisionTime": "2017-07-31T18:20:57Z"
+		},
+		{
+			"checksumSHA1": "7ZSQTAjst9zWrMtnVwH2FqfUOC8=",
+			"path": "google.golang.org/genproto/googleapis/bigtable/admin/table/v1",
+			"revision": "09f6ed296fc66555a25fe4ce95173148778dfa85",
+			"revisionTime": "2017-07-31T18:20:57Z"
+		},
+		{
+			"checksumSHA1": "fau7fK0XvEJu/gw9ek0B1IZfcxQ=",
+			"path": "google.golang.org/genproto/googleapis/longrunning",
+			"revision": "09f6ed296fc66555a25fe4ce95173148778dfa85",
+			"revisionTime": "2017-07-31T18:20:57Z"
 		},
 		{
 			"checksumSHA1": "K6olEyEeKICF/p4fe1Ojhx3H6Xw=",

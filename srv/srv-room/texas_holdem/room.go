@@ -1,31 +1,26 @@
 package texas_holdem
 
 import (
+	"chess/common/define"
 	"chess/common/log"
+	"chess/common/services"
 	"chess/models"
+	pb "chess/srv/srv-room/proto"
 	"fmt"
+	"golang.org/x/net/context"
 	"strconv"
 	"strings"
 	"sync"
 	"time"
-<<<<<<< HEAD
-=======
-	"chess/models"
-	pb "chess/srv/srv-room/proto"
-	"chess/common/log"
-	"chess/common/define"
-	"golang.org/x/net/context"
-	"chess/common/services"
->>>>>>> 999e6aaf1c9834755c104ddec3b006f2c4c758d0
 )
 
 var serviceId string
 
 type Tables struct {
-	M       map[string]*Table
-	counter int // 牌桌计数器
+	M        map[string]*Table
+	counter  int // 牌桌计数器
 	pcounter int // 玩家计数器
-	lock    sync.Mutex
+	lock     sync.Mutex
 }
 
 type Room struct {
@@ -50,10 +45,10 @@ func NewRoom(rid, bb, sb, minC, maxC, max int) *Room {
 			Max:        max,
 
 			tables: Tables{
-				M:       make(map[string]*Table),
-				counter: 0,
+				M:        make(map[string]*Table),
+				counter:  0,
 				pcounter: 0,
-				lock:    sync.Mutex{},
+				lock:     sync.Mutex{},
 			},
 		}
 	}
@@ -81,7 +76,7 @@ func (r *Room) pCounter(t int) {
 	defer r.tables.lock.Unlock()
 
 	r.tables.pcounter += t
-	if r.tables.pcounter <0{
+	if r.tables.pcounter < 0 {
 		r.tables.pcounter = 0
 	}
 }
@@ -165,6 +160,20 @@ func DelTable(tid string) {
 		return
 	}
 
+	// chat 注销 EndPoint
+	go func () {
+		conn, sid := services.GetService2(define.SRV_NAME_CHAT)
+		if conn == nil {
+			log.Error("cannot get chat service:", sid)
+			return
+		}
+		cli := pb.NewChatServiceClient(conn)
+		_, err := cli.Unreg(context.Background(), &pb.Chat_Id{Id: tid})
+		if err != nil {
+			log.Errorf("Chat service cli.Unreg: %v", err)
+		}
+	}()
+
 	if room, ok := RoomList[int(rid)]; ok {
 		room.DelTable(tid)
 	}
@@ -229,9 +238,9 @@ func Pcounter(rid, t int) {
 			context.Background(),
 			&pb.UpdateRoomInfoArgs{
 				ServiceId: serviceId,
-				RoomId: int32(rid),
+				RoomId:    int32(rid),
 				RoomInfo: &pb.RoomInfo{
-					TableNumber: int32(room.tables.counter),
+					TableNumber:  int32(room.tables.counter),
 					PlayerNumber: int32(room.tables.pcounter),
 				},
 			},

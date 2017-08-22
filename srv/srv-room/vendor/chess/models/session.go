@@ -36,7 +36,7 @@ func (m *SessionModel) Get(userId int) (*SessionModel, error) {
 
 	err := Mongo.Chess.M(MongoDBStr, MongoColSession, func(c *mgo.Collection) error {
 		query := bson.M{
-			"user_id":   userId,
+			"user_id": userId,
 			//"from":      from,
 			//"unique_id": uniqueId,
 		}

@@ -3,9 +3,9 @@ package kafka
 import (
 	"log"
 
-	cli "gopkg.in/urfave/cli.v2"
-
+	pb "chess/srv/srv-chat/proto"
 	"github.com/Shopify/sarama"
+	cli "gopkg.in/urfave/cli.v2"
 )
 
 var (
@@ -38,4 +38,9 @@ func Init(c *cli.Context) {
 }
 func NewConsumer() (sarama.Consumer, error) {
 	return sarama.NewConsumerFromClient(kClient)
+}
+
+func Input(message *pb.Chat_Message) {
+	msg := &sarama.ProducerMessage{Topic: ChatTopic, Key: sarama.ByteEncoder(message.Id), Value: sarama.ByteEncoder(message.Body)}
+	kAsyncProducer.Input() <- msg
 }
