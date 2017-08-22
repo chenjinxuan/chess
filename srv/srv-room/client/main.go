@@ -14,10 +14,10 @@ import (
 )
 
 var (
-	//target = "192.168.40.157:20001"
-	//serviceId = "room-1"
-	target    = "192.168.40.157:30001"
-	serviceId = "room-2"
+	target = "192.168.40.157:20001"
+	serviceId = "room-1"
+	//target    = "192.168.40.157:30001"
+	//serviceId = "room-2"
 	userId = flag.Int("uid", 0, "user id")
 )
 
@@ -29,6 +29,9 @@ func main() {
 		uid = time.Now().Second()
 	} else {
 		uid = *userId
+		if uid< 10000000 {
+			uid += 10000000
+		}
 	}
 
 	player := NewPlayer()
