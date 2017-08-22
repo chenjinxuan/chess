@@ -12,14 +12,14 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/xtaci/chat/kafka"
+	"chess/srv/srv-chat/kafka"
 
 	"github.com/Shopify/sarama"
 	log "github.com/Sirupsen/logrus"
 	"github.com/boltdb/bolt"
 	"golang.org/x/net/context"
 
-	. "github.com/xtaci/chat/proto"
+	. "chess/srv/srv-chat/proto"
 
 	cli "gopkg.in/urfave/cli.v2"
 )
