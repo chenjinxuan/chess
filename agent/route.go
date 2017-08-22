@@ -4,8 +4,8 @@ import (
 	"chess/agent/client_handler"
 	. "chess/agent/types"
 	"chess/agent/utils"
-	"chess/common/log"
 	"chess/common/define"
+	"chess/common/log"
 	"encoding/binary"
 	"time"
 )

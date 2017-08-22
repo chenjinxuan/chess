@@ -6,7 +6,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/xtaci/chat/kafka"
+	"chess/srv/srv-chat/kafka"
 
 	cli "gopkg.in/urfave/cli.v2"
 
@@ -14,7 +14,7 @@ import (
 	"github.com/xtaci/logrushooks"
 	"google.golang.org/grpc"
 
-	pb "github.com/xtaci/chat/proto"
+	pb "chess/srv/srv-chat/proto"
 )
 
 func main() {

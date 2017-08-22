@@ -30,9 +30,9 @@ type Config struct {
 
 func main() {
 	app := &cli.App{
-		Name:    "auth",
-		Usage:   "auth service",
-		Version: "2.0",
+		Name:    "room",
+		Usage:   "room service",
+		Version: "1.0",
 		Flags: []cli.Flag{
 			&cli.StringFlag{
 				Name:  "service-id",
@@ -48,6 +48,11 @@ func main() {
 				Name:  "port",
 				Value: 20001,
 				Usage: "listening port",
+			},
+			&cli.StringSliceFlag{
+				Name:  "services",
+				Value: cli.NewStringSlice("centre"),
+				Usage: "auto-discovering services",
 			},
 		},
 		Action: func(c *cli.Context) error {
@@ -77,6 +82,8 @@ func main() {
 			if err != nil {
 				panic(err)
 			}
+			// init services
+			services.Discover(c.StringSlice("services"))
 
 			go signal.Handler()
 

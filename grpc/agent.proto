@@ -32,12 +32,14 @@ message UserLoginReq{
     int32 user_id = 2;
     string unique_id = 3;
     string token = 4;
-    int32 reconnect = 5;
+    string connect_to = 5;
+    int32 is_reconnect = 6;  // 1重连  0正常登录
 }
 
 // 11, 用户登录回复
 message UserLoginAck{
     BaseAck base_ack = 1;
+    string service_id = 2;
 }
 
 // 40, 用户踢出通知
@@ -226,10 +228,16 @@ message RoomShutdownTableAck{
     BaseAck base_ack = 1;
 }
 
-// 2118, 玩家退出游戏  type: 1注销 2杀掉进程
+// 2118, 玩家退出游戏  type: 1注销
 message RoomPlayerLogoutReq{
     BaseReq base_req = 1;
     int32 type = 2;
+}
+
+// 2119, 玩家断线重连 牌桌信息回复
+message RoomPlayerReconnectAck{
+    BaseAck base_ack = 1;
+    TableInfo table = 2;
 }
 
 message PotInfo{

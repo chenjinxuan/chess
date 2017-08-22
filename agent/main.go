@@ -318,7 +318,6 @@ func handleClient(conn net.Conn) {
 			log.Warnf("read payload failed, ip:%v reason:%v size:%v", sess.IP, err, n)
 			return
 		}
-		log.Debug("read header:", header, " payload:", payload)
 
 		// deliver the data to the input queue of agent()
 		select {

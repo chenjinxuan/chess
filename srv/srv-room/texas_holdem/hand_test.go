@@ -190,7 +190,6 @@ func TestHand_AnalyseHand(t *testing.T) {
 
 	h := th.NewHand()
 
-
 	//test RoyalFlush : 黑桃3 黑桃6 方块4 方块9 红桃2
 	h.Init()
 

@@ -8,24 +8,16 @@ import (
 	"chess/srv/srv-room/misc/packet"
 	pb "chess/srv/srv-room/proto"
 	"chess/srv/srv-room/registry"
+	"chess/srv/srv-room/signal"
 	. "chess/srv/srv-room/texas_holdem"
 	"encoding/binary"
 	"errors"
+	"fmt"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc/metadata"
 	"io"
 	"strconv"
-	"chess/models"
-	"fmt"
 	"time"
-	"chess/srv/srv-room/signal"
-)
-
-const (
-	SESS_KICKED_OUT = 0x1 // 踢掉
-
-	SERVICE_NAME        = "room"
-	DEFAULT_CH_IPC_SIZE = 16 // 默认玩家异步IPC消息队列大小
 )
 
 var (
@@ -37,7 +29,7 @@ type server struct{}
 
 func (s *server) init() {
 	// Todo 从mysql取房间列表
-	InitRoomList()
+	InitRoomList(Cfg.ServiceId)
 }
 
 // PIPELINE #1 stream receiver
@@ -75,7 +67,6 @@ func (s *server) Stream(stream pb.RoomService_StreamServer) error {
 
 	sess_die := make(chan struct{})
 	ch_agent := s.recv(stream, sess_die)
-	ch_ipc := make(chan *pb.Room_Frame)
 
 	// read metadata from context
 	md, ok := metadata.FromContext(stream.Context())
@@ -96,6 +87,7 @@ func (s *server) Stream(stream pb.RoomService_StreamServer) error {
 	}
 	uniqueId := md["unique_id"][0]
 	serviceId := md["service_id"][0]
+	//isReconnect, _ := strconv.Atoi(md["is_reconnect"][0])
 
 	// 是否已登录
 	sess := NewSession(userid)
@@ -113,20 +105,41 @@ func (s *server) Stream(stream pb.RoomService_StreamServer) error {
 		}
 	}
 
-	//  get user info from mysql
-	var userWallet models.UsersWalletModel
-	err = models.UsersWallet.Get(userid, &userWallet)
-	if err != nil {
-		log.Error("models.UsersWallet.Get: ", err)
-		return err
-	}
+	var player *Player
 
-	// player init
-	player := NewPlayer(userid, stream)
-	player.TotalChips = int(userWallet.Balance)
-	player.CurrChips = int(userWallet.Balance)
-	//player.TotalChips = 10000
-	//player.CurrChips = 10000
+	tmp := registry.Query(userid)
+	if _player, ok := tmp.(*Player); ok { // 断线进行重连
+		player = _player
+		if player.Flag&define.PLAYER_DISCONNECT != 0 {
+			player.Flag = 0
+			player.Flag |= define.PLAYER_LOGIN
+			player.Stream = stream
+			if player.Table != nil {
+				// 2119, 断线重连回复
+				player.SendMessage(define.Code["room_player_reconnect_ack"], &pb.RoomPlayerReconnectAck{
+					BaseAck:   &pb.BaseAck{Ret: 1, Msg: "ok"},
+					Table:    player.Table.ToProtoMessage(),
+				})
+			} else {
+				// 2119, 断线重连回复  退出牌桌
+				player.SendMessage(define.Code["room_player_reconnect_ack"], &pb.RoomPlayerReconnectAck{
+					BaseAck:   &pb.BaseAck{Ret: 0, Msg: "ok"},
+				})
+			}
+
+			log.Debugf("玩家%d断线重连成功！", player.Id)
+		}
+
+	} else {// 正常登录
+
+		log.Debugf("玩家%d正常登录", userid)
+		player = NewPlayer(userid, stream)
+		registry.Register(player.Id, player)
+		// 2119, 断线重连回复  退出牌桌
+		player.SendMessage(define.Code["room_player_reconnect_ack"], &pb.RoomPlayerReconnectAck{
+			BaseAck:   &pb.BaseAck{Ret: 0, Msg: "ok"},
+		})
+	}
 
 	// 保存当前登录状态
 	sess.TraceId = helper.Md5(fmt.Sprintf("%d-%d", userid, time.Now().Unix()))
@@ -135,21 +148,18 @@ func (s *server) Stream(stream pb.RoomService_StreamServer) error {
 	sess.Status = SESSION_STATUS_LOGIN
 	err = sess.Set()
 	if err != nil {
+		registry.Unregister(player.Id, player)
 		log.Error("sess.Set: ", err)
 		return err
 	}
 	// 读取踢出通知
 	go sess.KickedOutLoop(player, sess_die)
 
-	// register user
-	registry.Register(player.Id, player)
 	log.Debugf("玩家%d登录成功，设备号：%s", player.Id, uniqueId)
 
 	signal.SessWg.Add(1)
 	defer func() {
-		registry.Unregister(player.Id, ch_ipc)
 		close(sess_die)
-		player.Leave()
 		// 注销登录状态
 		sess.Reset()
 		sess.DelKickedOutQueue()
@@ -162,6 +172,7 @@ func (s *server) Stream(stream pb.RoomService_StreamServer) error {
 		select {
 		case frame, ok := <-ch_agent: // frames from agent
 			if !ok { // EOF
+				player.Disconnect()
 				return nil
 			}
 			switch frame.Type {
@@ -171,8 +182,8 @@ func (s *server) Stream(stream pb.RoomService_StreamServer) error {
 				handle := client_handler.Handlers[c]
 				if handle == nil {
 					log.Error("service not bind:", c)
+					player.Disconnect()
 					return ERROR_SERVICE_NOT_BIND
-
 				}
 
 				// handle request
@@ -182,6 +193,7 @@ func (s *server) Stream(stream pb.RoomService_StreamServer) error {
 				if ret != nil {
 					if err := stream.Send(&pb.Room_Frame{Type: pb.Room_Message, Message: ret}); err != nil {
 						log.Error(err)
+						player.Disconnect()
 						return err
 					}
 				}
@@ -189,25 +201,26 @@ func (s *server) Stream(stream pb.RoomService_StreamServer) error {
 			case pb.Room_Ping:
 				if err := stream.Send(&pb.Room_Frame{Type: pb.Room_Ping, Message: frame.Message}); err != nil {
 					log.Error(err)
+					player.Disconnect()
 					return err
 				}
 				//log.Debugf("玩家%d pong...", player.Id)
 			default:
+				player.Disconnect()
 				log.Error("incorrect frame type:", frame.Type)
 				return ERROR_INCORRECT_FRAME_TYPE
 			}
-		case frame := <-ch_ipc: // forward async messages from interprocess(goroutines) communication
-			if err := stream.Send(frame); err != nil {
-				log.Error(err)
-				return err
-			}
 		case <-signal.SessDie:
+			registry.Unregister(player.Id, player)
 			log.Debugf("玩家%d, Receive signal.SessDie", player.Id)
 			return nil
 		}
 
 		// session control by logic
-		if player.Flag&SESS_KICKED_OUT != 0 { // logic kick out
+		if player.Flag&define.PLAYER_KICKED_OUT != 0 { // logic kick out
+			registry.Unregister(player.Id, player)
+			player.Leave()
+
 			if err := stream.Send(&pb.Room_Frame{
 				Type: pb.Room_Kick,
 				Message: packet.Pack(

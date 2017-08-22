@@ -1,18 +1,15 @@
 package c_auth
 
 import (
-	// "github.com/Sirupsen/logrus"
-	"github.com/gin-gonic/gin"
-	"github.com/satori/go.uuid"
-	"net/http"
-	"strconv"
-	"time"
-	"chess/common/auth"
 	"chess/api/components/input"
+	grpcServer "chess/api/grpc"
+	pb "chess/api/proto"
+	"chess/common/auth"
 	"chess/common/config"
-	// "treasure/log"
-	"strings"
 	"chess/models"
+	"github.com/gin-gonic/gin"
+	"golang.org/x/net/context"
+	"net/http"
 )
 
 type TokenRefreshParams struct {
@@ -26,6 +23,7 @@ type TokenRefreshParams struct {
 type TokenRefreshResult struct {
 	LoginResult
 }
+
 // @Title 刷新token
 // @Description 刷新token
 // @Summary 刷新token
@@ -47,7 +45,7 @@ func TokenRefrash(c *gin.Context) {
 
 	if input.BindJSON(c, &post, cConf) == nil {
 		// Get the session
-		session, err := models.Session.Get(post.UserId, strings.ToLower(post.From), post.UniqueId)
+		session, err := models.Session.Get(post.UserId)
 		if err != nil {
 			result.Msg = auth.AuthFailed.Error()
 			c.JSON(http.StatusOK, result)
@@ -69,39 +67,14 @@ func TokenRefrash(c *gin.Context) {
 		}
 
 		// Generate a new login token
-		expire := time.Now().Add(time.Second * time.Duration(config.C.Login.TokenExpire)).Unix()
-		tokenString, err := auth.CreateLoginToken(strconv.Itoa(post.UserId), expire, cConf.TokenSecret)
-		if err != nil {
-			result.Msg = "Could not generate token."
-			c.JSON(http.StatusOK, result)
-			return
-		}
-
-		// Generate a new refresh token
-		u := uuid.NewV4()
-		refreshToken := u.String()
-
-		// Update session and update database
-		sessionUpdated := new(models.SessionModel)
-		sessionUpdated.UserId = session.UserId
-		sessionUpdated.From = session.From
-		sessionUpdated.UniqueId = session.UniqueId
-		sessionUpdated.Token = &models.SessionToken{tokenString, expire}
-		sessionUpdated.RefreshToken = refreshToken
-		sessionUpdated.Updated = time.Now()
-		sessionUpdated.Created = session.Created
-		err = models.Session.Upsert(post.UserId, post.From, post.UniqueId, sessionUpdated)
-		if err != nil {
-			result.Msg = "Could not generate session."
-			c.JSON(http.StatusOK, result)
-			return
-		}
+		AuthClient := grpcServer.GetAuthGrpc()
+		authResult, err := AuthClient.RefreshToken(context.Background(), &pb.RefreshTokenArgs{UserId: int32(post.UserId), AppFrom: post.From, UniqueId: post.UniqueId})
 
 		result.Ret = 1
 		result.UserId = post.UserId
-		result.Token = tokenString
-		result.Expire = expire
-		result.RefreshToken = refreshToken
+		result.Token = authResult.Token
+		result.Expire = authResult.Expire
+		result.RefreshToken = authResult.RefreshToken
 		c.JSON(http.StatusOK, result)
 		return
 	}

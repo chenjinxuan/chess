@@ -34,6 +34,6 @@ func (c *SrvRoomConfig) Import() error {
 		return err
 	}
 
-	log.Debugf("SrvUser config import success! [%+v]", *c)
+	log.Debugf("SrvRoom config import success! [%+v]", *c)
 	return nil
 }

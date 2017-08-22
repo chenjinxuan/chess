@@ -1,25 +1,27 @@
 package c_auth
 
 import (
-	"github.com/gin-gonic/gin"
-	"net/http"
-	"strconv"
-	"strings"
 	"chess/api/components/auth"
 	"chess/api/components/input"
 	"chess/api/components/tp"
+	"chess/api/redis"
 	"chess/common/config"
 	"chess/common/define"
 	"chess/common/log"
 	"chess/models"
+	"github.com/gin-gonic/gin"
+	"net/http"
+	"strconv"
+	"strings"
+    "time"
 )
 
 type TokenInfoParams struct {
-	UserId   int    `json:"user_id" binding:"required"`
-	From     string `json:"from"`
-	UniqueId string `json:"unique_id"`
-	Token    string `json:"token" binding:"required"`
-	Ver      int    `json:"ver" binding:"required"`
+	UserId   int    `json:"user_id" binding:"required" description:"用户id"`
+	From     string `json:"from" description:"来源"`
+	UniqueId string `json:"unique_id" description:"唯一设备标识"`
+	Token    string `json:"token" binding:"required" description:"token"`
+	Ver      int    `json:"ver" binding:"required" description:"版本号"`
 }
 
 type TokenInfoResult struct {
@@ -27,6 +29,13 @@ type TokenInfoResult struct {
 	Expire int64 `json:"expire,omitempty"`
 }
 
+// @Title 获取token信息
+// @Description 获取token信息
+// @Summary 获取token信息
+// @Accept json
+// @Param   body     body    c_auth.TokenInfoParams  true        "post 数据"
+// @Success 200 {object} c_auth.TokenInfoResult
+// @router /auth/token/info [post]
 func TokenInfo(c *gin.Context) {
 	var result TokenInfoResult
 	var post TokenInfoParams
@@ -45,9 +54,18 @@ func TokenInfo(c *gin.Context) {
 		post.From = strings.ToLower(post.From)
 		// Check token
 		defer log.Debug(result)
+		//判断黑名单
+		msg, err := redis.Redis.Login.Get(post.Token)
+		if err == nil {
+			result.Ret = define.AuthALreadyLogin
+			result.Msg = msg
+			c.JSON(http.StatusOK, result)
+			return
+		}
 		loginData, err := auth.AuthLoginToken(post.Token, cConf.TokenSecret)
 		if err != nil {
 			log.Error(err)
+		    	result.Ret = define.AuthFailedStatus
 			result.Msg = auth.AuthFailed.Error()
 			c.JSON(http.StatusOK, result)
 			return
@@ -61,14 +79,21 @@ func TokenInfo(c *gin.Context) {
 		}
 
 		// Get the session
-		session, err := models.Session.Get(post.UserId, post.From, post.UniqueId)
+		session, err := models.Session.Get(post.UserId)
 		if err != nil {
 			log.Debugf("userid:%d,from:%s,uniqueId:%s", post.UserId, post.From, post.UniqueId)
 			result.Msg = auth.AuthFailed.Error()
 			c.JSON(http.StatusOK, result)
 			return
 		}
-
+                //判断过期时间12小时
+	       now:=time.Now().Unix()
+	        if session.Token.Expire - now < 60*60*12 {
+		    result.Ret = define.AuthReToken
+		    result.Msg = define.AuthMsgMap[define.AuthReToken]
+		    c.JSON(http.StatusOK, result)
+		    return
+		}
 		// TODO: 检查黑名单
 
 		//var checkConfig config.TokenInfoCheckDetail
@@ -78,7 +103,7 @@ func TokenInfo(c *gin.Context) {
 		//if post.From == "android" {
 		//	checkConfig = config.C.TokenInfoCheck.Android
 		//}
-                //
+		//
 		//if !checkConfig.Check || post.Ver < checkConfig.Min || post.Ver > checkConfig.Max {
 		//	result.Ret = 1
 		//	result.Expire = session.Token.Expire

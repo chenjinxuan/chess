@@ -5,6 +5,7 @@ import (
 	"chess/common/log"
 	"chess/srv/srv-room/misc/packet"
 	pb "chess/srv/srv-room/proto"
+	"chess/srv/srv-room/registry"
 	. "chess/srv/srv-room/texas_holdem"
 	"github.com/golang/protobuf/proto"
 )
@@ -46,9 +47,9 @@ func P_room_get_table_req(p *Player, data []byte) []byte {
 		ack.BaseAck.Msg = "wrong data"
 		return packet.Pack(Code["room_get_table_ack"], ack)
 	}
-
-	table := GetTable(int(req.RoomId), req.TableId)
-	if err == nil {
+	log.Debug("P_room_get_table_req: ", req)
+	table := GetTableExists(int(req.RoomId), req.TableId)
+	if table == nil {
 		ack.BaseAck.Msg = "table not found"
 		return packet.Pack(Code["room_get_table_ack"], ack)
 	}
@@ -156,6 +157,7 @@ func P_room_player_logout_req(p *Player, data []byte) []byte {
 		return nil
 	}
 	log.Debug("P_room_player_logout_req", req)
-
+	p.Leave()
+	registry.Unregister(p.Id, p)
 	return nil
 }

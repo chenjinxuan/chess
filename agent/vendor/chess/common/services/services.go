@@ -8,10 +8,10 @@ import (
 	"chess/common/log"
 	"fmt"
 	consulapi "github.com/hashicorp/consul/api"
-	"google.golang.org/grpc"
 	"golang.org/x/net/context"
-	"time"
+	"google.golang.org/grpc"
 	"sync/atomic"
+	"time"
 )
 
 // a single connection
@@ -24,9 +24,9 @@ type client struct {
 
 // a kind of service
 type service struct {
-	clients map[string]*client   // service-id -> client
-	ids []string // for round-robin purpose
-	idx     uint32 // for round-robin purpose
+	clients map[string]*client // service-id -> client
+	ids     []string           // for round-robin purpose
+	idx     uint32             // for round-robin purpose
 }
 
 // all services
@@ -83,7 +83,7 @@ func (p *service_pool) init(services []string) {
 		p.names_provided = true
 	}
 
-	log.Info("all service names:", names)
+	log.Info("need service names:", names)
 	for _, v := range names {
 		name := strings.TrimSpace(v)
 		p.names[name] = true
@@ -187,8 +187,8 @@ func (p *service_pool) add_service(id, name, address string, port int) {
 		service.clients[id] = &client{id, address, port, conn}
 		service.ids = append(service.ids, id)
 		log.Info("service added:", id, "-->", target)
-		go func (n string, c *client){
-			tg:= fmt.Sprintf("%s:%d", c.address,c.port)
+		go func(n string, c *client) {
+			tg := fmt.Sprintf("%s:%d", c.address, c.port)
 			wantState := grpc.Shutdown
 			if _, ok := assert_state(wantState, c.conn); ok { // 连接断开
 				log.Info("service shutdown:", id, "-->", tg)

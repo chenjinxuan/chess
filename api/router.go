@@ -1,4 +1,3 @@
-
 // @APIVersion 1.0
 // @Title API
 // @Description
@@ -7,16 +6,16 @@
 package main
 
 import (
-    "chess/api/components/middleware"
-    "chess/api/controllers/debug"
-    "chess/common/config"
-    "chess/api/controllers/auth"
-    "github.com/itsjamie/gin-cors"
-    "github.com/gin-gonic/gin"
-    "time"
-    "chess/api/controllers/room"
-    "chess/api/controllers/user"
-    "chess/api/components/auth"
+	"chess/api/components/auth"
+	"chess/api/components/middleware"
+	"chess/api/controllers/auth"
+	"chess/api/controllers/debug"
+	"chess/api/controllers/room"
+	"chess/api/controllers/user"
+	"chess/common/config"
+	"github.com/gin-gonic/gin"
+	"github.com/itsjamie/gin-cors"
+	"time"
 )
 
 func InitRouter() {
@@ -40,7 +39,7 @@ func InitRouter() {
 	//router.Use(system_maintenance.CheckSystemMaintenance(*configServerPath))
 	//router.Use(colletion.Filter(config.C.Filter))
 	router.Use(middleware.SetContext())
-        router.Use(config.SetContextConfig())
+	router.Use(config.SetContextConfig())
 	if config.Api.Debug {
 		debugRouter := router.Group("/debug")
 		{
@@ -63,31 +62,33 @@ func InitRouter() {
 	authRouter := router.Group("/auth")
 	{
 
-		authRouter.POST("/login", c_auth.Login) // 账号密码登录
-		authRouter.POST("/login/quick", c_auth.LoginMobile) // 手机号快速登录
-		authRouter.POST("/login/tp", c_auth.TpLogin) // 第三方登录
-	        authRouter.POST("/login/tourist",c_auth.TouristLogin) // 游客登录
-		authRouter.POST("/logout", nil) // 登出，销毁token
-		authRouter.POST("/token/info", c_auth.TokenInfo) //获取token信息
+		authRouter.POST("/login", c_auth.Login)                // 账号密码登录
+		authRouter.POST("/login/quick", c_auth.LoginMobile)    // 手机号快速登录
+		authRouter.POST("/login/tp", c_auth.TpLogin)           // 第三方登录
+		authRouter.POST("/login/tourist", c_auth.TouristLogin) // 游客登录
+
+		authRouter.POST("/token/info", c_auth.TokenInfo)       //获取token信息
 		authRouter.POST("/token/refresh", c_auth.TokenRefrash) // 刷新token
 		authRouter.POST("/register/mobile", c_auth.RegisterMobile)
 
-	    authRouter.GET("/test", c_auth.Ttest)
+		authRouter.GET("/test", c_auth.Ttest)
 	}
-        // @SubApi /room -房间相关 [/room/]
-        roomRouter :=router.Group("/room")
+	// @SubApi /room -房间相关 [/room/]
+	roomRouter := router.Group("/room")
 	{
-	    roomRouter.GET("/list",c_room.RoomsList)
+		roomRouter.GET("/list", c_room.RoomsList)
 	}
 
-    // @SubApi /user/:user_id - 用户相关 [/user/{user_id}/]
-        userRouter :=router.Group("/user/:user_id")
-    	{
-	    userRouter.GET("/info",auth.Login(config.C.TokenSecret),c_user.GetUserInfo)
-	    userRouter.GET("/checkin",auth.Login(config.C.TokenSecret),c_user.Checkin)
-	    userRouter.POST("/password/reset",auth.Login(config.C.TokenSecret), c_user.PasswordReset)
+	// @SubApi /user/:user_id - 用户相关 [/user/{user_id}/]
+	userRouter := router.Group("/user/:user_id")
+	{
+	    	userRouter.GET("/logout",auth.Login(config.C.TokenSecret) ,c_user.Logout)                        // 登出，销毁token
+		userRouter.GET("/info", auth.Login(config.C.TokenSecret), c_user.GetUserInfo)
+		userRouter.GET("/checkin", auth.Login(config.C.TokenSecret), c_user.Checkin)
+		userRouter.POST("/password/reset", auth.Login(config.C.TokenSecret), c_user.PasswordReset)
+	        userRouter.GET("/exchange",auth.Login(config.C.TokenSecret),c_user.Exchange)
 
-    	}
+	}
 	// @SubApi /verify - 验证码相关 [/verify/]
 	verifyRouter := router.Group("/verify")
 	{
@@ -100,6 +101,6 @@ func InitRouter() {
 	{
 		clientRouter.GET("/upgrade", nil)
 	}
-        //router.GET("/testquery",controllers.Get)
+	//router.GET("/testquery",controllers.Get)
 	router.Run(config.Api.Port)
 }

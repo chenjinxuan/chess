@@ -1,10 +1,10 @@
 package models
 
 import (
+	"chess/common/log"
 	"database/sql"
 	"github.com/Sirupsen/logrus"
 	"time"
-	"chess/common/log"
 )
 
 const (
@@ -14,7 +14,7 @@ const (
 	TYPE_QQ                 = 3
 	TYPE_WEIBO              = 4
 	TYPE_WECHAT             = 5
-        TYPE_TOURIST            = -1
+	TYPE_TOURIST            = -1
 
 	IS_FRESH_FALSE = 0 // 走完新手引导
 	IS_FRESH_TRUE  = 1
@@ -24,25 +24,25 @@ const (
 var Users = new(UsersModel)
 
 type UsersModel struct {
-	Id            int
-	Email         string
-	Pwd           string
-	Nickname      string
-	MobileNumber  string
-	ContactMobile string
-	RegIp         string
-	Gender        int
-	Avatar        string
-	LastLoginIp   string
-	Channel       string
-	Type          int
-	AppFrom          string
-	Status        int
-	IsFresh       int
-        CheckinDays   int
-        LastCheckinTime time.Time
-	Updated       time.Time
-	Created       time.Time
+	Id              int
+	Email           string
+	Pwd             string
+	Nickname        string
+	MobileNumber    string
+	ContactMobile   string
+	RegIp           string
+	Gender          int
+	Avatar          string
+	LastLoginIp     string
+	Channel         string
+	Type            int
+	AppFrom         string
+	Status          int
+	IsFresh         int
+	CheckinDays     int
+	LastCheckinTime time.Time
+	Updated         time.Time
+	Created         time.Time
 }
 
 func (m *UsersModel) Get(id int, user *UsersModel) error {
@@ -67,8 +67,8 @@ func (m *UsersModel) Get(id int, user *UsersModel) error {
 		&user.Type,
 		&user.Status,
 		&user.IsFresh,
-	        &user.CheckinDays,
-                &user.LastCheckinTime,
+		&user.CheckinDays,
+		&user.LastCheckinTime,
 		&user.Updated,
 		&user.Created,
 	)
@@ -119,13 +119,13 @@ func (m *UsersModel) Insert(user *UsersModel) (int, error) {
 		user.RegIp,
 		user.LastLoginIp,
 		user.Channel,
-	        user.AppFrom,
+		user.AppFrom,
 		user.Type,
 		1,
 	)
 
 	// Debug
-	log.Debugf("UsersModel.Insert",logrus.Fields{
+	log.Debugf("UsersModel.Insert", logrus.Fields{
 		"sql":   sqlString,
 		"Error": err,
 	})
@@ -387,187 +387,201 @@ ORDER BY t1.id LIMIT ?`
 }
 
 func (m *UsersModel) Save() error {
-    sqlString := `UPDATE users SET
+	sqlString := `UPDATE users SET
 		email = ?, pwd = ?, nickname = ?, mobile_number = ?, reg_ip = ?, last_login_ip = ?, status = ?
 		WHERE id = ?`
-    _, err := Mysql.Chess.Exec(
-	sqlString,
-	m.Email,
-	m.Pwd,
-	m.Nickname,
-	m.MobileNumber,
-	m.RegIp,
-	m.LastLoginIp,
-	m.Status,
-	m.Id,
-    )
+	_, err := Mysql.Chess.Exec(
+		sqlString,
+		m.Email,
+		m.Pwd,
+		m.Nickname,
+		m.MobileNumber,
+		m.RegIp,
+		m.LastLoginIp,
+		m.Status,
+		m.Id,
+	)
 
-    // Debug
-    log.Debugf("UsersModel.Save",logrus.Fields{
-	"sql":   sqlString,
-	"Error": err,
-    })
+	// Debug
+	log.Debugf("UsersModel.Save", logrus.Fields{
+		"sql":   sqlString,
+		"Error": err,
+	})
 
-    if err != nil {
+	if err != nil {
+		return err
+	}
 	return err
-    }
-    return err
 }
 
 // Update Nickname
-func (m *UsersModel) UpdateNickname(id int,nickname string) error {
-    sqlString := `UPDATE users SET
+func (m *UsersModel) UpdateNickname(id int, nickname string) error {
+	sqlString := `UPDATE users SET
 		 nickname = ?
 		WHERE id = ?`
-    _, err := Mysql.Chess.Exec(
-	sqlString,
-	nickname,
-	id,
-    )
+	_, err := Mysql.Chess.Exec(
+		sqlString,
+		nickname,
+		id,
+	)
 
-    // Debug
-    log.Debugf("UsersModel.UpdateProfile",logrus.Fields{
-	"sql":   sqlString,
-	"Error": err,
-    })
+	// Debug
+	log.Debugf("UsersModel.UpdateProfile", logrus.Fields{
+		"sql":   sqlString,
+		"Error": err,
+	})
 
-    return err
+	return err
 }
 
 // Update Mobile
 func (m *UsersModel) UpdateMobile(mobile string) error {
-    sqlString := `UPDATE users SET
+	sqlString := `UPDATE users SET
 		 mobile_number = ?
 		WHERE id = ?`
-    _, err := Mysql.Chess.Exec(
-	sqlString,
-	mobile,
-	m.Id,
-    )
+	_, err := Mysql.Chess.Exec(
+		sqlString,
+		mobile,
+		m.Id,
+	)
 
-    // Debug
-    log.Debugf("UsersModel.UpdateProfile",logrus.Fields{
-	"sql":   sqlString,
-	"Error": err,
-    })
+	// Debug
+	log.Debugf("UsersModel.UpdateProfile", logrus.Fields{
+		"sql":   sqlString,
+		"Error": err,
+	})
 
-    if err != nil {
+	if err != nil {
+		return err
+	}
 	return err
-    }
-    return err
 }
 
 func (m *UsersModel) UpdateAllMobile(mobile string) error {
-    sqlString := `UPDATE users 
+	sqlString := `UPDATE users 
 		SET mobile_number = ?,contact_mobile = ? 
 		WHERE id = ?`
-    _, err := Mysql.Chess.Exec(
-	sqlString,
-	mobile,
-	mobile,
-	m.Id,
-    )
+	_, err := Mysql.Chess.Exec(
+		sqlString,
+		mobile,
+		mobile,
+		m.Id,
+	)
 
-    // Debug
-    log.Debugf("UsersModel.UpdateProfile",logrus.Fields{
-	"sql":   sqlString,
-	"Error": err,
-    })
+	// Debug
+	log.Debugf("UsersModel.UpdateProfile", logrus.Fields{
+		"sql":   sqlString,
+		"Error": err,
+	})
 
-    if err != nil {
+	if err != nil {
+		return err
+	}
 	return err
-    }
-    return err
 }
 
 // Update Password
 func (m *UsersModel) UpdatePassword(password string) error {
-    sqlString := `UPDATE users SET
+	sqlString := `UPDATE users SET
 		 pwd = ?
 		WHERE id = ?`
-    _, err := Mysql.Chess.Exec(
-	sqlString,
-	password,
-	m.Id,
-    )
+	_, err := Mysql.Chess.Exec(
+		sqlString,
+		password,
+		m.Id,
+	)
 
-    // Debug
-    log.Debugf("UsersModel.UpdateProfile.Password",logrus.Fields{
-	"sql":   sqlString,
-	"Error": err,
-    })
+	// Debug
+	log.Debugf("UsersModel.UpdateProfile.Password", logrus.Fields{
+		"sql":   sqlString,
+		"Error": err,
+	})
 
-    if err != nil {
+	if err != nil {
+		return err
+	}
 	return err
-    }
-    return err
 }
 
 // Update Contact Mobile
 func (m *UsersModel) UpdateContactMobile(mobile string) error {
-    sqlString := `UPDATE users SET
+	sqlString := `UPDATE users SET
 		 contact_mobile = ?
 		WHERE id = ?`
-    _, err := Mysql.Chess.Exec(
-	sqlString,
-	mobile,
-	m.Id,
-    )
+	_, err := Mysql.Chess.Exec(
+		sqlString,
+		mobile,
+		m.Id,
+	)
 
-    // Debug
-    log.Debugf("UsersModel.UpdateContactMobile",logrus.Fields{
-	"sql":   sqlString,
-	"Error": err,
-    })
+	// Debug
+	log.Debugf("UsersModel.UpdateContactMobile", logrus.Fields{
+		"sql":   sqlString,
+		"Error": err,
+	})
 
-    if err != nil {
+	if err != nil {
+		return err
+	}
 	return err
-    }
-    return err
 }
 
 // Update Avatar
 func (m *UsersModel) UpdateAvatar(avatar string) error {
-    sqlString := `UPDATE users SET
+	sqlString := `UPDATE users SET
 		 avatar = ?
 		WHERE id = ?`
-    _, err := Mysql.Chess.Exec(
-	sqlString,
-	avatar,
-	m.Id,
-    )
+	_, err := Mysql.Chess.Exec(
+		sqlString,
+		avatar,
+		m.Id,
+	)
 
-    // Debug
-    log.Debugf("UsersModel.UpdateAvatar",logrus.Fields{
-	"sql":   sqlString,
-	"Error": err,
-    })
+	// Debug
+	log.Debugf("UsersModel.UpdateAvatar", logrus.Fields{
+		"sql":   sqlString,
+		"Error": err,
+	})
 
-    if err != nil {
+	if err != nil {
+		return err
+	}
 	return err
-    }
-    return err
 }
 
 // Update Avatar
 func (m *UsersModel) UpdateGender(gender int) error {
-    sqlString := `UPDATE users SET
+	sqlString := `UPDATE users SET
 		 gender = ?
 		WHERE id = ?`
-    _, err := Mysql.Chess.Exec(
-	sqlString,
-	gender,
-	m.Id,
-    )
+	_, err := Mysql.Chess.Exec(
+		sqlString,
+		gender,
+		m.Id,
+	)
 
-    // Debug
-    log.Debugf("UsersModel.UpdateGender",logrus.Fields{
-	"sql":   sqlString,
-	"Error": err,
-    })
+	// Debug
+	log.Debugf("UsersModel.UpdateGender", logrus.Fields{
+		"sql":   sqlString,
+		"Error": err,
+	})
 
-    if err != nil {
+	if err != nil {
+		return err
+	}
 	return err
-    }
-    return err
+}
+
+//获取签到信息
+func (m *UsersModel) CheckinInfo(userId int) (days int, checkTime time.Time, err error) {
+	sqlStr := `SELECT checkin_days,last_checkin_time FROM users WHERE id = ?`
+	err = Mysql.Chess.QueryRow(sqlStr, userId).Scan(&days, &checkTime)
+	return
+}
+
+//签到
+func (m *UsersModel) Checkin(userId, days int, checkTime string) error {
+	sqlStr := `UPDATE users SET checkin_days =  ? ,last_checkin_time = ? WHERE id = ?`
+	_, err := Mysql.Chess.Exec(sqlStr, days, checkTime, userId)
+	return err
 }

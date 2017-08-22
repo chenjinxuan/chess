@@ -5,10 +5,10 @@ import (
 	"crypto/sha1"
 	"fmt"
 	// "net/url"
+	"chess/api/log"
+	"chess/api/redis"
 	"strconv"
 	"time"
-	"chess/api/log"
-        "chess/api/redis"
 )
 
 type TicketData struct {

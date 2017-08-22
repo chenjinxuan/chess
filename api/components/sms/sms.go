@@ -1,6 +1,11 @@
 package sms
 
 import (
+	"chess/api/components/auth"
+	"chess/api/redis"
+	"chess/common/config"
+	"chess/common/log"
+	"chess/models"
 	"crypto/md5"
 	"encoding/json"
 	"errors"
@@ -12,11 +17,6 @@ import (
 	"regexp"
 	"strconv"
 	"time"
-	"chess/api/components/auth"
-	"chess/common/config"
-	"chess/common/log"
-	"chess/models"
-        "chess/api/redis"
 	//"chess/api/rpc"
 )
 
