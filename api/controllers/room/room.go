@@ -5,6 +5,9 @@ import (
 	"chess/models"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	grpcServer "chess/api/grpc"
+	pb "chess/api/proto"
+	"golang.org/x/net/context"
 )
 
 type RoomsResult struct {
@@ -18,7 +21,7 @@ type RoomsInfo struct {
 	MinCarry   int `json:"min_carry" description:"最小携带筹码"`
 	MaxCarry   int `json:"max_carry" description:"最大携带筹码"`
 	Max        int `json:"max" description:"最大人数"`
-	Online     int `json:"online" description:"在线人数"`
+	Online     int32 `json:"online" description:"在线人数"`
 }
 
 // @Title 获取房间列表信息
@@ -36,6 +39,8 @@ func RoomsList(c *gin.Context) {
 		return
 
 	}
+    CentreClient := grpcServer.GetCentreGrpc()
+    roomInfo, err := CentreClient.RoomList(context.Background(), &pb.RoomListArgs{})
 	for _, v := range data {
 		var info = new(RoomsInfo)
 		info.Id = v.Id
@@ -46,7 +51,10 @@ func RoomsList(c *gin.Context) {
 		info.Max = v.Max
 
 		//去游戏付获取在线人数
-		//v.Online
+	    if num,ok:=roomInfo.List[int32(info.Id)]; ok{
+		info.Online = num.PlayerNumber
+	    }
+
 		result.List = append(result.List, info)
 	}
 	result.Ret = 1

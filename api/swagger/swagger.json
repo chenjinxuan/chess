@@ -220,6 +220,54 @@
                 }
             }
         },
+        "/charge/charge_goods/list": {
+            "get": {
+                "tags": [
+                    "/charge - 充值相关 "
+                ],
+                "summary": "充值商品列表",
+                "description": "充值商品列表",
+                "operationId": ".充值商品列表",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/c_charge.ChargeGoodsResult"
+                        }
+                    }
+                }
+            }
+        },
+        "/goods/list": {
+            "get": {
+                "tags": [
+                    "/goods - 商品相关 "
+                ],
+                "summary": "商品列表",
+                "description": "商品列表",
+                "operationId": ".商品列表",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/c_goods.ListResult"
+                        }
+                    }
+                }
+            }
+        },
         "/room/list": {
             "get": {
                 "tags": [
@@ -285,13 +333,54 @@
                 }
             }
         },
+        "/user/{user_id}/detail": {
+            "get": {
+                "tags": [
+                    "/user/:user_id - 用户相关 "
+                ],
+                "summary": "获取用户详细信息",
+                "description": "获取用户详细信息",
+                "operationId": ".获取用户详细信息",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "token",
+                        "description": "token",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "user_id",
+                        "description": "user_id",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/c_user.GetUserInfoDetailResult"
+                        }
+                    }
+                }
+            }
+        },
         "/user/{user_id}/exchange": {
             "get": {
                 "tags": [
                     "/user/:user_id - 用户相关 "
                 ],
                 "summary": "钻石兑换金币",
-                "description": "钻石兑换金币",
+                "description": "钻石兑换金币 ret= -1 时 钻石不足",
                 "operationId": ".钻石兑换金币",
                 "consumes": [
                     "application/json"
@@ -696,9 +785,6 @@
                     "type": "integer",
                     "format": "int64"
                 },
-                "msg": {
-                    "type": "string"
-                },
                 "need_captcha": {
                     "description": "是否需要验证码",
                     "type": "boolean"
@@ -706,11 +792,6 @@
                 "refresh_token": {
                     "description": "当 Token 过期时，使用该 Token 获取一个新的",
                     "type": "string"
-                },
-                "ret": {
-                    "description": "1成功 0失败",
-                    "type": "integer",
-                    "format": "int64"
                 },
                 "token": {
                     "description": "请求授权的token",
@@ -738,6 +819,110 @@
                 "unique_id": {
                     "description": "唯一标识",
                     "type": "string"
+                }
+            }
+        },
+        "c_charge.ChargeGoodsInfo": {
+            "title": "ChargeGoodsInfo",
+            "type": "object",
+            "properties": {
+                "charge_goods_id": {
+                    "description": "商品id",
+                    "type": "string"
+                },
+                "image": {
+                    "description": "图片",
+                    "type": "string"
+                },
+                "name": {
+                    "description": "商品名",
+                    "type": "string"
+                },
+                "number": {
+                    "description": "钻石数量",
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "price": {
+                    "description": "价格",
+                    "type": "integer",
+                    "format": "int64"
+                }
+            }
+        },
+        "c_charge.ChargeGoodsResult": {
+            "title": "ChargeGoodsResult",
+            "type": "object",
+            "properties": {
+                "list": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/c_charge.ChargeGoodsInfo"
+                    }
+                },
+                "msg": {
+                    "type": "string"
+                },
+                "ret": {
+                    "description": "1成功 0失败",
+                    "type": "integer",
+                    "format": "int64"
+                }
+            }
+        },
+        "c_goods.GoodsInfo": {
+            "title": "GoodsInfo",
+            "type": "object",
+            "properties": {
+                "goods_category_id": {
+                    "description": "商品类别",
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "goods_describe": {
+                    "description": "商品描述",
+                    "type": "string"
+                },
+                "goods_type_id": {
+                    "description": "商品属性",
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "image": {
+                    "description": "商品图片",
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "price": {
+                    "description": "商品价格-\u003e钻石",
+                    "type": "integer",
+                    "format": "int64"
+                }
+            }
+        },
+        "c_goods.ListResult": {
+            "title": "ListResult",
+            "type": "object",
+            "properties": {
+                "list": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/c_goods.GoodsInfo"
+                    }
+                },
+                "msg": {
+                    "type": "string"
+                },
+                "ret": {
+                    "description": "1成功 0失败",
+                    "type": "integer",
+                    "format": "int64"
                 }
             }
         },
@@ -772,7 +957,7 @@
                 "online": {
                     "description": "在线人数",
                     "type": "integer",
-                    "format": "int64"
+                    "format": "int32"
                 },
                 "small_blind": {
                     "description": "小盲注",
@@ -838,6 +1023,52 @@
                 }
             }
         },
+        "c_user.GetUserInfoDetailResult": {
+            "title": "GetUserInfoDetailResult",
+            "type": "object",
+            "properties": {
+                "best_winner": {
+                    "description": "最大赢取筹码",
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "cards": {
+                    "description": "最大牌",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/c_user.UserBestCards"
+                    }
+                },
+                "inbound_rate": {
+                    "description": "入局率",
+                    "type": "number",
+                    "format": "double"
+                },
+                "msg": {
+                    "type": "string"
+                },
+                "ret": {
+                    "description": "1成功 0失败",
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "showdown_rate": {
+                    "description": "摊牌率",
+                    "type": "number",
+                    "format": "double"
+                },
+                "total_game": {
+                    "description": "总局数",
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "win_rate": {
+                    "description": "胜率",
+                    "type": "number",
+                    "format": "double"
+                }
+            }
+        },
         "c_user.PasswordResetParams": {
             "title": "PasswordResetParams",
             "type": "object",
@@ -883,6 +1114,22 @@
                 },
                 "ret": {
                     "description": "1成功 0失败",
+                    "type": "integer",
+                    "format": "int64"
+                }
+            }
+        },
+        "c_user.UserBestCards": {
+            "title": "UserBestCards",
+            "type": "object",
+            "properties": {
+                "suit": {
+                    "description": "花色",
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "value": {
+                    "description": "大小",
                     "type": "integer",
                     "format": "int64"
                 }

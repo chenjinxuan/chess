@@ -168,6 +168,11 @@ func TpLogin(c *gin.Context) {
 		if err != nil {
 			log.Error(err)
 		}
+		//初始化用户任务系统
+		err =  user_init.TaskInit(userId)
+		if err != nil {
+		    log.Error(err)
+		}
 
 	} else {
 		go models.Users.UpdateLastLoginIp(userId, clientIp)
