@@ -15,3 +15,9 @@ func GetAuthGrpc() (AuthClient pb.AuthServiceClient) {
 	AuthClient = pb.NewAuthServiceClient(auth)
 	return AuthClient
 }
+
+func GetCentreGrpc() (CentreClient pb.CentreServiceClient) {
+    centre := services.GetService(config.C.GrpcServer[1])
+    CentreClient = pb.NewCentreServiceClient(centre)
+    return CentreClient
+}

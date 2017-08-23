@@ -102,6 +102,11 @@ func LoginMobile(c *gin.Context) {
 				if err != nil {
 					log.Error(err)
 				}
+				//初始化用户任务系统
+				err =  user_init.TaskInit(user.Id)
+				if err != nil {
+				    log.Error(err)
+				}
 
 			}()
 

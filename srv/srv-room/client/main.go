@@ -4,21 +4,21 @@ import (
 	"chess/common/log"
 	pb "chess/srv/srv-room/proto"
 	"encoding/binary"
-	"flag"
 	"fmt"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
 	"io"
 	"time"
+	"flag"
 )
 
 var (
-	//target = "192.168.40.157:20001"
-	//serviceId = "room-1"
-	target    = "192.168.40.157:20002"
-	serviceId = "room-2"
-	userId    = flag.Int("uid", 0, "user id")
+	target = "192.168.40.157:20001"
+	serviceId = "room-1"
+	//target    = "192.168.40.157:20002"
+	//serviceId = "room-2"
+	userId = flag.Int("uid", 0, "user id")
 )
 
 func main() {
@@ -29,6 +29,9 @@ func main() {
 		uid = time.Now().Second()
 	} else {
 		uid = *userId
+		if uid< 10000000 {
+			uid += 10000000
+		}
 	}
 
 	player := NewPlayer()
@@ -49,7 +52,7 @@ func main() {
 			"service_name": "room",
 			"service_id":   serviceId,
 			"unique_id":    fmt.Sprintf("xxxx-xxxxx-%d", time.Now().Unix()),
-			"is_reconnect": "1",
+			//"unique_id":    fmt.Sprintf("xxxx-xxxxx-%d", 123),
 		}),
 	)
 

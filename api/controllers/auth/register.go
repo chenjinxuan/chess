@@ -10,8 +10,8 @@ import (
 	//"chess/api/components/sms"
 	"chess/api/components/user_init"
 	grpcServer "chess/api/grpc"
-	"chess/api/helper"
-	"chess/api/log"
+	"chess/common/helper"
+	"chess/common/log"
 	pb "chess/api/proto"
 	"chess/common/config"
 	"chess/models"
@@ -118,7 +118,7 @@ func RegisterMobile(c *gin.Context) {
 		user.Nickname = helper.GenMobileNickname(post.MobileNumber)
 		userId, err = models.Users.Insert(user)
 		if err != nil {
-			log.Log.Error(err)
+			log.Error(err)
 			result.Msg = "Could not create new user."
 			c.JSON(http.StatusOK, result)
 			return
@@ -135,13 +135,18 @@ func RegisterMobile(c *gin.Context) {
 		extra["idfa"] = c.Query("idfa")
 		//user.IsFresh, err = user_init.UserInit(*user, extra, cConf)
 		if err != nil {
-			log.Log.Error(err)
+			log.Error(err)
 		}
 		go func() {
 			//更新设备信息
 			err = user_init.DeviceInit(user.Id, user.AppFrom, post.UniqueId, c.Query("idfv"), c.Query("idfa"))
 			if err != nil {
-				log.Log.Error(err)
+				log.Error(err)
+			}
+		        //初始化用户任务系统
+		        err =  user_init.TaskInit(user.Id)
+			if err != nil {
+			    log.Error(err)
 			}
 		}()
 

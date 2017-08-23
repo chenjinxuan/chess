@@ -16,6 +16,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/itsjamie/gin-cors"
 	"time"
+    "chess/api/controllers/charge"
+    "chess/api/controllers/goods"
 )
 
 func InitRouter() {
@@ -84,6 +86,7 @@ func InitRouter() {
 	{
 	    	userRouter.GET("/logout",auth.Login(config.C.TokenSecret) ,c_user.Logout)                        // 登出，销毁token
 		userRouter.GET("/info", auth.Login(config.C.TokenSecret), c_user.GetUserInfo)
+	    	userRouter.GET("/detail", auth.Login(config.C.TokenSecret), c_user.GetUserInfoDetail)
 		userRouter.GET("/checkin", auth.Login(config.C.TokenSecret), c_user.Checkin)
 		userRouter.POST("/password/reset", auth.Login(config.C.TokenSecret), c_user.PasswordReset)
 	        userRouter.GET("/exchange",auth.Login(config.C.TokenSecret),c_user.Exchange)
@@ -101,6 +104,16 @@ func InitRouter() {
 	{
 		clientRouter.GET("/upgrade", nil)
 	}
+    	// @SubApi /charge - 充值相关 [/charge/]
+        chargeRouter := router.Group("/charge")
+    	{
+	chargeRouter.GET("/charge_goods/list",c_charge.ChargeGoodsList)
+    	}
+    	// @SubApi /goods - 商品相关 [/goods/]
+        goodsRouter := router.Group("/goods")
+    	{
+	goodsRouter.GET("/list",c_goods.List)
+    	}
 	//router.GET("/testquery",controllers.Get)
 	router.Run(config.Api.Port)
 }

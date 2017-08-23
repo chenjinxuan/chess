@@ -7,17 +7,18 @@ import (
     "chess/models"
     "strings"
     "net/http"
+    "chess/common/log"
 )
 
 type ExchangeParams struct {
-    Diamonds int `json:"diamonds" form:"diamonds"`
-    From string `json:"from" form:"from"`
+    GoodsId int `form:"goods_id" description:"购买兑换的商品id"`
+    From string `form:"from" description:"来源应用"`
 }
 type ExchangeResult struct {
     define.BaseResult
 }
 // @Title 钻石兑换金币
-// @Description 钻石兑换金币
+// @Description 钻石兑换金币 ret= -1 时 钻石不足
 // @Summary 钻石兑换金币
 // @Accept json
 // @Param   token     query    string   true        "token"
@@ -42,14 +43,27 @@ func Exchange(c *gin.Context)  {
 	c.JSON(http.StatusOK, result)
 	return
     }
+    //获取商品信息
+    goods,err:=models.Goods.Get(params.GoodsId)
+    if err != nil {
+	log.Errorf("models.Goods.Get err(%s)",err)
+	result.Msg = "get goods fail."
+	c.JSON(http.StatusOK, result)
+	return
+    }
+    //TODO 后续更加商品类型,属性做出相应的处理
+
+
     //获取用户钱包信息
     _,diamond,err:=models.UsersWallet.GetBalance(user_id)
     if err != nil {
+	log.Errorf("models.UsersWallet.GetBalance err(%s)",err)
 	result.Msg = "Get wallet fail."
 	c.JSON(http.StatusOK, result)
 	return
     }
-    if params.Diamonds <= 0 || diamond < params.Diamonds {
+    if diamond < goods.Price {
+	result.Ret = -1
 	result.Msg = "price fail."
 	c.JSON(http.StatusOK, result)
 	return
@@ -58,13 +72,14 @@ func Exchange(c *gin.Context)  {
     var model = new(models.UsersWithDrawRecordModel)
     model.AppFrom=strings.ToLower(params.From)
     model.UserId = user_id
-    model.Diamond = params.Diamonds
-    model.DiamondBlance = diamond - params.Diamonds
-    model.Count = params.Diamonds * 1000
+    model.Diamond = goods.Price
+    model.DiamondBlance = diamond - goods.Price
+    model.Count = goods.Price * goods.Rate
     model.Status = 1
     
    err= models.UsersWithDrawRecord.Exchange(model)
     if err != nil {
+	log.Errorf("models.UsersWithDrawRecord.Exchange err(%s)",err)
 	result.Msg = "exchange fail."
 	c.JSON(http.StatusOK, result)
 	return
