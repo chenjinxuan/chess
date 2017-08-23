@@ -106,18 +106,15 @@ func NewTable(rid, max, sb, bb, minC, maxC int) *Table {
 	}()
 
 	// chat 注册一个EndPoint
-	go func () {
-		conn, sid := services.GetService2(define.SRV_NAME_CHAT)
-		if conn == nil {
-			log.Error("cannot get chat service:", sid)
-			return
-		}
-		cli := pb.NewChatServiceClient(conn)
-		_, err := cli.Reg(context.Background(), &pb.Chat_Id{Id: table.Id})
-		if err != nil {
-			log.Errorf("Chat service cli.Reg: %v", err)
-		}
-	}()
+	conn, sid := services.GetService2(define.SRV_NAME_CHAT)
+	if conn == nil {
+		log.Error("cannot get chat service:", sid)
+	}
+	cli := pb.NewChatServiceClient(conn)
+	_, err := cli.Reg(context.Background(), &pb.Chat_Id{Id: table.Id})
+	if err != nil {
+		log.Errorf("Chat service cli.Reg: %v", err)
+	}
 
 	return table
 }

@@ -344,7 +344,7 @@ func (s *server) Reg(ctx context.Context, p *Chat_Id) (*Chat_Nil, error) {
 		log.Errorf("id already exists:%v", p.Id)
 		return nil, ERROR_ALREADY_EXISTS
 	}
-
+	log.Debug("New EndPoint:", p.Id)
 	s.eps[p.Id] = newEndPoint(s.retention)
 	return OK, nil
 }
@@ -358,6 +358,7 @@ func (s *server) Unreg(ctx context.Context, p *Chat_Id) (*Chat_Nil, error) {
 		return nil, ERROR_NOT_EXISTS
 	}
 	delete(s.eps, p.Id)
+	log.Debug("Delete EndPoint:", p.Id)
 	return OK, nil
 }
 
