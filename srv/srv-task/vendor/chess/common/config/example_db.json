@@ -1,0 +1,43 @@
+{
+  "mysql": {
+    "setting": {
+      "parse_time": true,
+      "loc": "Asia%2FChongqing"
+    },
+    "server": {
+      "wstool": {
+        "db": "wstool",
+        "host": "127.0.0.1:3306",
+        "username": "root",
+        "password": ""
+      }
+    }
+  },
+  "mongo": {
+    "setting": {
+      "dial_timeout": 5
+    },
+    "server": {
+      "wstool": {
+        "host": "127.0.0.1",
+        "username": "",
+        "password": ""
+      }
+    }
+  },
+  "redis": {
+    "setting": {
+      "max_idle": 10,
+      "max_active": 1000,
+      "idle_timeout": 30,
+      "wait_idle": true
+    },
+    "server": {
+      "wstool": {
+        "db": 0,
+        "host": "127.0.0.1:6379",
+        "password": ""
+      }
+    }
+  }
+}

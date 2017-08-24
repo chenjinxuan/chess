@@ -265,15 +265,9 @@ paths:
         description: token
         required: true
         type: string
-      - in: path
-        name: user_id
-        description: user_id
-        required: true
-        type: integer
-        format: int64
       - in: query
-        name: diamonds
-        description: diamonds
+        name: goods_id
+        description: goods_id
         required: true
         type: string
       - in: query
@@ -376,6 +370,98 @@ paths:
           description: ""
           schema:
             $ref: '#/definitions/c_user.PasswordResetResult'
+  /user/{user_id}/profile/avatar:
+    post:
+      tags:
+      - '/user/:user_id - 用户相关 '
+      summary: 更新头像
+      description: 更新头像
+      operationId: .更新头像
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        description: post 数据
+        required: true
+        schema:
+          $ref: '#/definitions/c_user.ProfileAvatarParams'
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/c_user.ProfileAvatarResult'
+  /user/{user_id}/profile/gender:
+    post:
+      tags:
+      - '/user/:user_id - 用户相关 '
+      summary: 更新性别
+      description: 更新性别
+      operationId: .更新性别
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        description: post 数据
+        required: true
+        schema:
+          $ref: '#/definitions/c_user.ProfileGenderParams'
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/define.BaseResult'
+  /user/{user_id}/profile/mobile:
+    post:
+      tags:
+      - '/user/:user_id - 用户相关 '
+      summary: 绑定手机
+      description: 绑定手机
+      operationId: .绑定手机
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        description: post 数据
+        required: true
+        schema:
+          $ref: '#/definitions/c_user.ProfileMobileParams'
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/c_user.ProfileMobileResult'
+  /user/{user_id}/profile/nickname:
+    post:
+      tags:
+      - '/user/:user_id - 用户相关 '
+      summary: 更新昵称
+      description: 更新昵称
+      operationId: .更新昵称
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        description: post 数据
+        required: true
+        schema:
+          $ref: '#/definitions/c_user.ProfileNicknameParams'
+      responses:
+        "200":
+          description: ""
+          schema:
+            $ref: '#/definitions/define.BaseResult'
 definitions:
   c_auth.LoginMobileParams:
     title: LoginMobileParams
@@ -778,6 +864,69 @@ definitions:
         description: 1成功 0失败
         type: integer
         format: int64
+  c_user.ProfileAvatarParams:
+    title: ProfileAvatarParams
+    type: object
+    properties:
+      avatar_filename:
+        description: 头像链接
+        type: string
+  c_user.ProfileAvatarResult:
+    title: ProfileAvatarResult
+    type: object
+    properties:
+      avatar:
+        description: 头像链接
+        type: string
+      msg:
+        type: string
+      ret:
+        description: 1成功 0失败
+        type: integer
+        format: int64
+  c_user.ProfileGenderParams:
+    title: ProfileGenderParams
+    type: object
+    properties:
+      gender:
+        description: 性别 0 未知,1男,2女
+        type: integer
+        format: int64
+  c_user.ProfileMobileParams:
+    title: ProfileMobileParams
+    type: object
+    properties:
+      code:
+        description: 短信验证码
+        type: string
+      mobile_number:
+        description: 手机号
+        type: string
+  c_user.ProfileMobileResult:
+    title: ProfileMobileResult
+    type: object
+    properties:
+      balance:
+        description: 金币余额
+        type: integer
+        format: int64
+      diamond_balance:
+        description: 钻石余额
+        type: integer
+        format: int64
+      msg:
+        type: string
+      ret:
+        description: 1成功 0失败
+        type: integer
+        format: int64
+  c_user.ProfileNicknameParams:
+    title: ProfileNicknameParams
+    type: object
+    properties:
+      nickname:
+        description: 昵称
+        type: string
   c_user.TokenOutResult:
     title: TokenOutResult
     type: object

@@ -22,8 +22,7 @@ type ExchangeResult struct {
 // @Summary 钻石兑换金币
 // @Accept json
 // @Param   token     query    string   true        "token"
-// @Param   user_id     path    int   true        "user_id"
-// @Param   diamonds     query    string   true        "diamonds"
+// @Param   goods_id     query    string   true        "goods_id"
 // @Param   from     query    string   true        "from"
 // @Success 200 {object} c_user.ExchangeResult
 // @router /user/{user_id}/exchange [get]

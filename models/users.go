@@ -408,9 +408,6 @@ func (m *UsersModel) Save() error {
 		"Error": err,
 	})
 
-	if err != nil {
-		return err
-	}
 	return err
 }
 
@@ -451,34 +448,9 @@ func (m *UsersModel) UpdateMobile(mobile string) error {
 		"Error": err,
 	})
 
-	if err != nil {
-		return err
-	}
 	return err
 }
 
-func (m *UsersModel) UpdateAllMobile(mobile string) error {
-	sqlString := `UPDATE users 
-		SET mobile_number = ?,contact_mobile = ? 
-		WHERE id = ?`
-	_, err := Mysql.Chess.Exec(
-		sqlString,
-		mobile,
-		mobile,
-		m.Id,
-	)
-
-	// Debug
-	log.Debugf("UsersModel.UpdateProfile", logrus.Fields{
-		"sql":   sqlString,
-		"Error": err,
-	})
-
-	if err != nil {
-		return err
-	}
-	return err
-}
 
 // Update Password
 func (m *UsersModel) UpdatePassword(password string) error {
@@ -503,28 +475,6 @@ func (m *UsersModel) UpdatePassword(password string) error {
 	return err
 }
 
-// Update Contact Mobile
-func (m *UsersModel) UpdateContactMobile(mobile string) error {
-	sqlString := `UPDATE users SET
-		 contact_mobile = ?
-		WHERE id = ?`
-	_, err := Mysql.Chess.Exec(
-		sqlString,
-		mobile,
-		m.Id,
-	)
-
-	// Debug
-	log.Debugf("UsersModel.UpdateContactMobile", logrus.Fields{
-		"sql":   sqlString,
-		"Error": err,
-	})
-
-	if err != nil {
-		return err
-	}
-	return err
-}
 
 // Update Avatar
 func (m *UsersModel) UpdateAvatar(avatar string) error {

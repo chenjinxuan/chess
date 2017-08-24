@@ -18,6 +18,7 @@ import (
 	"time"
     "chess/api/controllers/charge"
     "chess/api/controllers/goods"
+    "chess/api/controllers/task"
 )
 
 func InitRouter() {
@@ -90,6 +91,10 @@ func InitRouter() {
 		userRouter.GET("/checkin", auth.Login(config.C.TokenSecret), c_user.Checkin)
 		userRouter.POST("/password/reset", auth.Login(config.C.TokenSecret), c_user.PasswordReset)
 	        userRouter.GET("/exchange",auth.Login(config.C.TokenSecret),c_user.Exchange)
+	    	userRouter.POST("/profile/nickname", auth.Login(config.C.TokenSecret), c_user.ProfileNicknameUpdate)
+	    userRouter.POST("/profile/mobile", auth.Login(config.C.TokenSecret), c_user.ProfileMobile)
+	    userRouter.POST("/profile/avatar", auth.Login(config.C.TokenSecret), c_user.ProfileAvatar)
+	    userRouter.POST("/profile/gender", auth.Login(config.C.TokenSecret), c_user.ProfileGender)
 
 	}
 	// @SubApi /verify - 验证码相关 [/verify/]
@@ -107,13 +112,19 @@ func InitRouter() {
     	// @SubApi /charge - 充值相关 [/charge/]
         chargeRouter := router.Group("/charge")
     	{
-	chargeRouter.GET("/charge_goods/list",c_charge.ChargeGoodsList)
+		chargeRouter.GET("/charge_goods/list",c_charge.ChargeGoodsList)
     	}
     	// @SubApi /goods - 商品相关 [/goods/]
         goodsRouter := router.Group("/goods")
     	{
-	goodsRouter.GET("/list",c_goods.List)
+		goodsRouter.GET("/list",c_goods.List)
     	}
+    	// @SubApi /task/:user_id - 用户相关 [/task/{user_id}/]
+	taskRouter := router.Group("/task/:user_id")
+	{
+	    taskRouter.GET("/receive",auth.Login(config.C.TokenSecret),c_task.ReceiveTaskReward)
+	    taskRouter.GET("/list",auth.Login(config.C.TokenSecret),c_task.List)
+	}
 	//router.GET("/testquery",controllers.Get)
 	router.Run(config.Api.Port)
 }
