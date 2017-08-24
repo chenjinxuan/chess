@@ -7,29 +7,42 @@ import (
 	"time"
 
 	"chess/srv/srv-chat/kafka"
+	"chess/common/consul"
+	"chess/common/define"
+	"chess/common/services"
 
 	cli "gopkg.in/urfave/cli.v2"
 
 	log "github.com/Sirupsen/logrus"
-	"github.com/xtaci/logrushooks"
 	"google.golang.org/grpc"
 
 	pb "chess/srv/srv-chat/proto"
+	"fmt"
 )
 
 func main() {
-	log.AddHook(logrushooks.LineNoHook{})
+	//log.AddHook(logrushooks.LineNoHook{})
 
-	go func() {
-		log.Info(http.ListenAndServe("0.0.0.0:6060", nil))
-	}()
+	//go func() {
+	//	log.Info(http.ListenAndServe("0.0.0.0:6060", nil))
+	//}()
 	app := &cli.App{
 		Name: "chat",
 		Flags: []cli.Flag{
 			&cli.StringFlag{
-				Name:  "listen",
-				Value: ":10000",
-				Usage: "listening address:port",
+				Name:  "service-id",
+				Value: "chat-1",
+				Usage: "service id",
+			},
+			&cli.StringFlag{
+				Name:  "address",
+				Value: "127.0.0.1",
+				Usage: "external address",
+			},
+			&cli.IntFlag{
+				Name:  "port",
+				Value: 30001,
+				Usage: "listening port",
 			},
 			&cli.StringFlag{
 				Name:  "kafka-bucket",
@@ -48,7 +61,7 @@ func main() {
 			},
 			&cli.StringFlag{
 				Name:  "boltdb",
-				Value: "/data/CHAT.DAT",
+				Value: "./CHAT.DAT",
 				Usage: "chat snapshot file",
 			},
 			&cli.StringFlag{
@@ -69,7 +82,6 @@ func main() {
 		},
 
 		Action: func(c *cli.Context) error {
-			log.Println("listen:", c.String("listen"))
 			log.Println("boltdb:", c.String("boltdb"))
 			log.Println("kafka-brokers:", c.StringSlice("kafka-brokers"))
 			log.Println("chat-topic", c.String("chat-topic"))
@@ -78,8 +90,27 @@ func main() {
 			log.Println("write-interval:", c.Duration("write-interval"))
 			log.Println("kafka-bucket", c.String("kafka-bucket"))
 			log.Println("kafka-brokers", c.StringSlice("kafka-brokers"))
+
+			// 从consul读取配置，初始化数据库连接
+			err := consul.InitConsulClientViaEnv()
+			if err != nil {
+				panic(err)
+			}
+
+			// consul 服务注册
+			err = services.Register(c.String("service-id"), define.SRV_NAME_CHAT, c.String("address"), c.Int("port"), c.Int("port")+100, []string{"master"})
+			if err != nil {
+				panic(err)
+			}
+
+			// consul 健康检查
+			http.HandleFunc("/check", consulCheck)
+			go http.ListenAndServe(fmt.Sprintf(":%d", c.Int("port")+100), nil)
+
+
 			// 监听
-			lis, err := net.Listen("tcp", c.String("listen"))
+			laddr := fmt.Sprintf(":%d", c.Int("port"))
+			lis, err := net.Listen("tcp", laddr)
 			if err != nil {
 				log.Panic(err)
 				os.Exit(-1)
@@ -97,4 +128,9 @@ func main() {
 		},
 	}
 	app.Run(os.Args)
+}
+
+func consulCheck(w http.ResponseWriter, r *http.Request) {
+	//log.Info("Consul Health Check!")
+	fmt.Fprintln(w, "consulCheck")
 }

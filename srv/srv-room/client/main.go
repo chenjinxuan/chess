@@ -16,7 +16,7 @@ import (
 var (
 	target = "192.168.40.157:20001"
 	serviceId = "room-1"
-	//target    = "192.168.40.157:30001"
+	//target    = "192.168.40.157:20002"
 	//serviceId = "room-2"
 	userId = flag.Int("uid", 0, "user id")
 )

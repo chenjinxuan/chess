@@ -55,14 +55,14 @@ func main() {
 			Cfg.Address = c.String("address")
 			Cfg.Port = c.Int("port")
 
-			// TODO 从consul读取配置，初始化数据库连接
+			// 从consul读取配置，初始化数据库连接
 			err := consul.InitConsulClientViaEnv()
 			if err != nil {
 				panic(err)
 			}
 
 			// consul 服务注册
-			err = services.Register(c.String("service-id"), define.SRV_NAME_CENTRE, c.String("address"), c.Int("port"), c.Int("port")+10, []string{"master"})
+			err = services.Register(c.String("service-id"), define.SRV_NAME_CENTRE, c.String("address"), c.Int("port"), c.Int("port")+100, []string{"master"})
 			if err != nil {
 				panic(err)
 			}
@@ -77,7 +77,7 @@ func main() {
 
 			// consul 健康检查
 			http.HandleFunc("/check", consulCheck)
-			go http.ListenAndServe(fmt.Sprintf(":%d", c.Int("port")+10), nil)
+			go http.ListenAndServe(fmt.Sprintf(":%d", c.Int("port")+100), nil)
 
 			// grpc监听
 			laddr := fmt.Sprintf(":%d", c.Int("port"))

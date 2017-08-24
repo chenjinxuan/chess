@@ -240,6 +240,19 @@ message RoomPlayerReconnectAck{
     TableInfo table = 2;
 }
 
+// 2120, 牌桌聊天消息回复
+message RoomTableChatAck{
+    string id = 1;
+    bytes body = 2;
+    int64 offset = 3;
+}
+// 2121, 牌桌发送聊天消息
+message RoomTableChatReq{
+    BaseReq base_req = 1;
+    string id = 2;
+    bytes body = 3;
+}
+
 message PotInfo{
     int32 pot = 1;
     repeated int32 ps = 2;

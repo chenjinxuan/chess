@@ -3,6 +3,8 @@ package texas_holdem
 import (
 	"chess/common/define"
 	"chess/common/log"
+	"golang.org/x/net/context"
+	"chess/common/services"
 	pb "chess/srv/srv-room/proto"
 	"chess/srv/srv-room/registry"
 	"chess/srv/srv-room/signal"
@@ -103,6 +105,17 @@ func NewTable(rid, max, sb, bb, minC, maxC int) *Table {
 		}
 	}()
 
+	// chat 注册一个EndPoint
+	conn, sid := services.GetService2(define.SRV_NAME_CHAT)
+	if conn == nil {
+		log.Error("cannot get chat service:", sid)
+	}
+	cli := pb.NewChatServiceClient(conn)
+	_, err := cli.Reg(context.Background(), &pb.Chat_Id{Id: table.Id})
+	if err != nil {
+		log.Errorf("Chat service cli.Reg: %v", err)
+	}
+
 	return table
 }
 
@@ -143,7 +156,7 @@ func (t *Table) AddBystander(p *Player) {
 	t.Bystanders = append(t.Bystanders, p)
 }
 
-func (t *Table) DelBystander(p *Player) {
+func (t *Table) DelBystander(p *Player, checkExit bool) {
 	if p == nil {
 		return
 	}
@@ -154,6 +167,15 @@ func (t *Table) DelBystander(p *Player) {
 	for k, v := range t.Bystanders {
 		if v.Id == p.Id {
 			t.Bystanders = append(t.Bystanders[:k], t.Bystanders[k+1:]...)
+
+			if t.N == 0 && len(t.Bystanders) == 0 && checkExit {
+				log.Debugf("(%s)牌桌上已无玩家，销毁之！", t.Id)
+				DelTable(t.Id)
+				select {
+				case t.exitChan <- 0:
+				default:
+				}
+			}
 			return
 		}
 	}
@@ -183,7 +205,7 @@ func (t *Table) AddPlayer(p *Player) int {
 	return p.Pos
 }
 
-func (t *Table) DelPlayer(p *Player) {
+func (t *Table) DelPlayer(p *Player, checkExit bool) {
 	if p == nil || p.Pos == 0 {
 		return
 	}
@@ -197,7 +219,7 @@ func (t *Table) DelPlayer(p *Player) {
 		t.remain--
 	}
 
-	if t.N == 0 {
+	if t.N == 0 && len(t.Bystanders) == 0 && checkExit {
 		log.Debugf("(%s)牌桌上已无玩家，销毁之！", t.Id)
 		DelTable(t.Id)
 		select {
