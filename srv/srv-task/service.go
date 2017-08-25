@@ -1,16 +1,14 @@
 package main
 
 import (
-"chess/common/config"
 "chess/common/define"
 "chess/common/log"
-"chess/models"
-"chess/srv/srv-auth/redis"
 "errors"
 "golang.org/x/net/context"
 "regexp"
-"strconv"
 . "chess/srv/srv-task/proto"
+"chess/srv/srv-task/redis"
+    "encoding/json"
 )
 
 var (
@@ -28,9 +26,17 @@ func (s *server) init() {
 
 
 func (s *server) GameOver(ctx context.Context,args *GameInfoArgs) (*BaseRes,error){
+    log.Debug("gameOver receive.")
      //判断数据是否是否收到
     if args.Winner != 0 {
-	go s.loopProcessing(args)
+	//存入redis 队列
+	dataByte,err:=json.Marshal(args)
+	if err != nil {
+	    log.Errorf(" GameOver err %s",err)
+	    return  &BaseRes{Ret:0,Msg:"recive fail."},err
+	}
+	data:=string(dataByte)
+         task_redis.Redis.Task.Lpush(define.TaskLoopHandleGameOverRedisKey,data)
 	return &BaseRes{Ret:1,Msg:""},nil
 	
     }
@@ -38,19 +44,20 @@ func (s *server) GameOver(ctx context.Context,args *GameInfoArgs) (*BaseRes,erro
 }
 
 func (s *server) PlayerEvent(ctx context.Context,args *PlayerActionArgs)(*BaseRes,error){
+    log.Debug("PlayerEvent receive.")
     //判断数据是否是否收到
     if args.Id != 0 {
-	go s.loopProcessing(args)
+	//存入redis 队列
+	dataByte,err:=json.Marshal(args)
+	if err != nil {
+	    log.Errorf("PlayerEvent err %s",err)
+	    return  &BaseRes{Ret:0,Msg:"recive fail."},err
+	}
+	data:=string(dataByte)
+	task_redis.Redis.Task.Lpush(define.TaskLoopHandlePlayerEventRedisKey,data)
 	return &BaseRes{Ret:1,Msg:""},nil
-
     }
     return  &BaseRes{Ret:0,Msg:"recive fail."},nil
 }
 
-func (s *server) loopProcessing(args *GameInfoArgs) {
-    
-}
 
-func ()  {
-    
-}

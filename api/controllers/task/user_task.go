@@ -10,11 +10,7 @@ import (
     "database/sql"
     "chess/common/log"
 )
-var (
-    TodayTask= 1
-    WeekTask = 2
-    permanentTask = 3
-)
+
 type ReceiveTaskRewardParams struct {
     TaskId int `form:"task_id"  description:"任务id"`
 }
@@ -63,12 +59,12 @@ func ReceiveTaskReward(c *gin.Context){
 	    }
 	    //判断类型//过期类型
 
-	    if v.TaskTypeExpireType == TodayTask{
+	    if v.TaskTypeExpireType == define.TodayTask{
 		if time.Unix(v.LastUpdate,0).Format(define.FormatDate) != t.Format(define.FormatDate){
 		break
 		}
 	    }
-	    if v.TaskTypeExpireType == WeekTask  {
+	    if v.TaskTypeExpireType == define.WeekTask  {
 		_,week1 := time.Unix(v.LastUpdate,0).ISOWeek()
 		_,week2 := t.ISOWeek()
 		if week1 != week2{
@@ -95,7 +91,7 @@ func ReceiveTaskReward(c *gin.Context){
     task.AlreadyCompleted = oldTask.AlreadyCompleted
     if err == sql.ErrNoRows {
 	//删除旧的任务
-	err = models.UserTask.RemoveByTaskId(UserId,oldTask)
+	err = models.UserTask.RemoveByTaskId(UserId,oldTask.TaskId)
 	if err != nil {
 	    log.Errorf("models.UserTask.RemoveByTaskId err %s" ,err)
 	    result.Msg = "delete fail ."
@@ -143,6 +139,104 @@ func ReceiveTaskReward(c *gin.Context){
     return
 }
 
+type ListResult struct {
+    define.BaseResult
+    Data models.UserTaskMongoModel `json:"data"`
+}
+// @Title 任务列表
+// @Description 任务列表
+// @Summary 任务列表
+// @Accept json
+// @Param   token     query    string   true        "token"
+// @Param   user_id     path    int   true        "user_id"
+// @Success 200 {object} c_task.ListResult
+// @router /task/{user_id}/list [get]
 func List(c *gin.Context) {
+    var result ListResult
+    UserId, err := strconv.Atoi(c.Param("user_id"))
+    if err != nil {
+	result.Msg = "bind params fail ."
+	c.JSON(http.StatusOK, result)
+	return
+    }
+    data,err :=models.UserTask.Get(UserId)
+    if err != nil{
+	log.Errorf("models.UserTask.Get err %s" ,err)
+	result.Msg = "get fail ."
+	c.JSON(http.StatusOK, result)
+	return
+    }
+    t := time.Now()
+    var reData []models.UserTaskModel
+    for  _,v :=range data.List{
+	//判断类型//过期类型
+	if v.TaskTypeExpireType == define.PermanentTask { //是否过期
+	    if  v.ExpireTime.Unix() <= int64(t.Unix()) {
+		//删除任务
+		err = models.UserTask.RemoveByTaskId(UserId,v.TaskId)
+		if err != nil {
+		    log.Errorf("remove user(%v) expire task(%v) fail (%s)",UserId,v.TaskId,err)
+		}
+		continue
+	    }
 
+	}
+	if v.TaskTypeExpireType == define.TodayTask{
+	if time.Unix(v.LastUpdate,0).Format(define.FormatDate) != t.Format(define.FormatDate){
+	    //重置今日任务
+	    task,err:=models.UserTask.GetById(v.TaskId)
+	    if err != nil {
+		log.Errorf("models.UserTask.GetById err %s" ,err)
+		result.Msg = "get fail ."
+		c.JSON(http.StatusOK, result)
+		return
+	    }
+	    err = resetTask(UserId,task,t)
+	    if err != nil {
+		log.Errorf("resetTask err %s" ,err)
+		result.Msg = "get fail ."
+		c.JSON(http.StatusOK, result)
+		return
+	    }
+	    reData = append(reData,task)
+	    continue
+	}
+	    reData =append(reData,v)
+	    continue
+    }
+	if v.TaskTypeExpireType == define.WeekTask  {
+	_,week1 := time.Unix(v.LastUpdate,0).ISOWeek()
+	_,week2 := t.ISOWeek()
+	if week1 != week2{
+	    //重置今日任务
+	    task,err:=models.UserTask.GetById(v.TaskId)
+	    if err != nil {
+
+	    }
+	    err = resetTask(UserId,task,t)
+	    if err != nil {
+		log.Errorf("resetTask err %s" ,err)
+		result.Msg = "get fail ."
+		c.JSON(http.StatusOK, result)
+		return
+	    }
+	    reData = append(reData,task)
+	    continue
+
+		}
+	}
+	reData = append(reData,v)
+    }
+    result.Data.List =reData
+    result.Data.UserId = UserId
+    result.Ret = 1
+    c.JSON(http.StatusOK, result)
+    return
+}
+
+func resetTask(userId int,task models.UserTaskModel,t time.Time) error {
+
+    task.LastUpdate=t.Unix()
+    err := models.UserTask.UpdateOneTask(userId,task.TaskId,task)
+   return err
 }

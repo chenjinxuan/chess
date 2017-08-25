@@ -14,6 +14,7 @@ message GameInfoArgs {
     int32 match_type = 2;  //赛事类型
     int32 winner = 3; //胜者id
     repeated PlayerInfo players = 4;
+    int32 time = 5;  //时间戳
 }
 
 // 玩家信息
@@ -33,4 +34,5 @@ message PlayerActionArgs {
     int32 match_type = 2;
     int32 id = 3; //玩家id
     int32 type  = 4; //动作类型,比如1为打赏荷官
+    int32 time = 5;  //时间戳
 }

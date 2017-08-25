@@ -292,6 +292,95 @@
                 }
             }
         },
+        "/task/{user_id}/list": {
+            "get": {
+                "tags": [
+                    "/task/:user_id - 任务相关 "
+                ],
+                "summary": "任务列表",
+                "description": "任务列表",
+                "operationId": ".任务列表",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "token",
+                        "description": "token",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "user_id",
+                        "description": "user_id",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/c_task.ListResult"
+                        }
+                    }
+                }
+            }
+        },
+        "/task/{user_id}/receive": {
+            "get": {
+                "tags": [
+                    "/task/:user_id - 任务相关 "
+                ],
+                "summary": "任务达标领取",
+                "description": "任务达标领取",
+                "operationId": ".任务达标领取",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "token",
+                        "description": "token",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "task_id",
+                        "description": "task_id",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "path",
+                        "name": "user_id",
+                        "description": "user_id",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/c_task.ReceiveTaskRewardResult"
+                        }
+                    }
+                }
+            }
+        },
         "/user/{user_id}/checkin": {
             "get": {
                 "tags": [
@@ -917,6 +1006,9 @@
                     "type": "integer",
                     "format": "int64"
                 },
+                "msg": {
+                    "type": "string"
+                },
                 "need_captcha": {
                     "description": "是否需要验证码",
                     "type": "boolean"
@@ -924,6 +1016,11 @@
                 "refresh_token": {
                     "description": "当 Token 过期时，使用该 Token 获取一个新的",
                     "type": "string"
+                },
+                "ret": {
+                    "description": "1成功 0失败",
+                    "type": "integer",
+                    "format": "int64"
                 },
                 "token": {
                     "description": "请求授权的token",
@@ -1107,6 +1204,41 @@
                     "items": {
                         "$ref": "#/definitions/c_room.RoomsInfo"
                     }
+                },
+                "msg": {
+                    "type": "string"
+                },
+                "ret": {
+                    "description": "1成功 0失败",
+                    "type": "integer",
+                    "format": "int64"
+                }
+            }
+        },
+        "c_task.ListResult": {
+            "title": "ListResult",
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/models.UserTaskMongoModel"
+                },
+                "msg": {
+                    "type": "string"
+                },
+                "ret": {
+                    "description": "1成功 0失败",
+                    "type": "integer",
+                    "format": "int64"
+                }
+            }
+        },
+        "c_task.ReceiveTaskRewardResult": {
+            "title": "ReceiveTaskRewardResult",
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/models.UserTaskModel",
+                    "description": "替换已完成的任务"
                 },
                 "msg": {
                     "type": "string"
@@ -1443,6 +1575,113 @@
                     "description": "1成功 0失败",
                     "type": "integer",
                     "format": "int64"
+                }
+            }
+        },
+        "models.UserTaskModel": {
+            "title": "UserTaskModel",
+            "type": "object",
+            "properties": {
+                "already_completed": {
+                    "description": "任务已经完成数",
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "image": {
+                    "description": "任务图片",
+                    "type": "string"
+                },
+                "image_describe": {
+                    "description": "任务图片描述",
+                    "type": "string"
+                },
+                "is_win": {
+                    "description": "是非要赢才算",
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "last_update": {
+                    "description": "上次更新时间时间戳",
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "name": {
+                    "description": "任务名字",
+                    "type": "string"
+                },
+                "parent_id": {
+                    "description": "任务父级id",
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "required_describe": {
+                    "description": "任务要求描述",
+                    "type": "string"
+                },
+                "required_num": {
+                    "description": "任务要求数量",
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "reward_num": {
+                    "description": "奖品数量",
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "task_id": {
+                    "description": "任务id",
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "task_required_id": {
+                    "description": "任务要求id",
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "task_required_match_type": {
+                    "description": "任务要求赛事类型",
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "task_required_room_type": {
+                    "description": "任务要求房间类型",
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "task_reward_type_id": {
+                    "description": "任务奖品类型id 1金币",
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "task_type_expire_type": {
+                    "description": "任务过期类型",
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "task_type_id": {
+                    "description": "任务类型id",
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "task_type_name": {
+                    "description": "任务类型名字",
+                    "type": "string"
+                }
+            }
+        },
+        "models.UserTaskMongoModel": {
+            "title": "UserTaskMongoModel",
+            "type": "object",
+            "properties": {
+                "UserId": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "list": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.UserTaskModel"
+                    }
                 }
             }
         }

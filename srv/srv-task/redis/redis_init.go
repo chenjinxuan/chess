@@ -1,4 +1,4 @@
-package redis
+package task_redis
 
 import (
 	"chess/common/db"
@@ -10,13 +10,13 @@ var (
 )
 
 type RedisDB struct {
-	Login *db.Redis
+	Task *db.Redis
 }
 
-func InitAuthRedis() {
+func InitTaskRedis() {
 	var err error
-	Redis.Login, err = db.R("login")
+	Redis.Task, err = db.R("task")
 	if err != nil {
-		log.Warnf("db.R(\"login\") Error(%s)", err)
+		log.Warnf("db.R(\"Task\") Error(%s)", err)
 	}
 }

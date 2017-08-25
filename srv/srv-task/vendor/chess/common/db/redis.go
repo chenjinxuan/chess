@@ -192,3 +192,10 @@ func (r *Redis) Lpush(key string, val string) error {
 	_, err := conn.Do("LPUSH", key, val)
 	return err
 }
+func (r *Redis) Brpop(key string,time int) ([]string,error) {
+    conn := r.GetConn()
+    defer conn.Close()
+
+    res, err := redis.Strings(conn.Do("BRPOP", key, time))
+    return res,err
+}

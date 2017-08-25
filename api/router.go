@@ -119,7 +119,7 @@ func InitRouter() {
     	{
 		goodsRouter.GET("/list",c_goods.List)
     	}
-    	// @SubApi /task/:user_id - 用户相关 [/task/{user_id}/]
+    	// @SubApi /task/:user_id - 任务相关 [/task/{user_id}/]
 	taskRouter := router.Group("/task/:user_id")
 	{
 	    taskRouter.GET("/receive",auth.Login(config.C.TokenSecret),c_task.ReceiveTaskReward)
