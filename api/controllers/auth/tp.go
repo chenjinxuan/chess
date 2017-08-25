@@ -169,9 +169,9 @@ func TpLogin(c *gin.Context) {
 			log.Error(err)
 		}
 		//初始化用户任务系统
-		err =  user_init.TaskInit(userId)
+		err = user_init.TaskInit(userId)
 		if err != nil {
-		    log.Error(err)
+			log.Error(err)
 		}
 
 	} else {

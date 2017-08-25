@@ -195,11 +195,11 @@ func P_user_login_req(sess *Session, data []byte) []byte {
 		}
 	}(sess)
 	log.Debug("user_login_ack: ", pb.UserLoginAck{
-		BaseAck: &pb.BaseAck{Ret: 1, Msg: "ok"},
+		BaseAck:   &pb.BaseAck{Ret: 1, Msg: "ok"},
 		ServiceId: serviceId,
 	})
 	return packet.Pack(Code["user_login_ack"], &pb.UserLoginAck{
-		BaseAck: &pb.BaseAck{Ret: 1, Msg: "ok"},
+		BaseAck:   &pb.BaseAck{Ret: 1, Msg: "ok"},
 		ServiceId: serviceId,
 	})
 }

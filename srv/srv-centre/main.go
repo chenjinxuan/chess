@@ -113,7 +113,7 @@ func signalHandler(s *server) {
 	for {
 		msg := <-ch
 		switch msg {
-		case syscall.SIGTERM, syscall.SIGINT:// 关闭room
+		case syscall.SIGTERM, syscall.SIGINT: // 关闭room
 			fmt.Println("waiting for set server data to redis, please wait...")
 			s.Close()
 			fmt.Println("centre shutdown.")

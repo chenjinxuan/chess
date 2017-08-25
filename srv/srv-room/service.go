@@ -117,27 +117,27 @@ func (s *server) Stream(stream pb.RoomService_StreamServer) error {
 			if player.Table != nil {
 				// 2119, 断线重连回复
 				player.SendMessage(define.Code["room_player_reconnect_ack"], &pb.RoomPlayerReconnectAck{
-					BaseAck:   &pb.BaseAck{Ret: 1, Msg: "ok"},
-					Table:    player.Table.ToProtoMessage(),
+					BaseAck: &pb.BaseAck{Ret: 1, Msg: "ok"},
+					Table:   player.Table.ToProtoMessage(),
 				})
 			} else {
 				// 2119, 断线重连回复  退出牌桌
 				player.SendMessage(define.Code["room_player_reconnect_ack"], &pb.RoomPlayerReconnectAck{
-					BaseAck:   &pb.BaseAck{Ret: 0, Msg: "ok"},
+					BaseAck: &pb.BaseAck{Ret: 0, Msg: "ok"},
 				})
 			}
 
 			log.Debugf("玩家%d断线重连成功！", player.Id)
 		}
 
-	} else {// 正常登录
+	} else { // 正常登录
 
 		log.Debugf("玩家%d正常登录", userid)
 		player = NewPlayer(userid, stream)
 		registry.Register(player.Id, player)
 		// 2119, 断线重连回复  退出牌桌
 		player.SendMessage(define.Code["room_player_reconnect_ack"], &pb.RoomPlayerReconnectAck{
-			BaseAck:   &pb.BaseAck{Ret: 0, Msg: "ok"},
+			BaseAck: &pb.BaseAck{Ret: 0, Msg: "ok"},
 		})
 	}
 

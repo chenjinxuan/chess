@@ -451,7 +451,6 @@ func (m *UsersModel) UpdateMobile(mobile string) error {
 	return err
 }
 
-
 // Update Password
 func (m *UsersModel) UpdatePassword(password string) error {
 	sqlString := `UPDATE users SET
@@ -474,7 +473,6 @@ func (m *UsersModel) UpdatePassword(password string) error {
 	}
 	return err
 }
-
 
 // Update Avatar
 func (m *UsersModel) UpdateAvatar(avatar string) error {

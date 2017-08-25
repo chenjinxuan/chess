@@ -690,18 +690,12 @@ definitions:
         description: 是否是新用户
         type: integer
         format: int64
-      msg:
-        type: string
       need_captcha:
         description: 是否需要验证码
         type: boolean
       refresh_token:
         description: 当 Token 过期时，使用该 Token 获取一个新的
         type: string
-      ret:
-        description: 1成功 0失败
-        type: integer
-        format: int64
       token:
         description: 请求授权的token
         type: string
@@ -1118,6 +1112,9 @@ definitions:
         description: 任务已经完成数
         type: integer
         format: int64
+      expire_time:
+        $ref: '#/definitions/time.Time'
+        description: 当任务类型为永久任务的时候才有过期时间
       image:
         description: 任务图片
         type: string
@@ -1154,12 +1151,20 @@ definitions:
         description: 任务id
         type: integer
         format: int64
+      task_required_hand_level:
+        description: 手牌等级 0 不需要,1开始需要手牌等级
+        type: integer
+        format: int64
       task_required_id:
         description: 任务要求id
         type: integer
         format: int64
       task_required_match_type:
         description: 任务要求赛事类型
+        type: integer
+        format: int64
+      task_required_player_action:
+        description: 玩家动作要求,0无要求,1打赏荷官
         type: integer
         format: int64
       task_required_room_type:
@@ -1192,3 +1197,5 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/models.UserTaskModel'
+  time.Time:
+    type: object

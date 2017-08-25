@@ -6,10 +6,10 @@ import (
 	"os"
 	"time"
 
-	"chess/srv/srv-chat/kafka"
 	"chess/common/consul"
 	"chess/common/define"
 	"chess/common/services"
+	"chess/srv/srv-chat/kafka"
 
 	cli "gopkg.in/urfave/cli.v2"
 
@@ -106,7 +106,6 @@ func main() {
 			// consul 健康检查
 			http.HandleFunc("/check", consulCheck)
 			go http.ListenAndServe(fmt.Sprintf(":%d", c.Int("port")+100), nil)
-
 
 			// 监听
 			laddr := fmt.Sprintf(":%d", c.Int("port"))

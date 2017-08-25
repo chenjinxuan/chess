@@ -2,26 +2,27 @@ package main
 
 import (
 	"chess/common/log"
-	"golang.org/x/net/context"
 	pb "chess/srv/srv-centre/proto"
 	"chess/srv/srv-centre/redis"
-	"sync"
-	"errors"
 	"encoding/json"
-	redislib "github.com/garyburd/redigo/redis"
+	"errors"
 	"fmt"
+	redislib "github.com/garyburd/redigo/redis"
+	"golang.org/x/net/context"
+	"sync"
 )
+
 var ErrArgsInvalid = errors.New("args invalid")
 
 const (
 	RedisKey = "srv-centre-data"
 )
 
-type server struct{
+type server struct {
 	mu *sync.RWMutex `json:"-"`
 
 	Services map[string]map[int32]*pb.RoomInfo `json:"services"` // 对应room服的房间信息
-	Summary map[int32]*pb.RoomInfo `json:"summary"` // 全服
+	Summary  map[int32]*pb.RoomInfo            `json:"summary"`  // 全服
 }
 
 func (s *server) init() {
@@ -62,7 +63,7 @@ func (s *server) Close() {
 	}
 }
 
-func (s *server) RoomList(ctx context.Context, args *pb.RoomListArgs) (*pb.RoomListRes, error){
+func (s *server) RoomList(ctx context.Context, args *pb.RoomListArgs) (*pb.RoomListRes, error) {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
 
@@ -72,7 +73,7 @@ func (s *server) RoomList(ctx context.Context, args *pb.RoomListArgs) (*pb.RoomL
 }
 
 // 更新房间信息
-func (s *server) UpdateRoomInfo(ctx context.Context, args *pb.UpdateRoomInfoArgs) (*pb.BaseRes, error){
+func (s *server) UpdateRoomInfo(ctx context.Context, args *pb.UpdateRoomInfoArgs) (*pb.BaseRes, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
@@ -109,5 +110,5 @@ func (s *server) UpdateRoomInfo(ctx context.Context, args *pb.UpdateRoomInfoArgs
 		}
 	}
 
-	return &pb.BaseRes{Ret:1}, nil
+	return &pb.BaseRes{Ret: 1}, nil
 }

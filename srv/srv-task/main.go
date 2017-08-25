@@ -1,8 +1,6 @@
 package main
 
 import (
-	"net"
-	"os"
 	"chess/common/config"
 	"chess/common/consul"
 	"chess/common/db"
@@ -10,15 +8,16 @@ import (
 	"chess/common/log"
 	"chess/common/services"
 	"chess/models"
+	"chess/srv/srv-task/handler"
 	pb "chess/srv/srv-task/proto"
 	"chess/srv/srv-task/redis"
 	"fmt"
 	"google.golang.org/grpc"
 	cli "gopkg.in/urfave/cli.v2"
+	"net"
 	"net/http"
-        "chess/srv/srv-task/handler"
+	"os"
 )
-
 
 func main() {
 	app := &cli.App{
@@ -76,14 +75,14 @@ func main() {
 				os.Exit(-1)
 			}
 			log.Info("listening on ", lis.Addr())
-                        //初始化handler
+			//初始化handler
 			mgr := handler.GetTaskHandlerMgr()
 			if mgr == nil {
-			    log.Errorf("Get CouponGenMgr fail")
-			    os.Exit(-1)
+				log.Errorf("Get CouponGenMgr fail")
+				os.Exit(-1)
 			}
-		        mgr.Loop()
-		        mgr.SubLoop()
+			mgr.Loop()
+			mgr.SubLoop()
 			// 注册服务
 			s := grpc.NewServer()
 			ins := &server{}

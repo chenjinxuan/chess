@@ -8,7 +8,6 @@ import (
 
 var Db = new(DbConfig)
 
-
 type DbConfig struct {
 	MySQL MySQLConf `json:"mysql"`
 	Mongo MongoConf `json:"mongo"`

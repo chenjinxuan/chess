@@ -1,13 +1,12 @@
 package c_user
 
 import (
-
-	"github.com/gin-gonic/gin"
-	"net/http"
-	"strconv"
 	"chess/api/components/convert"
 	"chess/api/components/input"
 	"chess/api/components/profile"
+	"github.com/gin-gonic/gin"
+	"net/http"
+	"strconv"
 	//"chess/api/components/sms"
 	"chess/common/config"
 	"chess/common/define"
@@ -36,7 +35,6 @@ const (
 	Mobile_Binded    = -53 //该手机好已绑定第三方账号
 )
 
-
 type ProfileNicknameParams struct {
 	Nickname string `form:"nickname" json:"nickname" binding:"required" description:"昵称"`
 }
@@ -56,16 +54,14 @@ type ProfileGenderParams struct {
 
 type ProfileMobileResult struct {
 	define.BaseResult
-        DiamondBalance int `json:"diamond_balance" description:"钻石余额"`
-	Balance int `json:"balance" description:"金币余额"`
+	DiamondBalance int `json:"diamond_balance" description:"钻石余额"`
+	Balance        int `json:"balance" description:"金币余额"`
 }
 
 type ProfileAvatarResult struct {
 	define.BaseResult
 	Avatar string `json:"avatar" description:"头像链接"`
 }
-
-
 
 // @Title 更新昵称
 // @Description 更新昵称
@@ -111,7 +107,7 @@ func ProfileNicknameUpdate(c *gin.Context) {
 			c.JSON(http.StatusOK, result)
 			return
 		}
-		err = user.UpdateNickname(uid,helper.ConverUnsupportStr(nickname))
+		err = user.UpdateNickname(uid, helper.ConverUnsupportStr(nickname))
 
 		if err != nil {
 			result.Ret = 0
@@ -131,8 +127,6 @@ func ProfileNicknameUpdate(c *gin.Context) {
 		return
 	}
 }
-
-
 
 // @Title 绑定手机
 // @Description 绑定手机
@@ -193,8 +187,8 @@ func ProfileMobile(c *gin.Context) {
 				c.JSON(http.StatusOK, result)
 				return
 			}
-			var balance,diamond_balance int
-			balance, diamond_balance,err = models.UsersWallet.GetBalanceByMobile(form.MobileNumber)
+			var balance, diamond_balance int
+			balance, diamond_balance, err = models.UsersWallet.GetBalanceByMobile(form.MobileNumber)
 			log.Debug(balance)
 			if err != nil {
 				result.Ret = 0
@@ -202,7 +196,7 @@ func ProfileMobile(c *gin.Context) {
 				return
 			}
 			result.Balance = balance
-		    	result.DiamondBalance =diamond_balance
+			result.DiamondBalance = diamond_balance
 			result.Ret = Mobile_Exist
 			result.Msg = "this mobile is exist"
 			c.JSON(http.StatusOK, result)
@@ -236,7 +230,6 @@ func ProfileMobile(c *gin.Context) {
 	c.JSON(http.StatusOK, result)
 	return
 }
-
 
 // @Title 更新头像
 // @Description 更新头像
@@ -298,6 +291,7 @@ func ProfileAvatar(c *gin.Context) {
 	c.JSON(http.StatusOK, result)
 	return
 }
+
 // @Title 更新性别
 // @Description 更新性别
 // @Summary 更新性别
