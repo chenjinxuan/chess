@@ -253,6 +253,11 @@ message RoomTableChatReq{
     bytes body = 3;
 }
 
+// 2122, 自动坐下等待玩家数通报
+message RoomTableAutoSitdownNumAck{
+    int32 num = 1;
+}
+
 message PotInfo{
     int32 pot = 1;
     repeated int32 ps = 2;

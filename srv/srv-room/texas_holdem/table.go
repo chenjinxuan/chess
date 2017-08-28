@@ -40,6 +40,7 @@ type Table struct {
 	Button     int     // 庄家位置
 	Players    Players // 坐下的玩家
 	Bystanders Players // 站起的玩家
+	AutoSitdown []int // 自动坐下队列
 	Chips      []int32 // 玩家最终下注筹码，摊牌时为玩家最终获得筹码
 	Bet        int     // 当前回合 上一玩家下注额
 	N          int     // 当前牌桌玩家数
@@ -205,13 +206,33 @@ func (t *Table) AddPlayer(p *Player) int {
 	return p.Pos
 }
 
+func (t *Table) AddAutoSitdown(){
+
+
+}
+
+func (t *Table) DelAutoSitdown(){
+	if len(t.AutoSitdown) == 0 {
+		return
+	}
+	pid := t.AutoSitdown[0]
+	for _, v := range t.Bystanders {
+		if v.Id == pid  {
+			v.Sitdown()
+		}
+	}
+	t.lock.Lock()
+	t.AutoSitdown = t.AutoSitdown[1:]
+
+	t.lock.Unlock()
+}
+
 func (t *Table) DelPlayer(p *Player, checkExit bool) {
 	if p == nil || p.Pos == 0 {
 		return
 	}
 
 	t.lock.Lock()
-	defer t.lock.Unlock()
 
 	t.Players[p.Pos-1] = nil
 	t.N--
@@ -233,6 +254,12 @@ func (t *Table) DelPlayer(p *Player, checkExit bool) {
 		case t.EndChan <- 0:
 		default:
 		}
+	}
+	t.lock.Unlock()
+
+	// 自动坐下
+	if len(t.AutoSitdown) > 0 {
+		t.DelAutoSitdown()
 	}
 }
 
