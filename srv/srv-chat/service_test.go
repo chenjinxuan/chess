@@ -2,18 +2,18 @@ package main
 
 import (
 	. "chess/srv/srv-chat/proto"
-	"testing"
 	"io"
+	"testing"
 
+	"fmt"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
-	"fmt"
 	"time"
 )
 
 const (
 	address = "127.0.0.1:30001"
-	ChatId = "1"
+	ChatId  = "1"
 )
 
 var (
@@ -21,7 +21,7 @@ var (
 	err  error
 )
 
-func init(){
+func init() {
 	// Set up a connection to the server.
 	conn, err = grpc.Dial(address, grpc.WithInsecure())
 	if err != nil {
@@ -40,15 +40,14 @@ func TestServer_Reg(t *testing.T) {
 }
 
 func TestChat(t *testing.T) {
-	count:=10
+	count := 10
 
 	go recv(&Chat_Consumer{Id: ChatId}, count)
 	go recv(&Chat_Consumer{Id: ChatId}, count)
 
 	send(&Chat_Message{Id: ChatId, Body: []byte("Hello")}, count)
-	time.Sleep(1*time.Minute)
+	time.Sleep(1 * time.Minute)
 }
-
 
 func send(m *Chat_Message, count int) {
 	c := NewChatServiceClient(conn)

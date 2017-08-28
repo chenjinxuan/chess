@@ -13,7 +13,7 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
-    "time"
+	"time"
 )
 
 type TokenInfoParams struct {
@@ -65,7 +65,7 @@ func TokenInfo(c *gin.Context) {
 		loginData, err := auth.AuthLoginToken(post.Token, cConf.TokenSecret)
 		if err != nil {
 			log.Error(err)
-		    	result.Ret = define.AuthFailedStatus
+			result.Ret = define.AuthFailedStatus
 			result.Msg = auth.AuthFailed.Error()
 			c.JSON(http.StatusOK, result)
 			return
@@ -86,13 +86,13 @@ func TokenInfo(c *gin.Context) {
 			c.JSON(http.StatusOK, result)
 			return
 		}
-                //判断过期时间12小时
-	       now:=time.Now().Unix()
-	        if session.Token.Expire - now < 60*60*12 {
-		    result.Ret = define.AuthReToken
-		    result.Msg = define.AuthMsgMap[define.AuthReToken]
-		    c.JSON(http.StatusOK, result)
-		    return
+		//判断过期时间12小时
+		now := time.Now().Unix()
+		if session.Token.Expire-now < 60*60*12 {
+			result.Ret = define.AuthReToken
+			result.Msg = define.AuthMsgMap[define.AuthReToken]
+			c.JSON(http.StatusOK, result)
+			return
 		}
 		// TODO: 检查黑名单
 

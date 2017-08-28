@@ -6,6 +6,7 @@ import (
 	. "chess/srv/srv-chat/proto"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"github.com/Shopify/sarama"
 	"github.com/boltdb/bolt"
 	"golang.org/x/net/context"
@@ -16,7 +17,6 @@ import (
 	"sync/atomic"
 	"syscall"
 	"time"
-	"fmt"
 )
 
 var (
@@ -361,7 +361,6 @@ func (s *server) Unreg(ctx context.Context, p *Chat_Id) (*Chat_Nil, error) {
 	log.Debug("Delete EndPoint:", p.Id)
 	return OK, nil
 }
-
 
 func (s *server) Query(ctx context.Context, crange *Chat_ConsumeRange) (*Chat_List, error) {
 	ep := s.read_ep(crange.Id)

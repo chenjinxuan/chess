@@ -1,14 +1,14 @@
 package main
 
 import (
-	"time"
 	pb "chess/agent/proto"
 	. "chess/agent/types"
 	"chess/agent/utils"
-	"chess/common/log"
 	"chess/common/define"
+	"chess/common/log"
 	"chess/common/services"
 	"golang.org/x/net/context"
+	"time"
 )
 
 // PIPELINE #2: agent

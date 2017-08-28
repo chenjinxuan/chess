@@ -3,18 +3,19 @@ package config
 import (
 	. "chess/common/consul"
 	"chess/common/log"
-        "encoding/json"
+	"encoding/json"
 )
 
 var SrvAuth = new(SrvAuthConfig)
 var CAuth *SrvAuthConfig
+
 type SrvAuthConfig struct {
 	PublicConfig
 	DbConfig
 
 	ServerAliasName string //服务别名
 	RPCPort         string
-        Login           *Login           `json:"login"`
+	Login           *Login `json:"login"`
 }
 
 func (c *SrvAuthConfig) Import() error {
@@ -40,15 +41,15 @@ func (c *SrvAuthConfig) Import() error {
 	if err != nil {
 		return err
 	}
-	defaultStr,err:=ConsulClient.Key("srv_auth/default","")
+	defaultStr, err := ConsulClient.Key("srv_auth/default", "")
 	if err != nil {
-	return err
+		return err
 	}
-    	err = json.Unmarshal([]byte(defaultStr),&c)
+	err = json.Unmarshal([]byte(defaultStr), &c)
 	if err != nil {
-	    return err
+		return err
 	}
-	CAuth=c
+	CAuth = c
 	log.Debugf("SrvAuth config import success! [%+v]", *c)
 	return nil
 }

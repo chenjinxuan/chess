@@ -3,7 +3,6 @@ package texas_holdem
 import (
 	"chess/common/define"
 	"chess/common/log"
-	"golang.org/x/net/context"
 	"chess/common/services"
 	pb "chess/srv/srv-room/proto"
 	"chess/srv/srv-room/registry"
@@ -11,6 +10,7 @@ import (
 	"fmt"
 	"github.com/golang/protobuf/proto"
 	"github.com/satori/go.uuid"
+	"golang.org/x/net/context"
 	"sync"
 	"time"
 )

@@ -14,7 +14,6 @@ type SrvCentreConfig struct {
 	ServerAliasName string //服务别名
 }
 
-
 func (c *SrvCentreConfig) Import() error {
 	var err error
 
@@ -36,4 +35,3 @@ func (c *SrvCentreConfig) Import() error {
 	log.Debugf("SrvCentre config import success! [%+v]", *c)
 	return nil
 }
-

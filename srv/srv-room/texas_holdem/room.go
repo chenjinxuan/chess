@@ -161,7 +161,7 @@ func DelTable(tid string) {
 	}
 
 	// chat 注销 EndPoint
-	go func () {
+	go func() {
 		conn, sid := services.GetService2(define.SRV_NAME_CHAT)
 		if conn == nil {
 			log.Error("cannot get chat service:", sid)

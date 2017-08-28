@@ -1,13 +1,13 @@
 package c_room
 
 import (
+	grpcServer "chess/api/grpc"
+	pb "chess/api/proto"
 	"chess/common/define"
 	"chess/models"
 	"github.com/gin-gonic/gin"
-	"net/http"
-	grpcServer "chess/api/grpc"
-	pb "chess/api/proto"
 	"golang.org/x/net/context"
+	"net/http"
 )
 
 type RoomsResult struct {
@@ -15,12 +15,12 @@ type RoomsResult struct {
 	List []*RoomsInfo `json:"list"`
 }
 type RoomsInfo struct {
-	Id         int `json:"id"`
-	BigBlind   int `json:"big_blind" description:"大盲注"`
-	SmallBlind int `json:"small_blind" description:"小盲注"`
-	MinCarry   int `json:"min_carry" description:"最小携带筹码"`
-	MaxCarry   int `json:"max_carry" description:"最大携带筹码"`
-	Max        int `json:"max" description:"最大人数"`
+	Id         int   `json:"id"`
+	BigBlind   int   `json:"big_blind" description:"大盲注"`
+	SmallBlind int   `json:"small_blind" description:"小盲注"`
+	MinCarry   int   `json:"min_carry" description:"最小携带筹码"`
+	MaxCarry   int   `json:"max_carry" description:"最大携带筹码"`
+	Max        int   `json:"max" description:"最大人数"`
 	Online     int32 `json:"online" description:"在线人数"`
 }
 
@@ -39,8 +39,8 @@ func RoomsList(c *gin.Context) {
 		return
 
 	}
-    CentreClient := grpcServer.GetCentreGrpc()
-    roomInfo, err := CentreClient.RoomList(context.Background(), &pb.RoomListArgs{})
+	CentreClient := grpcServer.GetCentreGrpc()
+	roomInfo, err := CentreClient.RoomList(context.Background(), &pb.RoomListArgs{})
 	for _, v := range data {
 		var info = new(RoomsInfo)
 		info.Id = v.Id
@@ -51,9 +51,9 @@ func RoomsList(c *gin.Context) {
 		info.Max = v.Max
 
 		//去游戏付获取在线人数
-	    if num,ok:=roomInfo.List[int32(info.Id)]; ok{
-		info.Online = num.PlayerNumber
-	    }
+		if num, ok := roomInfo.List[int32(info.Id)]; ok {
+			info.Online = num.PlayerNumber
+		}
 
 		result.List = append(result.List, info)
 	}

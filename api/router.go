@@ -9,16 +9,16 @@ import (
 	"chess/api/components/auth"
 	"chess/api/components/middleware"
 	"chess/api/controllers/auth"
+	"chess/api/controllers/charge"
 	"chess/api/controllers/debug"
+	"chess/api/controllers/goods"
 	"chess/api/controllers/room"
+	"chess/api/controllers/task"
 	"chess/api/controllers/user"
 	"chess/common/config"
 	"github.com/gin-gonic/gin"
 	"github.com/itsjamie/gin-cors"
 	"time"
-    "chess/api/controllers/charge"
-    "chess/api/controllers/goods"
-    "chess/api/controllers/task"
 )
 
 func InitRouter() {
@@ -85,16 +85,16 @@ func InitRouter() {
 	// @SubApi /user/:user_id - 用户相关 [/user/{user_id}/]
 	userRouter := router.Group("/user/:user_id")
 	{
-	    	userRouter.GET("/logout",auth.Login(config.C.TokenSecret) ,c_user.Logout)                        // 登出，销毁token
+		userRouter.GET("/logout", auth.Login(config.C.TokenSecret), c_user.Logout) // 登出，销毁token
 		userRouter.GET("/info", auth.Login(config.C.TokenSecret), c_user.GetUserInfo)
-	    	userRouter.GET("/detail", auth.Login(config.C.TokenSecret), c_user.GetUserInfoDetail)
+		userRouter.GET("/detail", auth.Login(config.C.TokenSecret), c_user.GetUserInfoDetail)
 		userRouter.GET("/checkin", auth.Login(config.C.TokenSecret), c_user.Checkin)
 		userRouter.POST("/password/reset", auth.Login(config.C.TokenSecret), c_user.PasswordReset)
-	        userRouter.GET("/exchange",auth.Login(config.C.TokenSecret),c_user.Exchange)
-	    	userRouter.POST("/profile/nickname", auth.Login(config.C.TokenSecret), c_user.ProfileNicknameUpdate)
-	    userRouter.POST("/profile/mobile", auth.Login(config.C.TokenSecret), c_user.ProfileMobile)
-	    userRouter.POST("/profile/avatar", auth.Login(config.C.TokenSecret), c_user.ProfileAvatar)
-	    userRouter.POST("/profile/gender", auth.Login(config.C.TokenSecret), c_user.ProfileGender)
+		userRouter.GET("/exchange", auth.Login(config.C.TokenSecret), c_user.Exchange)
+		userRouter.POST("/profile/nickname", auth.Login(config.C.TokenSecret), c_user.ProfileNicknameUpdate)
+		userRouter.POST("/profile/mobile", auth.Login(config.C.TokenSecret), c_user.ProfileMobile)
+		userRouter.POST("/profile/avatar", auth.Login(config.C.TokenSecret), c_user.ProfileAvatar)
+		userRouter.POST("/profile/gender", auth.Login(config.C.TokenSecret), c_user.ProfileGender)
 
 	}
 	// @SubApi /verify - 验证码相关 [/verify/]
@@ -109,21 +109,21 @@ func InitRouter() {
 	{
 		clientRouter.GET("/upgrade", nil)
 	}
-    	// @SubApi /charge - 充值相关 [/charge/]
-        chargeRouter := router.Group("/charge")
-    	{
-		chargeRouter.GET("/charge_goods/list",c_charge.ChargeGoodsList)
-    	}
-    	// @SubApi /goods - 商品相关 [/goods/]
-        goodsRouter := router.Group("/goods")
-    	{
-		goodsRouter.GET("/list",c_goods.List)
-    	}
-    	// @SubApi /task/:user_id - 用户相关 [/task/{user_id}/]
+	// @SubApi /charge - 充值相关 [/charge/]
+	chargeRouter := router.Group("/charge")
+	{
+		chargeRouter.GET("/charge_goods/list", c_charge.ChargeGoodsList)
+	}
+	// @SubApi /goods - 商品相关 [/goods/]
+	goodsRouter := router.Group("/goods")
+	{
+		goodsRouter.GET("/list", c_goods.List)
+	}
+	// @SubApi /task/:user_id - 任务相关 [/task/{user_id}/]
 	taskRouter := router.Group("/task/:user_id")
 	{
-	    taskRouter.GET("/receive",auth.Login(config.C.TokenSecret),c_task.ReceiveTaskReward)
-	    taskRouter.GET("/list",auth.Login(config.C.TokenSecret),c_task.List)
+		taskRouter.GET("/receive", auth.Login(config.C.TokenSecret), c_task.ReceiveTaskReward)
+		taskRouter.GET("/list", auth.Login(config.C.TokenSecret), c_task.List)
 	}
 	//router.GET("/testquery",controllers.Get)
 	router.Run(config.Api.Port)

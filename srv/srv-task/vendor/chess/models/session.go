@@ -10,8 +10,9 @@ import (
 )
 
 const (
-	MongoDBStr      = "chess"
-	MongoColSession = "session"
+	MongoDBStr       = "chess"
+	MongoColSession  = "session"
+	MongoColUserTask = "user_task"
 )
 
 var Session = new(SessionModel)

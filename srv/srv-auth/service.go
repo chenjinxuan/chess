@@ -69,7 +69,6 @@ func (s *server) RefreshToken(ctx context.Context, args *RefreshTokenArgs) (*Ref
 			Msg: "ok",
 		}, nil
 	}
-
 	return &RefreshTokenRes{Ret: 1,
 		Msg:          "ok",
 		UserId:       int32(result.UserId),

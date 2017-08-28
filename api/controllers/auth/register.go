@@ -10,10 +10,10 @@ import (
 	//"chess/api/components/sms"
 	"chess/api/components/user_init"
 	grpcServer "chess/api/grpc"
-	"chess/common/helper"
-	"chess/common/log"
 	pb "chess/api/proto"
 	"chess/common/config"
+	"chess/common/helper"
+	"chess/common/log"
 	"chess/models"
 	"golang.org/x/net/context"
 )
@@ -143,10 +143,10 @@ func RegisterMobile(c *gin.Context) {
 			if err != nil {
 				log.Error(err)
 			}
-		        //初始化用户任务系统
-		        err =  user_init.TaskInit(user.Id)
+			//初始化用户任务系统
+			err = user_init.TaskInit(user.Id)
 			if err != nil {
-			    log.Error(err)
+				log.Error(err)
 			}
 		}()
 

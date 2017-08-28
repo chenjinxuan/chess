@@ -3,16 +3,16 @@ package texas_holdem
 import (
 	"chess/common/define"
 	"chess/common/log"
+	"chess/common/services"
 	"chess/models"
 	"chess/srv/srv-room/misc/packet"
 	pb "chess/srv/srv-room/proto"
 	"chess/srv/srv-room/registry"
 	"errors"
 	"github.com/golang/protobuf/proto"
-	"time"
 	"golang.org/x/net/context"
 	"io"
-	"chess/common/services"
+	"time"
 )
 
 const (
@@ -184,7 +184,7 @@ func (p *Player) SubscribeChat() {
 	}
 	cli := pb.NewChatServiceClient(conn)
 	ctx, cancel := context.WithCancel(context.Background())
-	stream, err := cli.Subscribe(ctx, &pb.Chat_Consumer{Id:table.Id, From:-1})
+	stream, err := cli.Subscribe(ctx, &pb.Chat_Consumer{Id: table.Id, From: -1})
 	if err != nil {
 		log.Error("c.Subscribe error: ", err)
 		return
@@ -202,9 +202,9 @@ func (p *Player) SubscribeChat() {
 		}
 
 		p.SendMessage(define.Code["room_table_chat_ack"], &pb.RoomTableChatAck{
-			Id:   message.Id,
-			Body:message.Body,
-			Offset:message.Offset,
+			Id:     message.Id,
+			Body:   message.Body,
+			Offset: message.Offset,
 		})
 	}
 }

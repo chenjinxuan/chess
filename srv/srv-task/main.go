@@ -1,9 +1,6 @@
 package main
 
 import (
-	"net"
-	"os"
-
 	"chess/common/config"
 	"chess/common/consul"
 	"chess/common/db"
@@ -11,32 +8,31 @@ import (
 	"chess/common/log"
 	"chess/common/services"
 	"chess/models"
-	pb "chess/srv/srv-auth/proto"
-	"chess/srv/srv-auth/redis"
+	"chess/srv/srv-task/handler"
+	pb "chess/srv/srv-task/proto"
+	"chess/srv/srv-task/redis"
 	"fmt"
 	"google.golang.org/grpc"
 	cli "gopkg.in/urfave/cli.v2"
+	"net"
 	"net/http"
-)
-
-const (
-	SERVICE_NAME = "authserver"
+	"os"
 )
 
 func main() {
 	app := &cli.App{
-		Name:    "auth",
-		Usage:   "auth service",
+		Name:    "task",
+		Usage:   "task service",
 		Version: "2.0",
 		Flags: []cli.Flag{
 			&cli.IntFlag{
 				Name:  "port",
-				Value: 50011,
+				Value: 60011,
 				Usage: "listening address:port",
 			},
 			&cli.StringFlag{
 				Name:  "service-id",
-				Value: "auth-1",
+				Value: "task-1",
 				Usage: "service id",
 			},
 			&cli.StringFlag{
@@ -51,7 +47,7 @@ func main() {
 			if err != nil {
 				panic(err)
 			}
-			err = config.SrvAuth.Import()
+			err = config.SrvTask.Import()
 			if err != nil {
 				panic(err)
 			}
@@ -60,10 +56,10 @@ func main() {
 			db.InitMySQL()
 			db.InitMongo()
 			db.InitRedis()
-			redis.InitAuthRedis()
+			task_redis.InitTaskRedis()
 			models.Init()
 
-			err = services.Register(c.String("service-id"), define.SRV_NAME_AUTH, c.String("address"), c.Int("port"), c.Int("port")+10, []string{"master"})
+			err = services.Register(c.String("service-id"), define.SRV_NAME_TASK, c.String("address"), c.Int("port"), c.Int("port")+10, []string{"master"})
 			if err != nil {
 				log.Error(err)
 				os.Exit(-1)
@@ -79,12 +75,19 @@ func main() {
 				os.Exit(-1)
 			}
 			log.Info("listening on ", lis.Addr())
-
+			//初始化handler
+			mgr := handler.GetTaskHandlerMgr()
+			if mgr == nil {
+				log.Errorf("Get CouponGenMgr fail")
+				os.Exit(-1)
+			}
+			mgr.Loop()
+			mgr.SubLoop()
 			// 注册服务
 			s := grpc.NewServer()
 			ins := &server{}
 			ins.init()
-			pb.RegisterAuthServiceServer(s, ins)
+			pb.RegisterTaskServiceServer(s, ins)
 			// 开始服务
 			return s.Serve(lis)
 		},
