@@ -5,26 +5,26 @@ package proto;
 
 service TaskService {
     // 获取所有房间信息
-    rpc GameOver(GameInfoArgs) returns (BaseRes){}
+    rpc GameOver(GameInfoArgs) returns (TaskRes){}
     // 更新房间信息
-    rpc PlayerEvent(PlayerActionArgs) returns (BaseRes){}
+    rpc PlayerEvent(PlayerActionArgs) returns (TaskRes){}
 }
 message GameInfoArgs {
     int32 room_type = 1; //房间场类型
     int32 match_type = 2;  //赛事类型
     int32 winner = 3; //胜者id
-    repeated PlayerInfo players = 4;
+    repeated TaskPlayerInfo players = 4;
     int32 time = 5;  //时间戳
 }
 
 // 玩家信息
-message PlayerInfo{
+message TaskPlayerInfo{
     int32 id = 1; // 玩家id
     int32 hand_level = 2;  // 牌型
     int32 is_allin = 3; //是否全下0否1是
     int32 all_bet = 4; //全部下注
 }
-message BaseRes{
+message TaskRes{
     int32 ret = 1;
     string msg = 2;
 }

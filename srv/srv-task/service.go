@@ -24,7 +24,7 @@ type server struct {
 func (s *server) init() {
 }
 
-func (s *server) GameOver(ctx context.Context, args *GameInfoArgs) (*BaseRes, error) {
+func (s *server) GameOver(ctx context.Context, args *GameInfoArgs) (*TaskRes, error) {
 	log.Debug("gameOver receive.")
 	//判断数据是否是否收到
 	if args.Winner != 0 {
@@ -32,17 +32,17 @@ func (s *server) GameOver(ctx context.Context, args *GameInfoArgs) (*BaseRes, er
 		dataByte, err := json.Marshal(args)
 		if err != nil {
 			log.Errorf(" GameOver err %s", err)
-			return &BaseRes{Ret: 0, Msg: "recive fail."}, err
+			return &TaskRes{Ret: 0, Msg: "recive fail."}, err
 		}
 		data := string(dataByte)
 		task_redis.Redis.Task.Lpush(define.TaskLoopHandleGameOverRedisKey, data)
-		return &BaseRes{Ret: 1, Msg: ""}, nil
+		return &TaskRes{Ret: 1, Msg: ""}, nil
 
 	}
-	return &BaseRes{Ret: 0, Msg: "recive fail."}, nil
+	return &TaskRes{Ret: 0, Msg: "recive fail."}, nil
 }
 
-func (s *server) PlayerEvent(ctx context.Context, args *PlayerActionArgs) (*BaseRes, error) {
+func (s *server) PlayerEvent(ctx context.Context, args *PlayerActionArgs) (*TaskRes, error) {
 	log.Debug("PlayerEvent receive.")
 	//判断数据是否是否收到
 	if args.Id != 0 {
@@ -50,11 +50,11 @@ func (s *server) PlayerEvent(ctx context.Context, args *PlayerActionArgs) (*Base
 		dataByte, err := json.Marshal(args)
 		if err != nil {
 			log.Errorf("PlayerEvent err %s", err)
-			return &BaseRes{Ret: 0, Msg: "recive fail."}, err
+			return &TaskRes{Ret: 0, Msg: "recive fail."}, err
 		}
 		data := string(dataByte)
 		task_redis.Redis.Task.Lpush(define.TaskLoopHandlePlayerEventRedisKey, data)
-		return &BaseRes{Ret: 1, Msg: ""}, nil
+		return &TaskRes{Ret: 1, Msg: ""}, nil
 	}
-	return &BaseRes{Ret: 0, Msg: "recive fail."}, nil
+	return &TaskRes{Ret: 0, Msg: "recive fail."}, nil
 }

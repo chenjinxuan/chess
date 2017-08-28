@@ -40,8 +40,8 @@ func (m *TaskHandlerManager) Init() (err error) {
 	log.Info("init TaskHandler ,manager ...")
 	m.TaskHandlerGameOverRedisKey = define.TaskLoopHandleGameOverRedisKey
 	m.TaskHandlerPlayerEventRedisKey = define.TaskLoopHandlePlayerEventRedisKey
-	m.GameOver = make(chan GameInfoArgs, 1)
-	m.PlayerEvent = make(chan PlayerActionArgs, 1)
+	m.GameOver = make(chan GameInfoArgs, 2)
+	m.PlayerEvent = make(chan PlayerActionArgs, 2)
 	err = m.initTaskRequired()
 	if err != nil {
 		log.Errorf("init taskrequired fail .(%s)", err)
@@ -142,26 +142,37 @@ func (m *TaskHandlerManager) Loop() {
 							log.Errorf("get user(%v) tasklist fail (%s)", v.Id, err)
 							continue
 						}
+					    	var newTaskList models.UserTaskMongoModel
+					        newTaskList.UserId = int(v.Id)
 						for _, taskInfo := range taskList.List {
+
 							if taskInfo.TaskRequiredRoomType != 0 { //是否要求房间场次类型
 								if taskInfo.TaskRequiredRoomType != int(gameInfo.RoomType) {
+								        newTaskList.List =append(newTaskList.List,taskInfo)
 									continue
 								}
 
 							}
 							if taskInfo.TaskRequiredMatchType != 0 { //是否要求赛事类型
 								if taskInfo.TaskRequiredMatchType != int(gameInfo.MatchType) {
+								    newTaskList.List =append(newTaskList.List,taskInfo)
 									continue
 								}
 							}
 
-							if taskInfo.IsWin != 0 { //是否需要胜利
-								if v.Id != gameInfo.Winner {
+							if taskInfo.IsWin != define.RequiredCommon { //是否需要胜利
+								if v.Id != gameInfo.Winner && taskInfo.IsWin == define.RequiredWin{
+								    newTaskList.List =append(newTaskList.List,taskInfo)
 									continue
 								}
+							}else if taskInfo.IsWin == define.RequiredTotalBalance {
+							    newTaskList.List =append(newTaskList.List,taskInfo)
+							        continue
 							}
+
 							if taskInfo.TaskRequiredHandLevel != 0 { //是否需要手牌等级
 								if int(v.HandLevel) != taskInfo.TaskRequiredHandLevel {
+								    newTaskList.List =append(newTaskList.List,taskInfo)
 									continue
 								}
 							}
@@ -178,6 +189,7 @@ func (m *TaskHandlerManager) Loop() {
 							}
 							if taskInfo.TaskTypeExpireType == define.TodayTask {
 								if time.Unix(taskInfo.LastUpdate, 0).Format(define.FormatDate) != overTime.Format(define.FormatDate) {
+								    newTaskList.List =append(newTaskList.List,taskInfo)
 									continue
 								}
 							}
@@ -185,6 +197,7 @@ func (m *TaskHandlerManager) Loop() {
 								_, week1 := time.Unix(taskInfo.LastUpdate, 0).ISOWeek()
 								_, week2 := overTime.ISOWeek()
 								if week1 != week2 {
+								    newTaskList.List =append(newTaskList.List,taskInfo)
 									continue
 								}
 							}
@@ -192,11 +205,16 @@ func (m *TaskHandlerManager) Loop() {
 							taskInfo.LastUpdate = int64(gameInfo.Time)
 							taskInfo.AlreadyCompleted = taskInfo.AlreadyCompleted + 1
 
-							err = models.UserTask.UpdateOneTask(taskList.UserId, taskInfo.TaskId, taskInfo)
-							if err != nil {
-								log.Errorf("update user(%v) taskid(%v) fail  (%s)", taskList.UserId, taskInfo.TaskId, err)
-							}
+						    newTaskList.List =append(newTaskList.List,taskInfo)
+							//err = models.UserTask.UpdateOneTask(taskList.UserId, taskInfo.TaskId, taskInfo)
+							//if err != nil {
+							//	log.Errorf("update user(%v) taskid(%v) fail  (%s)", taskList.UserId, taskInfo.TaskId, err)
+							//}
 						}
+					       err=models.UserTask.Upsert(int(v.Id),newTaskList)
+					    if err != nil {
+					    	log.Errorf("update user(%v)  fail  (%s)", taskList.UserId,  err)
+					    }
 					}
 
 				}(_gameInfo)
@@ -210,11 +228,15 @@ func (m *TaskHandlerManager) Loop() {
 						log.Errorf("get user(%v) tasklist fail (%s)", playAction.Id, err)
 					}
 					for _, taskInfo := range taskList.List {
-						if taskInfo.TaskRequiredPlayerAction != 0 {
-							if taskInfo.TaskRequiredPlayerAction != int(playAction.Type) {
-								continue
-							}
+					        //不是动作类型的任务直接跳过
+						if taskInfo.TaskRequiredPlayerAction == 0 {
+							continue
 						}
+
+					        if taskInfo.TaskRequiredPlayerAction != int(playAction.Type) {
+						        continue
+						}
+
 						if taskInfo.TaskRequiredRoomType != 0 { //是否要求房间场次类型
 							if taskInfo.TaskRequiredRoomType != int(playAction.RoomType) {
 								continue

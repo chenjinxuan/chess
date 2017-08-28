@@ -59,7 +59,16 @@ func ReceiveTaskReward(c *gin.Context) {
 				break
 			}
 			//判断类型//过期类型
-
+		    if v.TaskTypeExpireType == define.PermanentTask { //是否过期
+			if v.ExpireTime.Unix() <= int64(t.Unix()) {
+			    //删除任务
+			    err = models.UserTask.RemoveByTaskId(UserId, v.TaskId)
+			    if err != nil {
+				log.Errorf("remove user(%v) expire task(%v) fail (%s)", UserId, v.TaskId, err)
+			    }
+			    break
+			}
+		    }
 			if v.TaskTypeExpireType == define.TodayTask {
 				if time.Unix(v.LastUpdate, 0).Format(define.FormatDate) != t.Format(define.FormatDate) {
 					break
@@ -170,6 +179,26 @@ func List(c *gin.Context) {
 	t := time.Now()
 	var reData []models.UserTaskModel
 	for _, v := range data.List {
+		if v.IsWin == define.RequiredTotalBalance { //金币余额类型的任务,,查出现有的金币和任务里已达到的金额对比,如果金额增加则更新,减少则不变
+		    balance,_,err:=models.UsersWallet.GetBalance(UserId)
+		    if err != nil {
+			log.Errorf("models.UsersWallet.GetBalance err %s", err)
+			result.Msg = "get balance fail ."
+			c.JSON(http.StatusOK, result)
+			return
+		    }
+		    if balance >= v.AlreadyCompleted{
+			v.AlreadyCompleted=balance
+			err = resetTask(UserId, v, t)
+			if err != nil {
+			    log.Errorf("resetTask err %s", err)
+			    result.Msg = "get fail ."
+			    c.JSON(http.StatusOK, result)
+			    return
+			}
+		    }
+
+		}
 		//判断类型//过期类型
 		if v.TaskTypeExpireType == define.PermanentTask { //是否过期
 			if v.ExpireTime.Unix() <= int64(t.Unix()) {
@@ -181,8 +210,7 @@ func List(c *gin.Context) {
 				continue
 			}
 
-		}
-		if v.TaskTypeExpireType == define.TodayTask {
+		}else if v.TaskTypeExpireType == define.TodayTask {
 			if time.Unix(v.LastUpdate, 0).Format(define.FormatDate) != t.Format(define.FormatDate) {
 				//重置今日任务
 				task, err := models.UserTask.GetById(v.TaskId)
@@ -204,8 +232,7 @@ func List(c *gin.Context) {
 			}
 			reData = append(reData, v)
 			continue
-		}
-		if v.TaskTypeExpireType == define.WeekTask {
+		}else if v.TaskTypeExpireType == define.WeekTask {
 			_, week1 := time.Unix(v.LastUpdate, 0).ISOWeek()
 			_, week2 := t.ISOWeek()
 			if week1 != week2 {
@@ -226,6 +253,7 @@ func List(c *gin.Context) {
 
 			}
 		}
+
 		reData = append(reData, v)
 	}
 	result.Data.List = reData
