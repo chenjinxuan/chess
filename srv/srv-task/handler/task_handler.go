@@ -15,6 +15,7 @@ type TaskHandlerManager struct {
 	TaskRequired                   []models.TaskRequiredModel
 	TaskType                       []models.TaskTypeModel
 	TaskRewardType                 []models.TaskRewardTypeModel
+        RoomType                       map[int]models.RoomsModel
 	Type                           int
 	GameOver                       chan GameInfoArgs
 	PlayerEvent                    chan PlayerActionArgs
@@ -57,6 +58,11 @@ func (m *TaskHandlerManager) Init() (err error) {
 		log.Errorf("init taskType fail .(%s)", err)
 		return
 	}
+	err = m.initRoomType()
+	if err != nil {
+	    log.Errorf("init roomType fail .(%s)", err)
+	    return
+	}
 	return nil
 }
 
@@ -71,6 +77,18 @@ func (m *TaskHandlerManager) initTaskType() (err error) {
 func (m *TaskHandlerManager) initTaskRewardType() (err error) {
 	m.TaskRewardType, err = models.TaskRewardType.List()
 	return
+}
+
+func (m *TaskHandlerManager) initRoomType() (err error)  {
+    m.RoomType = make(map[int]models.RoomsModel)
+    data,err:=models.Rooms.GetAll()
+    if err != nil {
+	return
+    }
+    for _,v:=range data {
+	m.RoomType[v.Id]=v
+    }
+    return
 }
 
 func (m *TaskHandlerManager) SubLoop() {
@@ -147,7 +165,7 @@ func (m *TaskHandlerManager) Loop() {
 						for _, taskInfo := range taskList.List {
 
 							if taskInfo.TaskRequiredRoomType != 0 { //是否要求房间场次类型
-								if taskInfo.TaskRequiredRoomType != int(gameInfo.RoomType) {
+								if taskInfo.TaskRequiredRoomType !=  m.RoomType[int(gameInfo.RoomType)].RoomsTypeId {
 								        newTaskList.List =append(newTaskList.List,taskInfo)
 									continue
 								}
@@ -238,7 +256,7 @@ func (m *TaskHandlerManager) Loop() {
 						}
 
 						if taskInfo.TaskRequiredRoomType != 0 { //是否要求房间场次类型
-							if taskInfo.TaskRequiredRoomType != int(playAction.RoomType) {
+							if taskInfo.TaskRequiredRoomType != m.RoomType[int(playAction.RoomType)].RoomsTypeId {
 								continue
 							}
 
