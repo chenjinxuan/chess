@@ -40,7 +40,7 @@ type Table struct {
 	Button     int     // 庄家位置
 	Players    Players // 坐下的玩家
 	Bystanders Players // 站起的玩家
-	AutoSitdown []int // 自动坐下队列
+	AutoSitdown []int32 // 自动坐下队列
 	Chips      []int32 // 玩家最终下注筹码，摊牌时为玩家最终获得筹码
 	Bet        int     // 当前回合 上一玩家下注额
 	N          int     // 当前牌桌玩家数
@@ -165,6 +165,12 @@ func (t *Table) DelBystander(p *Player, checkExit bool) {
 	t.lock.Lock()
 	defer t.lock.Unlock()
 
+	for k, v := range t.AutoSitdown {
+		if v == int32(p.Id) {
+			t.AutoSitdown = append(t.AutoSitdown[:k], t.AutoSitdown[k+1:]...)
+		}
+	}
+
 	for k, v := range t.Bystanders {
 		if v.Id == p.Id {
 			t.Bystanders = append(t.Bystanders[:k], t.Bystanders[k+1:]...)
@@ -206,25 +212,28 @@ func (t *Table) AddPlayer(p *Player) int {
 	return p.Pos
 }
 
-func (t *Table) AddAutoSitdown(){
-
-
+func (t *Table) AddAutoSitdown(pid int){
+	t.lock.Lock()
+	t.AutoSitdown = append(t.AutoSitdown, int32(pid))
+	t.lock.Unlock()
 }
 
-func (t *Table) DelAutoSitdown(){
+func (t *Table) DoAutoSitdown(){
 	if len(t.AutoSitdown) == 0 {
 		return
 	}
-	pid := t.AutoSitdown[0]
+	pid := int(t.AutoSitdown[0])
 	for _, v := range t.Bystanders {
-		if v.Id == pid  {
+		if v.Id == pid && v.Flag&define.PLAYER_DISCONNECT == 0  {
 			v.Sitdown()
 		}
 	}
-	t.lock.Lock()
-	t.AutoSitdown = t.AutoSitdown[1:]
 
-	t.lock.Unlock()
+	// 通报自动坐下等待玩家数
+	t.BroadcastBystanders(define.Code["room_table_autositdownnum_ack"], &pb.RoomPlayerAutoSitdownAck{
+		Num: int32(len(t.AutoSitdown)),
+		Queue: t.AutoSitdown,
+	})
 }
 
 func (t *Table) DelPlayer(p *Player, checkExit bool) {
@@ -259,7 +268,7 @@ func (t *Table) DelPlayer(p *Player, checkExit bool) {
 
 	// 自动坐下
 	if len(t.AutoSitdown) > 0 {
-		t.DelAutoSitdown()
+		t.DoAutoSitdown()
 	}
 }
 

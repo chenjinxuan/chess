@@ -39,7 +39,7 @@ var Room_FrameType_value = map[string]int32{
 func (x Room_FrameType) String() string {
 	return proto1.EnumName(Room_FrameType_name, int32(x))
 }
-func (Room_FrameType) EnumDescriptor() ([]byte, []int) { return fileDescriptor4, []int{0, 0} }
+func (Room_FrameType) EnumDescriptor() ([]byte, []int) { return fileDescriptor3, []int{0, 0} }
 
 type Room struct {
 }
@@ -47,7 +47,7 @@ type Room struct {
 func (m *Room) Reset()                    { *m = Room{} }
 func (m *Room) String() string            { return proto1.CompactTextString(m) }
 func (*Room) ProtoMessage()               {}
-func (*Room) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{0} }
+func (*Room) Descriptor() ([]byte, []int) { return fileDescriptor3, []int{0} }
 
 type Room_Frame struct {
 	Type    Room_FrameType `protobuf:"varint,1,opt,name=Type,enum=proto.Room_FrameType" json:"Type,omitempty"`
@@ -57,7 +57,7 @@ type Room_Frame struct {
 func (m *Room_Frame) Reset()                    { *m = Room_Frame{} }
 func (m *Room_Frame) String() string            { return proto1.CompactTextString(m) }
 func (*Room_Frame) ProtoMessage()               {}
-func (*Room_Frame) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{0, 0} }
+func (*Room_Frame) Descriptor() ([]byte, []int) { return fileDescriptor3, []int{0, 0} }
 
 func (m *Room_Frame) GetType() Room_FrameType {
 	if m != nil {
@@ -79,7 +79,7 @@ type RoomInfoArgs struct {
 func (m *RoomInfoArgs) Reset()                    { *m = RoomInfoArgs{} }
 func (m *RoomInfoArgs) String() string            { return proto1.CompactTextString(m) }
 func (*RoomInfoArgs) ProtoMessage()               {}
-func (*RoomInfoArgs) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{1} }
+func (*RoomInfoArgs) Descriptor() ([]byte, []int) { return fileDescriptor3, []int{1} }
 
 type RoomInfoRes struct {
 }
@@ -87,7 +87,7 @@ type RoomInfoRes struct {
 func (m *RoomInfoRes) Reset()                    { *m = RoomInfoRes{} }
 func (m *RoomInfoRes) String() string            { return proto1.CompactTextString(m) }
 func (*RoomInfoRes) ProtoMessage()               {}
-func (*RoomInfoRes) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{2} }
+func (*RoomInfoRes) Descriptor() ([]byte, []int) { return fileDescriptor3, []int{2} }
 
 func init() {
 	proto1.RegisterType((*Room)(nil), "proto.Room")
@@ -239,9 +239,9 @@ var _RoomService_serviceDesc = grpc.ServiceDesc{
 	Metadata: "room.proto",
 }
 
-func init() { proto1.RegisterFile("room.proto", fileDescriptor4) }
+func init() { proto1.RegisterFile("room.proto", fileDescriptor3) }
 
-var fileDescriptor4 = []byte{
+var fileDescriptor3 = []byte{
 	// 217 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0xe2, 0x2a, 0xca, 0xcf, 0xcf,
 	0xd5, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x62, 0x05, 0x53, 0x4a, 0x4d, 0x8c, 0x5c, 0x2c, 0x41,

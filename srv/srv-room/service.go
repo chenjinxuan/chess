@@ -28,7 +28,7 @@ var (
 type server struct{}
 
 func (s *server) init() {
-	// Todo 从mysql取房间列表
+	// 从mysql取房间列表
 	InitRoomList(Cfg.ServiceId)
 }
 

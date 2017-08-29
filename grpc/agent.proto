@@ -254,8 +254,13 @@ message RoomTableChatReq{
 }
 
 // 2122, 自动坐下等待玩家数通报
-message RoomTableAutoSitdownNumAck{
+message RoomPlayerAutoSitdownAck{
     int32 num = 1;
+    repeated int32 queue = 2;
+}
+// 2123, 玩家加入自动坐下队列
+message RoomPlayerAutoSitdownReq{
+    BaseReq base_req = 1;
 }
 
 message PotInfo{

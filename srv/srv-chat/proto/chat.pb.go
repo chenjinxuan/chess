@@ -23,7 +23,7 @@ type Chat struct {
 func (m *Chat) Reset()                    { *m = Chat{} }
 func (m *Chat) String() string            { return proto1.CompactTextString(m) }
 func (*Chat) ProtoMessage()               {}
-func (*Chat) Descriptor() ([]byte, []int) { return fileDescriptor3, []int{0} }
+func (*Chat) Descriptor() ([]byte, []int) { return fileDescriptor2, []int{0} }
 
 type Chat_Nil struct {
 }
@@ -31,7 +31,7 @@ type Chat_Nil struct {
 func (m *Chat_Nil) Reset()                    { *m = Chat_Nil{} }
 func (m *Chat_Nil) String() string            { return proto1.CompactTextString(m) }
 func (*Chat_Nil) ProtoMessage()               {}
-func (*Chat_Nil) Descriptor() ([]byte, []int) { return fileDescriptor3, []int{0, 0} }
+func (*Chat_Nil) Descriptor() ([]byte, []int) { return fileDescriptor2, []int{0, 0} }
 
 type Chat_List struct {
 	Messages []*Chat_Message `protobuf:"bytes,1,rep,name=Messages" json:"Messages,omitempty"`
@@ -40,7 +40,7 @@ type Chat_List struct {
 func (m *Chat_List) Reset()                    { *m = Chat_List{} }
 func (m *Chat_List) String() string            { return proto1.CompactTextString(m) }
 func (*Chat_List) ProtoMessage()               {}
-func (*Chat_List) Descriptor() ([]byte, []int) { return fileDescriptor3, []int{0, 1} }
+func (*Chat_List) Descriptor() ([]byte, []int) { return fileDescriptor2, []int{0, 1} }
 
 func (m *Chat_List) GetMessages() []*Chat_Message {
 	if m != nil {
@@ -56,7 +56,7 @@ type Chat_Id struct {
 func (m *Chat_Id) Reset()                    { *m = Chat_Id{} }
 func (m *Chat_Id) String() string            { return proto1.CompactTextString(m) }
 func (*Chat_Id) ProtoMessage()               {}
-func (*Chat_Id) Descriptor() ([]byte, []int) { return fileDescriptor3, []int{0, 2} }
+func (*Chat_Id) Descriptor() ([]byte, []int) { return fileDescriptor2, []int{0, 2} }
 
 func (m *Chat_Id) GetId() string {
 	if m != nil {
@@ -74,7 +74,7 @@ type Chat_Message struct {
 func (m *Chat_Message) Reset()                    { *m = Chat_Message{} }
 func (m *Chat_Message) String() string            { return proto1.CompactTextString(m) }
 func (*Chat_Message) ProtoMessage()               {}
-func (*Chat_Message) Descriptor() ([]byte, []int) { return fileDescriptor3, []int{0, 3} }
+func (*Chat_Message) Descriptor() ([]byte, []int) { return fileDescriptor2, []int{0, 3} }
 
 func (m *Chat_Message) GetId() string {
 	if m != nil {
@@ -105,7 +105,7 @@ type Chat_Consumer struct {
 func (m *Chat_Consumer) Reset()                    { *m = Chat_Consumer{} }
 func (m *Chat_Consumer) String() string            { return proto1.CompactTextString(m) }
 func (*Chat_Consumer) ProtoMessage()               {}
-func (*Chat_Consumer) Descriptor() ([]byte, []int) { return fileDescriptor3, []int{0, 4} }
+func (*Chat_Consumer) Descriptor() ([]byte, []int) { return fileDescriptor2, []int{0, 4} }
 
 func (m *Chat_Consumer) GetId() string {
 	if m != nil {
@@ -130,7 +130,7 @@ type Chat_ConsumeRange struct {
 func (m *Chat_ConsumeRange) Reset()                    { *m = Chat_ConsumeRange{} }
 func (m *Chat_ConsumeRange) String() string            { return proto1.CompactTextString(m) }
 func (*Chat_ConsumeRange) ProtoMessage()               {}
-func (*Chat_ConsumeRange) Descriptor() ([]byte, []int) { return fileDescriptor3, []int{0, 5} }
+func (*Chat_ConsumeRange) Descriptor() ([]byte, []int) { return fileDescriptor2, []int{0, 5} }
 
 func (m *Chat_ConsumeRange) GetId() string {
 	if m != nil {
@@ -161,7 +161,7 @@ type Chat_ConsumeLatest struct {
 func (m *Chat_ConsumeLatest) Reset()                    { *m = Chat_ConsumeLatest{} }
 func (m *Chat_ConsumeLatest) String() string            { return proto1.CompactTextString(m) }
 func (*Chat_ConsumeLatest) ProtoMessage()               {}
-func (*Chat_ConsumeLatest) Descriptor() ([]byte, []int) { return fileDescriptor3, []int{0, 6} }
+func (*Chat_ConsumeLatest) Descriptor() ([]byte, []int) { return fileDescriptor2, []int{0, 6} }
 
 func (m *Chat_ConsumeLatest) GetId() string {
 	if m != nil {
@@ -453,9 +453,9 @@ var _ChatService_serviceDesc = grpc.ServiceDesc{
 	Metadata: "chat.proto",
 }
 
-func init() { proto1.RegisterFile("chat.proto", fileDescriptor3) }
+func init() { proto1.RegisterFile("chat.proto", fileDescriptor2) }
 
-var fileDescriptor3 = []byte{
+var fileDescriptor2 = []byte{
 	// 337 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x8c, 0x52, 0xcd, 0x6a, 0xf2, 0x40,
 	0x14, 0x25, 0xbf, 0x9f, 0x5e, 0xfd, 0x6c, 0xb9, 0x15, 0x49, 0x67, 0x15, 0xba, 0x28, 0x59, 0x94,
