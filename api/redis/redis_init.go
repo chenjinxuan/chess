@@ -1,4 +1,4 @@
-package redis
+package api_redis
 
 import (
 	"chess/common/db"
@@ -14,6 +14,7 @@ type RedisDB struct {
 	Login   *db.Redis
 	Captcha *db.Redis
 	Sms     *db.Redis
+        Task    *db.Redis
 }
 
 func InitApiRedis() {
@@ -33,6 +34,10 @@ func InitApiRedis() {
 	Redis.Sms, err = db.R("sms")
 	if err != nil {
 		log.Warnf("db.R(\"sms\") Error(%s)", err)
+	}
+	Redis.Sms, err = db.R("task")
+	if err != nil {
+	    log.Warnf("db.R(\"task\") Error(%s)", err)
 	}
 
 }

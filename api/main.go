@@ -45,7 +45,7 @@ func main() {
 	db.InitMongo()
 	db.InitRedis()
 	//init redis
-	redis.InitApiRedis()
+	api_redis.InitApiRedis()
 	models.Init()
 
 	// consul 服务注册

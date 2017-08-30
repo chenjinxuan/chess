@@ -8,6 +8,8 @@ service TaskService {
     rpc GameOver(GameInfoArgs) returns (TaskRes){}
     // 更新房间信息
     rpc PlayerEvent(PlayerActionArgs) returns (TaskRes){}
+    //更新任务
+    rpc UpsetTask(UpsetTaskArgs) returns (TaskRes) {}
 }
 message GameInfoArgs {
     int32 room_type = 1; //房间场类型
@@ -35,4 +37,8 @@ message PlayerActionArgs {
     int32 id = 3; //玩家id
     int32 type  = 4; //动作类型,比如1为打赏荷官
     int32 time = 5;  //时间戳
+}
+
+message UpsetTaskArgs {
+    int32 id = 1; //用户id
 }

@@ -55,7 +55,7 @@ func TokenInfo(c *gin.Context) {
 		// Check token
 		defer log.Debug(result)
 		//判断黑名单
-		msg, err := redis.Redis.Login.GetInt(post.Token)
+		msg, err := api_redis.Redis.Login.GetInt(post.Token)
 		if err == nil {
 			result.Ret = define.AuthALreadyLogin
 			result.Msg = define.AuthMsgMap[msg]

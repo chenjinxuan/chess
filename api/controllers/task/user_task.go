@@ -9,6 +9,10 @@ import (
 	"net/http"
 	"strconv"
 	"time"
+	grpcServer "chess/api/grpc"
+	pb "chess/api/proto"
+	"golang.org/x/net/context"
+       "fmt"
 )
 
 type ReceiveTaskRewardParams struct {
@@ -169,6 +173,13 @@ func List(c *gin.Context) {
 		c.JSON(http.StatusOK, result)
 		return
 	}
+        //通知是否要更新任务
+    TaskClient := grpcServer.GetTaskGrpc()
+    taskResult, err := TaskClient.UpsetTask(context.Background(), &pb.UpsetTaskArgs{Id:int32(UserId)})
+    if err != nil {
+	fmt.Println(err)
+    }
+    fmt.Println(taskResult)
 	data, err := models.UserTask.Get(UserId)
 	if err != nil {
 		log.Errorf("models.UserTask.Get err %s", err)
@@ -179,6 +190,7 @@ func List(c *gin.Context) {
 	t := time.Now()
 	var reData []models.UserTaskModel
 	for _, v := range data.List {
+
 		if v.IsWin == define.RequiredTotalBalance { //金币余额类型的任务,,查出现有的金币和任务里已达到的金额对比,如果金额增加则更新,减少则不变
 		    balance,_,err:=models.UsersWallet.GetBalance(UserId)
 		    if err != nil {

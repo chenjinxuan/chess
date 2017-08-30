@@ -21,3 +21,10 @@ func GetCentreGrpc() (CentreClient pb.CentreServiceClient) {
 	CentreClient = pb.NewCentreServiceClient(centre)
 	return CentreClient
 }
+
+
+func GetTaskGrpc() (TaskClient pb.TaskServiceClient) {
+    task:= services.GetService(config.C.GrpcServer[2])
+    TaskClient = pb.NewTaskServiceClient(task)
+    return TaskClient
+}

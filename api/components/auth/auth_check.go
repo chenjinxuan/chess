@@ -13,7 +13,7 @@ func GetFailLoginKey(mobile string) string {
 
 func GetFailLoginCount(mobile string) (int, error) {
 	key := GetFailLoginKey(mobile)
-	client := redis.Redis.Login
+	client := api_redis.Redis.Login
 	isExist, err := client.Exists(key)
 	if err != nil {
 		return 0, errors.New("system error")
@@ -34,7 +34,7 @@ func GetFailLoginCount(mobile string) (int, error) {
 
 func FailCountPlusOne(mobile string) error {
 	key := GetFailLoginKey(mobile)
-	client := redis.Redis.Login
+	client := api_redis.Redis.Login
 	isExist, err := client.Exists(key)
 	if err != nil {
 		return errors.New("system error")
