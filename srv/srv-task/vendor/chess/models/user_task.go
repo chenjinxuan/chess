@@ -29,13 +29,14 @@ type UserTaskModel struct {
 	IsWin                    int       `bson:"is_win" json:"is_win" description:"是非要赢才算"`
 	TaskRequiredHandLevel    int       `bson:"task_required_hand_level" json:"task_required_hand_level" description:"手牌等级 0 不需要,1开始需要手牌等级"`
 	TaskRequiredPlayerAction int       `bson:"task_required_player_action" json:"task_required_player_action" description:"玩家动作要求,0无要求,1打赏荷官"`
-	ExpireTime               time.Time `bson:"expire_time" json:"expire_time" description:"当任务类型为永久任务的时候才有过期时间"`
+	ExpireTime               time.Time `bson:"expire_time" json:"expire_time" description:"过期时间"`
+        EffectTime               time.Time `bson:"effect_time" json:"effect_time" description:"生效时间"`
 }
 
 var UserTask = new(UserTaskModel)
 
 func (m *UserTaskModel) GetInit() (list []UserTaskModel, err error) {
-	sqlStr := `SELECT a.id,a.parent_id,b.id,b.name,b.expire_type,a.name,a.image,a.image_describe,a.task_reward_type_id,a.reward_num,c.id,c.room_type,c.match_type,c.hand_level,c.player_action,a.required_describe,a.required_num,a.is_win,a.expire_time
+	sqlStr := `SELECT a.id,a.parent_id,b.id,b.name,b.expire_type,a.name,a.image,a.image_describe,a.task_reward_type_id,a.reward_num,c.id,c.room_type,c.match_type,c.hand_level,c.player_action,a.required_describe,a.required_num,a.is_win,a.expire_time,effect_time
     FROM task AS a
     LEFT JOIN task_type AS b ON a.task_type_id = b.id
     LEFT JOIN task_required AS c ON a.task_required_id = c.id
@@ -47,7 +48,7 @@ func (m *UserTaskModel) GetInit() (list []UserTaskModel, err error) {
 	defer rows.Close()
 	for rows.Next() {
 		var t UserTaskModel
-		err = rows.Scan(&t.TaskId, &t.ParentId, &t.TaskTypeId, &t.TaskTypeName, &t.TaskTypeExpireType, &t.Name, &t.Image, &t.ImageDescribe, &t.TaskRewardTypeId, &t.RewardNum, &t.TaskRequiredId, &t.TaskRequiredRoomType, &t.TaskRequiredMatchType, &t.TaskRequiredHandLevel, &t.TaskRequiredPlayerAction, &t.RequiredDescribe, &t.RequiredNum, &t.IsWin, &t.ExpireTime)
+		err = rows.Scan(&t.TaskId, &t.ParentId, &t.TaskTypeId, &t.TaskTypeName, &t.TaskTypeExpireType, &t.Name, &t.Image, &t.ImageDescribe, &t.TaskRewardTypeId, &t.RewardNum, &t.TaskRequiredId, &t.TaskRequiredRoomType, &t.TaskRequiredMatchType, &t.TaskRequiredHandLevel, &t.TaskRequiredPlayerAction, &t.RequiredDescribe, &t.RequiredNum, &t.IsWin, &t.ExpireTime, &t.EffectTime)
 		if err != nil {
 			continue
 		}
@@ -58,21 +59,21 @@ func (m *UserTaskModel) GetInit() (list []UserTaskModel, err error) {
 }
 
 func (m *UserTaskModel) GetByParentId(taskId int) (t UserTaskModel, err error) {
-	sqlStr := `SELECT a.id,a.parent_id,b.id,b.name,b.expire_type,a.name,a.image,a.image_describe,a.task_reward_type_id,a.reward_num,c.id,c.room_type,c.match_type,c.hand_level,c.player_action,a.required_describe,a.required_num,a.is_win,a.expire_time
+	sqlStr := `SELECT a.id,a.parent_id,b.id,b.name,b.expire_type,a.name,a.image,a.image_describe,a.task_reward_type_id,a.reward_num,c.id,c.room_type,c.match_type,c.hand_level,c.player_action,a.required_describe,a.required_num,a.is_win,a.expire_time,effect_time
     FROM task AS a
     LEFT JOIN task_type AS b ON a.task_type_id = b.id
     LEFT JOIN task_required AS c ON a.task_required_id = c.id
     WHERE a.parent_id = ? AND a.status = 1`
-	err = Mysql.Chess.QueryRow(sqlStr, taskId).Scan(&t.TaskId, &t.ParentId, &t.TaskTypeId, &t.TaskTypeName, &t.TaskTypeExpireType, &t.Name, &t.Image, &t.ImageDescribe, &t.TaskRewardTypeId, &t.RewardNum, &t.TaskRequiredId, &t.TaskRequiredRoomType, &t.TaskRequiredMatchType, &t.TaskRequiredHandLevel, &t.TaskRequiredPlayerAction, &t.RequiredDescribe, &t.RequiredNum, &t.IsWin, &t.ExpireTime)
+	err = Mysql.Chess.QueryRow(sqlStr, taskId).Scan(&t.TaskId, &t.ParentId, &t.TaskTypeId, &t.TaskTypeName, &t.TaskTypeExpireType, &t.Name, &t.Image, &t.ImageDescribe, &t.TaskRewardTypeId, &t.RewardNum, &t.TaskRequiredId, &t.TaskRequiredRoomType, &t.TaskRequiredMatchType, &t.TaskRequiredHandLevel, &t.TaskRequiredPlayerAction, &t.RequiredDescribe, &t.RequiredNum, &t.IsWin, &t.ExpireTime, &t.EffectTime)
 	return
 }
 func (m *UserTaskModel) GetById(taskId int) (t UserTaskModel, err error) {
-	sqlStr := `SELECT a.id,a.parent_id,b.id,b.name,b.expire_type,a.name,a.image,a.image_describe,a.task_reward_type_id,a.reward_num,c.id,c.room_type,c.match_type,c.hand_level,c.player_action,a.required_describe,a.required_num,a.is_win,a.expire_time
+	sqlStr := `SELECT a.id,a.parent_id,b.id,b.name,b.expire_type,a.name,a.image,a.image_describe,a.task_reward_type_id,a.reward_num,c.id,c.room_type,c.match_type,c.hand_level,c.player_action,a.required_describe,a.required_num,a.is_win,a.expire_time,effect_time
     FROM task AS a
     LEFT JOIN task_type AS b ON a.task_type_id = b.id
     LEFT JOIN task_required AS c ON a.task_required_id = c.id
     WHERE a.id = ? AND a.status = 1`
-	err = Mysql.Chess.QueryRow(sqlStr, taskId).Scan(&t.TaskId, &t.ParentId, &t.TaskTypeId, &t.TaskTypeName, &t.TaskTypeExpireType, &t.Name, &t.Image, &t.ImageDescribe, &t.TaskRewardTypeId, &t.RewardNum, &t.TaskRequiredId, &t.TaskRequiredRoomType, &t.TaskRequiredMatchType, &t.TaskRequiredHandLevel, &t.TaskRequiredPlayerAction, &t.RequiredDescribe, &t.RequiredNum, &t.IsWin, &t.ExpireTime)
+	err = Mysql.Chess.QueryRow(sqlStr, taskId).Scan(&t.TaskId, &t.ParentId, &t.TaskTypeId, &t.TaskTypeName, &t.TaskTypeExpireType, &t.Name, &t.Image, &t.ImageDescribe, &t.TaskRewardTypeId, &t.RewardNum, &t.TaskRequiredId, &t.TaskRequiredRoomType, &t.TaskRequiredMatchType, &t.TaskRequiredHandLevel, &t.TaskRequiredPlayerAction, &t.RequiredDescribe, &t.RequiredNum, &t.IsWin, &t.ExpireTime, &t.EffectTime)
 	return
 }
 
@@ -150,6 +151,7 @@ func (m *UserTaskModel) UpdateOneTask(userId, taskId int, task UserTaskModel) er
 			"list.$.task_required_hand_level":    task.TaskRequiredHandLevel,
 			"list.$.task_required_player_action": task.TaskRequiredPlayerAction,
 			"list.$.expire_time":                 task.ExpireTime,
+		        "list.$.effect_time":                 task.EffectTime,
 		}
 		err := c.Update(query, bson.M{"$set": update})
 

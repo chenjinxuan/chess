@@ -65,6 +65,7 @@ It has these top-level messages:
 	TaskPlayerInfo
 	TaskRes
 	PlayerActionArgs
+	UpsetTaskArgs
 */
 package proto
 

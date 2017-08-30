@@ -21,9 +21,9 @@ type TicketData struct {
 // 获取公众号的access token
 func (c *Client) GetGlobalAccessToken() (string, error) {
 	var accessToken string
-	redis := redis.Redis.Main
+	redis := api_redis.Redis.Main
 	key := "GlobalAccessToken" + c.appId
-	isExist, err := redis.Exists(key)
+	isExist, err := api_redis.Redis.Task.Exists(key)
 	if err != nil {
 		return accessToken, err
 	}
@@ -47,7 +47,7 @@ func (c *Client) GetGlobalAccessToken() (string, error) {
 }
 
 func (c *Client) GetTicketStr() (string, error) {
-	redis := redis.Redis.Main
+	redis := api_redis.Redis.Main
 	key := fmt.Sprintf("jsapiTicket-%s", c.appId)
 	// 获取公众号
 	var ticketStr string
@@ -77,7 +77,7 @@ func (c *Client) GetTicket(openid, fromUrl string) (TicketData, error) {
 	timeStr = strconv.Itoa(int(timeInt))
 	//
 	var ticketStr string
-	redis := redis.Redis.Main
+	redis := api_redis.Redis.Main
 	//fromUrl := c.Request.Header.Get("Referer")
 
 	// 生成nonceStr

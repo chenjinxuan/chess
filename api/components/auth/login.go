@@ -38,7 +38,7 @@ func Login(secret string) gin.HandlerFunc {
 		userId := c.Param("user_id")
 		tokenString := c.Query("token")
 		//判断黑名单
-		msg, err := redis.Redis.Login.GetInt(tokenString)
+		msg, err := api_redis.Redis.Login.GetInt(tokenString)
 		if err == nil {
 			result.Ret = define.AuthALreadyLogin
 			result.Msg = define.AuthMsgMap[msg]

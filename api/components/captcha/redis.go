@@ -28,16 +28,16 @@ func NewRedisStore() captcha.Store {
 
 func (r *RedisStore) SetRandom(id string) {
 	digits := captcha.RandomDigits(4)
-	redis.Redis.Captcha.Setex(id, string(digits), config.C.Captcha.ExpireTime)
+	api_redis.Redis.Captcha.Setex(id, string(digits), config.C.Captcha.ExpireTime)
 }
 
 func (r *RedisStore) Set(id string, digits []byte) {
-	redis.Redis.Captcha.Setex(id, string(digits), config.C.Captcha.ExpireTime)
+    api_redis.Redis.Captcha.Setex(id, string(digits), config.C.Captcha.ExpireTime)
 }
 
 func (r *RedisStore) Get(id string, clear bool) (digits []byte) {
 	// digits = captcha.RandomDigits(4)
-	str, err := redis.Redis.Captcha.Get(id)
+	str, err := api_redis.Redis.Captcha.Get(id)
 	if err != nil {
 		// @todo
 		digits = captcha.RandomDigits(4)
@@ -47,6 +47,6 @@ func (r *RedisStore) Get(id string, clear bool) (digits []byte) {
 }
 
 func (r *RedisStore) Del(id string) error {
-	err := redis.Redis.Captcha.Del(id)
+	err := api_redis.Redis.Captcha.Del(id)
 	return err
 }
