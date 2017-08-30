@@ -4,6 +4,7 @@ import (
 	"chess/common/define"
 	"chess/common/log"
 	"chess/common/services"
+	"chess/models"
 	pb "chess/srv/srv-room/proto"
 	"chess/srv/srv-room/registry"
 	"chess/srv/srv-room/signal"
@@ -27,25 +28,25 @@ const (
 )
 
 type Table struct {
-	Id         string
-	RoomId     int
-	SmallBlind int
-	BigBlind   int
-	MinCarry   int // 最大携带
-	MaxCarry   int // 最小携带
-	Cards      Cards
-	Pot        []int32    // 奖池筹码数, 第一项为主池，其他项(若存在)为边池
-	PotList    PotDetails // 奖池 详细信息
-	Timeout    int
-	Button     int     // 庄家位置
-	Players    Players // 坐下的玩家
-	Bystanders Players // 站起的玩家
+	Id          string
+	RoomId      int
+	SmallBlind  int
+	BigBlind    int
+	MinCarry    int // 最大携带
+	MaxCarry    int // 最小携带
+	Cards       Cards
+	Pot         []int32    // 奖池筹码数, 第一项为主池，其他项(若存在)为边池
+	PotList     PotDetails // 奖池 详细信息
+	Timeout     int
+	Button      int     // 庄家位置
+	Players     Players // 坐下的玩家
+	Bystanders  Players // 站起的玩家
 	AutoSitdown []int32 // 自动坐下队列
-	Chips      []int32 // 玩家最终下注筹码，摊牌时为玩家最终获得筹码
-	Bet        int     // 当前回合 上一玩家下注额
-	N          int     // 当前牌桌玩家数
-	Max        int     // 牌桌最大玩家数
-	Status     int     // 0已结束  1进行中
+	Chips       []int32 // 玩家最终下注筹码，摊牌时为玩家最终获得筹码
+	Bet         int     // 当前回合 上一玩家下注额
+	N           int     // 当前牌桌玩家数
+	Max         int     // 牌桌最大玩家数
+	Status      int     // 0已结束  1进行中
 
 	MaxChips int
 	MinChips int
@@ -55,6 +56,7 @@ type Table struct {
 	exitChan chan interface{} // 销毁牌桌
 	lock     sync.Mutex
 	dm       *DealMachine
+	gambling *models.GamblingModel // 用于持久化牌局结果
 }
 
 func genTableId(rid int) string {
@@ -212,26 +214,26 @@ func (t *Table) AddPlayer(p *Player) int {
 	return p.Pos
 }
 
-func (t *Table) AddAutoSitdown(pid int){
+func (t *Table) AddAutoSitdown(pid int) {
 	t.lock.Lock()
 	t.AutoSitdown = append(t.AutoSitdown, int32(pid))
 	t.lock.Unlock()
 }
 
-func (t *Table) DoAutoSitdown(){
+func (t *Table) DoAutoSitdown() {
 	if len(t.AutoSitdown) == 0 {
 		return
 	}
 	pid := int(t.AutoSitdown[0])
 	for _, v := range t.Bystanders {
-		if v.Id == pid && v.Flag&define.PLAYER_DISCONNECT == 0  {
+		if v.Id == pid && v.Flag&define.PLAYER_DISCONNECT == 0 {
 			v.Sitdown()
 		}
 	}
 
 	// 通报自动坐下等待玩家数
 	t.BroadcastBystanders(define.Code["room_table_autositdownnum_ack"], &pb.RoomPlayerAutoSitdownAck{
-		Num: int32(len(t.AutoSitdown)),
+		Num:   int32(len(t.AutoSitdown)),
 		Queue: t.AutoSitdown,
 	})
 }
@@ -341,7 +343,13 @@ func (t *Table) EachBystander(start int, f func(p *Player) bool) {
 }
 
 func (t *Table) start() {
-	var dealer *Player
+	t.gambling = &models.GamblingModel{
+		RoomId:  t.RoomId,
+		TableId: t.Id,
+		Max:     t.Max,
+		Start:   time.Now().Unix(),
+		Players: make([]*models.Player, t.Max, MaxN),
+	}
 
 	t.Each(0, func(p *Player) bool {
 		if p.Chips < t.BigBlind || p.Flag&define.PLAYER_DISCONNECT != 0 { // 筹码不足 或 掉线
@@ -357,6 +365,16 @@ func (t *Table) start() {
 		p.Cards = nil
 		p.Action = ActReady
 		p.Hand.Init()
+		t.gambling.Players[p.Pos-1] = &models.Player{
+			Id:             p.Id,
+			Nickname:       p.Nickname,
+			Avatar:         p.Avatar,
+			Pos:            p.Pos,
+			Action:         ActReady,
+			FormerChips:    p.Chips,
+			HandLevel:      -1,
+			HandFinalValue: -1,
+		}
 		return true
 	})
 
@@ -369,6 +387,7 @@ func (t *Table) start() {
 	})
 
 	// Select Dealer
+	var dealer *Player
 	button := t.Button - 1
 	t.Each((button+1)%t.Cap(), func(p *Player) bool {
 		t.Button = p.Pos
@@ -412,6 +431,10 @@ func (t *Table) start() {
 
 	bbPos := bb.Pos
 
+	t.gambling.Button = t.Button
+	t.gambling.SbPos = sb.Pos
+	t.gambling.BbPos = bbPos
+
 	t.Pot = nil
 	t.PotList = nil
 	t.Chips = make([]int32, t.Max)
@@ -425,6 +448,15 @@ func (t *Table) start() {
 			p.Bet = 0
 			p.Cards = Cards{t.dm.Deal(), t.dm.Deal()}
 			t.remain++
+
+			t.gambling.Players[p.Pos-1].Cards = append(t.gambling.Players[p.Pos-1].Cards, &models.Card{
+				Suit:  p.Cards[0].Suit,
+				Value: p.Cards[0].Value,
+			})
+			t.gambling.Players[p.Pos-1].Cards = append(t.gambling.Players[p.Pos-1].Cards, &models.Card{
+				Suit:  p.Cards[1].Suit,
+				Value: p.Cards[1].Value,
+			})
 		}
 		return true
 	})
@@ -475,6 +507,9 @@ func (t *Table) start() {
 		t.dm.Deal(),
 		t.dm.Deal(),
 	}
+	t.gambling.Cards = append(t.gambling.Cards, &models.Card{Suit: t.Cards[0].Suit, Value: t.Cards[0].Value})
+	t.gambling.Cards = append(t.gambling.Cards, &models.Card{Suit: t.Cards[1].Suit, Value: t.Cards[1].Value})
+	t.gambling.Cards = append(t.gambling.Cards, &models.Card{Suit: t.Cards[2].Suit, Value: t.Cards[2].Value})
 	t.Each(0, func(p *Player) bool {
 		if len(p.Cards) > 0 {
 			p.Hand.Init()
@@ -484,6 +519,8 @@ func (t *Table) start() {
 			p.Hand.SetCard(p.Cards[0])
 			p.Hand.SetCard(p.Cards[1])
 			p.Hand.AnalyseHand()
+			t.gambling.Players[p.Pos-1].HandLevel = p.Hand.Level
+			t.gambling.Players[p.Pos-1].HandFinalValue = p.Hand.FinalValue
 		}
 		// 2108,  翻牌
 		p.SendMessage(define.Code["room_deal_ack"], &pb.RoomDealAck{
@@ -513,6 +550,7 @@ func (t *Table) start() {
 	// Round 3 : Turn
 	t.ready()
 	t.Cards = append(t.Cards, t.dm.Deal())
+	t.gambling.Cards = append(t.gambling.Cards, &models.Card{Suit: t.Cards[3].Suit, Value: t.Cards[3].Value})
 	t.Each(0, func(p *Player) bool {
 		if len(p.Cards) > 0 {
 			p.Hand.Init()
@@ -523,6 +561,8 @@ func (t *Table) start() {
 			p.Hand.SetCard(p.Cards[0])
 			p.Hand.SetCard(p.Cards[1])
 			p.Hand.AnalyseHand()
+			t.gambling.Players[p.Pos-1].HandLevel = p.Hand.Level
+			t.gambling.Players[p.Pos-1].HandFinalValue = p.Hand.FinalValue
 		}
 		// 2108,  转牌
 		p.SendMessage(define.Code["room_deal_ack"], &pb.RoomDealAck{
@@ -551,6 +591,7 @@ func (t *Table) start() {
 	// Round 4 : River   河牌
 	t.ready()
 	t.Cards = append(t.Cards, t.dm.Deal())
+	t.gambling.Cards = append(t.gambling.Cards, &models.Card{Suit: t.Cards[4].Suit, Value: t.Cards[4].Value})
 	t.Each(0, func(p *Player) bool {
 		if len(p.Cards) > 0 {
 			p.Hand.Init()
@@ -562,6 +603,8 @@ func (t *Table) start() {
 			p.Hand.SetCard(p.Cards[0])
 			p.Hand.SetCard(p.Cards[1])
 			p.Hand.AnalyseHand()
+			t.gambling.Players[p.Pos-1].HandLevel = p.Hand.Level
+			t.gambling.Players[p.Pos-1].HandFinalValue = p.Hand.FinalValue
 		}
 		// 2108,  河牌
 		p.SendMessage(define.Code["room_deal_ack"], &pb.RoomDealAck{
@@ -693,6 +736,7 @@ func (t *Table) shutdown() {
 // 摊牌
 func (t *Table) showdown() {
 	pots := t.calc()
+	t.gambling.Pot = t.Pot
 
 	for i := range t.Chips {
 		t.Chips[i] = 0
@@ -743,9 +787,11 @@ func (t *Table) showdown() {
 		for _, winner := range winners {
 			potDetail.Ps[winner-1] += int32(pot.Pot / len(winners))
 			t.Chips[winner-1] += int32(pot.Pot / len(winners))
+			t.gambling.Players[winner-1].Win += pot.Pot / len(winners)
 		}
 		potDetail.Ps[winners[0]-1] += int32(pot.Pot % len(winners)) // odd chips
 		t.Chips[winners[0]-1] += int32(pot.Pot % len(winners))      // odd chips
+		t.gambling.Players[winners[0]-1].Win += pot.Pot % len(winners)
 
 		t.PotList = append(t.PotList, potDetail)
 	}
@@ -764,6 +810,16 @@ func (t *Table) showdown() {
 				}
 			}
 		}
+
+		if t.gambling.Players[i] != nil && t.gambling.Players[i].Id > 0 {
+			t.gambling.Players[i].CurrentChips = t.gambling.Players[i].FormerChips + t.gambling.Players[i].Win - t.gambling.Players[i].Bet
+		}
+	}
+
+	t.gambling.End = time.Now().Unix()
+	err := t.gambling.Upsert()
+	if err != nil {
+		log.Error("t.gambling.Upsert: ", err)
 	}
 
 	t.Status = 0
@@ -813,6 +869,9 @@ func (t *Table) betting(pos, n int) (raised bool) {
 	if p.Action == ActAllin {
 		t.allin++
 	}
+
+	t.gambling.Players[pos-1].Action = p.Action
+	t.gambling.Players[pos-1].Bet += p.Bet
 
 	// 2106， 通报玩家下注结果
 	t.BroadcastAll(define.Code["room_player_bet_ack"], &pb.RoomPlayerBetAck{

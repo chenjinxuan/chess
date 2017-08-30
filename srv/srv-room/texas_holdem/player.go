@@ -339,7 +339,7 @@ func (p *Player) Standup() {
 	})
 	// 2122, 通知自动坐下等待玩家数
 	p.SendMessage(define.Code["room_player_autositdown_ack"], &pb.RoomPlayerAutoSitdownAck{
-		Num: int32(len(table.AutoSitdown)),
+		Num:   int32(len(table.AutoSitdown)),
 		Queue: table.AutoSitdown,
 	})
 
@@ -375,7 +375,7 @@ func (p *Player) AutoSitdown() {
 
 	// 2122, 广播自动坐下等待玩家数
 	table.BroadcastBystanders(define.Code["room_player_autositdown_ack"], &pb.RoomPlayerAutoSitdownAck{
-		Num: int32(len(table.AutoSitdown)),
+		Num:   int32(len(table.AutoSitdown)),
 		Queue: table.AutoSitdown,
 	})
 }
