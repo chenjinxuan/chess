@@ -89,12 +89,17 @@ func InitRouter() {
 		userRouter.GET("/info", auth.Login(config.C.TokenSecret), c_user.GetUserInfo)
 		userRouter.GET("/detail", auth.Login(config.C.TokenSecret), c_user.GetUserInfoDetail)
 		userRouter.GET("/checkin", auth.Login(config.C.TokenSecret), c_user.Checkin)
+	    	userRouter.GET("/checkin/list", auth.Login(config.C.TokenSecret), c_user.CheckinList)
+
 		userRouter.POST("/password/reset", auth.Login(config.C.TokenSecret), c_user.PasswordReset)
 		userRouter.GET("/exchange", auth.Login(config.C.TokenSecret), c_user.Exchange)
 		userRouter.POST("/profile/nickname", auth.Login(config.C.TokenSecret), c_user.ProfileNicknameUpdate)
 		userRouter.POST("/profile/mobile", auth.Login(config.C.TokenSecret), c_user.ProfileMobile)
 		userRouter.POST("/profile/avatar", auth.Login(config.C.TokenSecret), c_user.ProfileAvatar)
 		userRouter.POST("/profile/gender", auth.Login(config.C.TokenSecret), c_user.ProfileGender)
+	    	userRouter.GET("/bag/list", auth.Login(config.C.TokenSecret), c_user.BagList)
+
+
 
 	}
 	// @SubApi /verify - 验证码相关 [/verify/]
