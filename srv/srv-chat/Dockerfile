@@ -1,8 +1,7 @@
-FROM golang:latest
-MAINTAINER xtaci <daniel820313@gmail.com>
-COPY . /go/src/github.com/xtaci/chat
-RUN go install github.com/xtaci/chat
-ENTRYPOINT ["/go/bin/chat"]
-EXPOSE 10000 8080 6060
+FROM golang:1.8
+MAINTAINER lanziliang <lanziliang11@gmail.com>
+COPY . /go/src/chess/srv/srv-chat
+RUN go install chess/srv/srv-chat
+ENTRYPOINT ["/go/bin/srv-chat"]
 RUN mkdir /data
 VOLUME /data

@@ -6,6 +6,13 @@ import (
 	"database/sql"
 )
 
+const (
+	MongoDBStr       = "chess"
+	MongoColSession  = "session"
+	MongoColUserTask = "user_task"
+	MongoColGambling = "gambling"
+)
+
 var (
 	Mysql MySQLDB
 	Mongo MongoDB

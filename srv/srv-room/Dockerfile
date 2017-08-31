@@ -1,6 +1,5 @@
-FROM golang:latest
+FROM golang:1.8
 MAINTAINER lanziliang <lanziliang11@gmail.com>
-COPY . /go/src/room
-RUN go install room
-ENTRYPOINT ["/go/bin/room"]
-EXPOSE 10000
+COPY . /go/src/chess/srv/srv-room
+RUN go install chess/srv/srv-room
+ENTRYPOINT ["/go/bin/srv-room"]

@@ -42,6 +42,8 @@ var Code = map[string]int16{
 	"room_player_reconnect_ack":    2119, // 玩家断线重连回复
 	"room_table_chat_ack":          2120, // 聊天消息回复
 	"room_table_chat_req":          2121, // 发送聊天消息
+	"room_player_autositdown_ack":  2122, // 自动坐下等待玩家数通报
+	"room_player_autositdown_req":  2123, // 玩家加入自动坐下队列
 }
 
 var RCode = map[int16]string{
@@ -85,6 +87,8 @@ var RCode = map[int16]string{
 	2119: "room_player_reconnect_ack",    // 玩家断线重连回复
 	2120: "room_table_chat_ack",          // 聊天消息回复
 	2121: "room_table_chat_req",          // 发送聊天消息
+	2122: "room_player_autositdown_ack",  // 自动坐下等待玩家数通报
+	2123: "room_player_autositdown_req",  // 玩家加入自动坐下队列
 }
 
 const (

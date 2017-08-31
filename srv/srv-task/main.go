@@ -27,8 +27,13 @@ func main() {
 		Flags: []cli.Flag{
 			&cli.IntFlag{
 				Name:  "port",
-				Value: 60011,
+				Value: 15001,
 				Usage: "listening address:port",
+			},
+			&cli.IntFlag{
+				Name:  "check-port",
+				Value: 15101,
+				Usage: "consul health check listening address:port",
 			},
 			&cli.StringFlag{
 				Name:  "service-id",
@@ -37,13 +42,13 @@ func main() {
 			},
 			&cli.StringFlag{
 				Name:  "address",
-				Value: "192.168.60.164",
+				Value: "127.0.0.1",
 				Usage: "external address",
 			},
 		},
 		Action: func(c *cli.Context) error {
-			// TODO 从consul读取配置，初始化数据库连接
-			err := consul.InitConsulClient("192.168.40.117:8500", "lan-dc1", "", "")
+			// 从consul读取配置，初始化数据库连接
+			err := consul.InitConsulClientViaEnv()
 			if err != nil {
 				panic(err)
 			}
@@ -59,14 +64,14 @@ func main() {
 			task_redis.InitTaskRedis()
 			models.Init()
 
-			err = services.Register(c.String("service-id"), define.SRV_NAME_TASK, c.String("address"), c.Int("port"), c.Int("port")+10, []string{"master"})
+			err = services.Register(c.String("service-id"), define.SRV_NAME_TASK, c.String("address"), c.Int("port"), c.Int("check-port"), []string{"master"})
 			if err != nil {
 				log.Error(err)
 				os.Exit(-1)
 			}
 			// consul 健康检查
 			http.HandleFunc("/check", consulCheck)
-			go http.ListenAndServe(fmt.Sprintf(":%d", c.Int("port")+10), nil)
+			go http.ListenAndServe(fmt.Sprintf(":%d", c.Int("check-port")), nil)
 			// grpc监听
 			laddr := fmt.Sprintf(":%d", c.Int("port"))
 			lis, err := net.Listen("tcp", laddr)

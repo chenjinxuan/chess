@@ -26,6 +26,7 @@ type Config struct {
 	ServiceId string
 	Address   string
 	Port      int
+	CheckPort      int
 }
 
 func main() {
@@ -46,8 +47,13 @@ func main() {
 			},
 			&cli.IntFlag{
 				Name:  "port",
-				Value: 20001,
+				Value: 14001,
 				Usage: "listening port",
+			},
+			&cli.IntFlag{
+				Name:  "check-port",
+				Value: 14101,
+				Usage: "consul health check listening port",
 			},
 			&cli.StringSliceFlag{
 				Name:  "services",
@@ -59,6 +65,7 @@ func main() {
 			Cfg.ServiceId = c.String("service-id")
 			Cfg.Address = c.String("address")
 			Cfg.Port = c.Int("port")
+			Cfg.CheckPort = c.Int("check-port")
 
 			// 从consul读取配置，初始化数据库连接
 			err := consul.InitConsulClientViaEnv()
@@ -78,7 +85,7 @@ func main() {
 			redis.Init()
 
 			// consul 服务注册
-			err = services.Register(c.String("service-id"), define.SRV_NAME_ROOM, c.String("address"), c.Int("port"), c.Int("port")+100, []string{"master"})
+			err = services.Register(c.String("service-id"), define.SRV_NAME_ROOM, c.String("address"), c.Int("port"), c.Int("check-port"), []string{"master"})
 			if err != nil {
 				panic(err)
 			}
@@ -89,7 +96,7 @@ func main() {
 
 			// consul 健康检查
 			http.HandleFunc("/check", consulCheck)
-			go http.ListenAndServe(fmt.Sprintf(":%d", c.Int("port")+100), nil)
+			go http.ListenAndServe(fmt.Sprintf(":%d", c.Int("check-port")), nil)
 
 			// grpc监听
 			laddr := fmt.Sprintf(":%d", c.Int("port"))

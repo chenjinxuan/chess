@@ -41,8 +41,13 @@ func main() {
 			},
 			&cli.IntFlag{
 				Name:  "port",
-				Value: 30001,
+				Value: 13001,
 				Usage: "listening port",
+			},
+			&cli.IntFlag{
+				Name:  "check-port",
+				Value: 13101,
+				Usage: "consul health check listening port",
 			},
 			&cli.StringFlag{
 				Name:  "kafka-bucket",
@@ -61,7 +66,7 @@ func main() {
 			},
 			&cli.StringFlag{
 				Name:  "boltdb",
-				Value: "./CHAT.DAT",
+				Value: "/data/CHAT.DAT",
 				Usage: "chat snapshot file",
 			},
 			&cli.StringFlag{
@@ -89,7 +94,6 @@ func main() {
 			log.Println("retention:", c.Int("retention"))
 			log.Println("write-interval:", c.Duration("write-interval"))
 			log.Println("kafka-bucket", c.String("kafka-bucket"))
-			log.Println("kafka-brokers", c.StringSlice("kafka-brokers"))
 
 			// 从consul读取配置，初始化数据库连接
 			err := consul.InitConsulClientViaEnv()
@@ -98,14 +102,14 @@ func main() {
 			}
 
 			// consul 服务注册
-			err = services.Register(c.String("service-id"), define.SRV_NAME_CHAT, c.String("address"), c.Int("port"), c.Int("port")+100, []string{"master"})
+			err = services.Register(c.String("service-id"), define.SRV_NAME_CHAT, c.String("address"), c.Int("port"), c.Int("check-port"), []string{"master"})
 			if err != nil {
 				panic(err)
 			}
 
 			// consul 健康检查
 			http.HandleFunc("/check", consulCheck)
-			go http.ListenAndServe(fmt.Sprintf(":%d", c.Int("port")+100), nil)
+			go http.ListenAndServe(fmt.Sprintf(":%d", c.Int("check-port")), nil)
 
 			// 监听
 			laddr := fmt.Sprintf(":%d", c.Int("port"))
