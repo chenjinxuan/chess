@@ -199,3 +199,24 @@ func (r *Redis) Brpop(key string, time int) ([]string, error) {
 	res, err := redis.Strings(conn.Do("BRPOP", key, time))
 	return res, err
 }
+
+func (r *Redis) Sadd(key string,val string) error {
+	conn := r.GetConn()
+	defer conn.Close()
+	_, err := conn.Do("SADD", key, val)
+	return err
+}
+func (r *Redis) Spop(key string)  (string, error) {
+    conn := r.GetConn()
+    defer conn.Close()
+    res, err := redis.String(conn.Do("SPOP", key))
+    return res ,err
+}
+
+func (r *Redis) Scard(key string) (int, error) {
+    conn := r.GetConn()
+    defer conn.Close()
+    res, err := redis.Int(conn.Do("SCARD", key))
+    return res,err
+}
+

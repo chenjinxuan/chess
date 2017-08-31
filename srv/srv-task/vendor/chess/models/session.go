@@ -9,12 +9,6 @@ import (
 	"time"
 )
 
-const (
-	MongoDBStr       = "chess"
-	MongoColSession  = "session"
-	MongoColUserTask = "user_task"
-)
-
 var Session = new(SessionModel)
 
 type SessionModel struct {

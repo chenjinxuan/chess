@@ -1,6 +1,5 @@
-FROM golang:latest
-MAINTAINER xtaci <daniel820313@gmail.com>
-COPY . /go/src/agent
-RUN go install agent
+FROM golang:1.8
+MAINTAINER lanziliang <lanziliang11@gmail.com>
+COPY . /go/src/chess/agent
+RUN go install chess/agent
 ENTRYPOINT ["/go/bin/agent"]
-EXPOSE 8888 8888/udp

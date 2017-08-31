@@ -1,6 +1,5 @@
-FROM golang:latest
-MAINTAINER xtaci <daniel820313@gmail.com>
-COPY . /go/src/auth
-RUN go install auth
-ENTRYPOINT /go/bin/auth
-EXPOSE 50006
+FROM golang:1.8
+MAINTAINER lanziliang <lanziliang11@gmail.com>
+COPY . /go/src/chess/srv/srv-task
+RUN go install chess/srv/srv-task
+ENTRYPOINT ["/go/bin/srv-task"]

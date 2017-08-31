@@ -46,8 +46,13 @@ func main() {
 			},
 			&cli.IntFlag{
 				Name:  "port",
-				Value: 10001,
+				Value: 12001,
 				Usage: "listening port",
+			},
+			&cli.IntFlag{
+				Name:  "check-port",
+				Value: 12101,
+				Usage: "consul health check listening port",
 			},
 		},
 		Action: func(c *cli.Context) error {
@@ -62,7 +67,7 @@ func main() {
 			}
 
 			// consul 服务注册
-			err = services.Register(c.String("service-id"), define.SRV_NAME_CENTRE, c.String("address"), c.Int("port"), c.Int("port")+100, []string{"master"})
+			err = services.Register(c.String("service-id"), define.SRV_NAME_CENTRE, c.String("address"), c.Int("port"), c.Int("check-port"), []string{"master"})
 			if err != nil {
 				panic(err)
 			}
@@ -77,7 +82,7 @@ func main() {
 
 			// consul 健康检查
 			http.HandleFunc("/check", consulCheck)
-			go http.ListenAndServe(fmt.Sprintf(":%d", c.Int("port")+100), nil)
+			go http.ListenAndServe(fmt.Sprintf(":%d", c.Int("check-port")), nil)
 
 			// grpc监听
 			laddr := fmt.Sprintf(":%d", c.Int("port"))

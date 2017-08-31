@@ -1,0 +1,34 @@
+version: '3'
+services:
+  agent-1:
+    build:
+    ports:
+    depends_on:
+      - auth-1
+      - room-1
+    links:
+      - auth-1
+      - room-1
+
+  auth-1:
+    build:
+    ports:
+    volumes:
+
+  centre-1:
+    build:
+    ports:
+    volumes:
+
+  chat-1:
+    build:
+    ports:
+    volumes:
+
+
+  room-1:
+    build:
+    ports:
+    links:
+      - auth-1
+      - room-1
