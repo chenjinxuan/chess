@@ -9,7 +9,7 @@ import (
 	"errors"
 	"golang.org/x/net/context"
 	"regexp"
-    "strconv"
+	"strconv"
 )
 
 var (
@@ -61,13 +61,12 @@ func (s *server) PlayerEvent(ctx context.Context, args *PlayerActionArgs) (*Task
 }
 
 func (s *server) UpsetTask(ctx context.Context, args *UpsetTaskArgs) (*TaskRes, error) {
-    log.Debug("Upset receive.")
-    //判断数据是否是否收到
-    if args.Id != 0 {
-	//存入redis 队列
-	_=task_redis.Redis.Task.Sadd(define.TaskUpsetRedisKey, strconv.Itoa(int(args.Id)))
-	return &TaskRes{Ret: 1, Msg: ""}, nil
-    }
-    return &TaskRes{Ret: 0, Msg: "recive fail."}, nil
+	log.Debug("Upset receive.")
+	//判断数据是否是否收到
+	if args.Id != 0 {
+		//存入redis 队列
+		_ = task_redis.Redis.Task.Sadd(define.TaskUpsetRedisKey, strconv.Itoa(int(args.Id)))
+		return &TaskRes{Ret: 1, Msg: ""}, nil
+	}
+	return &TaskRes{Ret: 0, Msg: "recive fail."}, nil
 }
-

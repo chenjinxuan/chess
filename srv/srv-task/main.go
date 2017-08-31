@@ -83,6 +83,15 @@ func main() {
 			}
 			mgr.Loop()
 			mgr.SubLoop()
+			//初始化update
+			upsetMgr := handler.GetTaskUpsetMgr()
+			if upsetMgr == nil {
+				log.Errorf("Get CouponGenMgr fail")
+				os.Exit(-1)
+			}
+			upsetMgr.LoopGetALLTask()
+			upsetMgr.Loop()
+			upsetMgr.SubLoop()
 			// 注册服务
 			s := grpc.NewServer()
 			ins := &server{}

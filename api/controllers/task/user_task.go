@@ -12,7 +12,6 @@ import (
 	grpcServer "chess/api/grpc"
 	pb "chess/api/proto"
 	"golang.org/x/net/context"
-       "fmt"
 )
 
 type ReceiveTaskRewardParams struct {
@@ -174,12 +173,9 @@ func List(c *gin.Context) {
 		return
 	}
         //通知是否要更新任务
-    TaskClient := grpcServer.GetTaskGrpc()
-    taskResult, err := TaskClient.UpsetTask(context.Background(), &pb.UpsetTaskArgs{Id:int32(UserId)})
-    if err != nil {
-	fmt.Println(err)
-    }
-    fmt.Println(taskResult)
+	TaskClient := grpcServer.GetTaskGrpc()
+        go TaskClient.UpsetTask(context.Background(), &pb.UpsetTaskArgs{Id:int32(UserId)})
+
 	data, err := models.UserTask.Get(UserId)
 	if err != nil {
 		log.Errorf("models.UserTask.Get err %s", err)
