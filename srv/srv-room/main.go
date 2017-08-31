@@ -73,7 +73,7 @@ func main() {
 
 			db.InitMySQL()
 			db.InitRedis()
-			//db.InitMongo()
+			db.InitMongo()
 			models.Init()
 			redis.Init()
 

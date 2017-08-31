@@ -51,11 +51,11 @@ func (m *UsersWalletModel) GetBalance(userId int) (balance, diamondBalance int, 
 	return
 }
 
-func (m *UsersWalletModel) GetBalanceByMobile(mobile string) (balance int, err error) {
-	sqlString := `SELECT balance 
+func (m *UsersWalletModel) GetBalanceByMobile(mobile string) (balance, diamond_balance int, err error) {
+	sqlString := `SELECT balance , diamond_balance
 		FROM users_wallet,users
 		WHERE users_wallet.user_id = users.id AND users.mobile_number = ?`
-	err = Mysql.Chess.QueryRow(sqlString, mobile).Scan(&balance)
+	err = Mysql.Chess.QueryRow(sqlString, mobile).Scan(&balance, &diamond_balance)
 	return
 }
 
@@ -121,5 +121,11 @@ func (m *UsersWalletModel) Checkout(uid, add int) error {
 		WHERE user_id = ?`
 
 	_, err := Mysql.Chess.Exec(sqlStr, add, add, uid)
+	return err
+}
+
+func (m *UsersWalletModel) AddBlance(userId, balance int) error {
+	sqlStr := `UPDATE users_wallet SET balance = balance + ? WHERE user_id = ?`
+	_, err := Mysql.Chess.Exec(sqlStr, balance, userId)
 	return err
 }

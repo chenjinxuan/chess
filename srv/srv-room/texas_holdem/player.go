@@ -337,6 +337,11 @@ func (p *Player) Standup() {
 		PlayerId:  int32(p.Id),
 		PlayerPos: int32(p.Pos),
 	})
+	// 2122, 通知自动坐下等待玩家数
+	p.SendMessage(define.Code["room_player_autositdown_ack"], &pb.RoomPlayerAutoSitdownAck{
+		Num:   int32(len(table.AutoSitdown)),
+		Queue: table.AutoSitdown,
+	})
 
 	p.Bet = 0
 	p.Cards = nil
@@ -346,6 +351,33 @@ func (p *Player) Standup() {
 	p.CurrChips += p.Chips
 	p.Chips = 0
 
+}
+
+// 自动坐下
+func (p *Player) AutoSitdown() {
+	table := p.Table
+	if table == nil {
+		log.Errorf("玩家%d不在牌桌上！", p.Id)
+		return
+	}
+
+	if p.Action != ActStandup {
+		log.Errorf("玩家%d当前不是站起状态！", p.Id)
+		return
+	}
+
+	if table.N < table.Max {
+		log.Errorf("玩家%d可直接坐下！", p.Id)
+		return
+	}
+
+	table.AddAutoSitdown(p.Id)
+
+	// 2122, 广播自动坐下等待玩家数
+	table.BroadcastBystanders(define.Code["room_player_autositdown_ack"], &pb.RoomPlayerAutoSitdownAck{
+		Num:   int32(len(table.AutoSitdown)),
+		Queue: table.AutoSitdown,
+	})
 }
 
 // 坐下

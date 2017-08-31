@@ -25,6 +25,7 @@ func init() {
 		2116: P_room_player_change_table_req,
 		2118: P_room_player_logout_req,
 		2121: P_room_table_chat_req,
+		2123: P_room_player_autositdown_req,
 	}
 }
 
@@ -174,5 +175,19 @@ func P_room_table_chat_req(p *Player, data []byte) []byte {
 	log.Debug("P_room_table_chat_req", req)
 
 	p.SendChatMessage(req)
+	return nil
+}
+
+// 玩家加入自动坐下队列
+func P_room_player_autositdown_req(p *Player, data []byte) []byte {
+	req := &pb.RoomPlayerAutoSitdownReq{}
+	err := proto.Unmarshal(data, req)
+	if err != nil {
+		log.Errorf("proto.Unmarshal Error: %s", err)
+		return nil
+	}
+	log.Debug("P_room_player_autositdown_req", req)
+
+	p.AutoSitdown()
 	return nil
 }

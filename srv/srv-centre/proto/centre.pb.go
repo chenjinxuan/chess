@@ -25,7 +25,7 @@ type BaseRes struct {
 func (m *BaseRes) Reset()                    { *m = BaseRes{} }
 func (m *BaseRes) String() string            { return proto1.CompactTextString(m) }
 func (*BaseRes) ProtoMessage()               {}
-func (*BaseRes) Descriptor() ([]byte, []int) { return fileDescriptor2, []int{0} }
+func (*BaseRes) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{0} }
 
 func (m *BaseRes) GetRet() int32 {
 	if m != nil {
@@ -50,7 +50,7 @@ type UpdateRoomInfoArgs struct {
 func (m *UpdateRoomInfoArgs) Reset()                    { *m = UpdateRoomInfoArgs{} }
 func (m *UpdateRoomInfoArgs) String() string            { return proto1.CompactTextString(m) }
 func (*UpdateRoomInfoArgs) ProtoMessage()               {}
-func (*UpdateRoomInfoArgs) Descriptor() ([]byte, []int) { return fileDescriptor2, []int{1} }
+func (*UpdateRoomInfoArgs) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{1} }
 
 func (m *UpdateRoomInfoArgs) GetServiceId() string {
 	if m != nil {
@@ -79,7 +79,7 @@ type RoomListArgs struct {
 func (m *RoomListArgs) Reset()                    { *m = RoomListArgs{} }
 func (m *RoomListArgs) String() string            { return proto1.CompactTextString(m) }
 func (*RoomListArgs) ProtoMessage()               {}
-func (*RoomListArgs) Descriptor() ([]byte, []int) { return fileDescriptor2, []int{2} }
+func (*RoomListArgs) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{2} }
 
 type RoomListRes struct {
 	List map[int32]*RoomInfo `protobuf:"bytes,1,rep,name=list" json:"list,omitempty" protobuf_key:"varint,1,opt,name=key" protobuf_val:"bytes,2,opt,name=value"`
@@ -88,7 +88,7 @@ type RoomListRes struct {
 func (m *RoomListRes) Reset()                    { *m = RoomListRes{} }
 func (m *RoomListRes) String() string            { return proto1.CompactTextString(m) }
 func (*RoomListRes) ProtoMessage()               {}
-func (*RoomListRes) Descriptor() ([]byte, []int) { return fileDescriptor2, []int{3} }
+func (*RoomListRes) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{3} }
 
 func (m *RoomListRes) GetList() map[int32]*RoomInfo {
 	if m != nil {
@@ -105,7 +105,7 @@ type RoomInfo struct {
 func (m *RoomInfo) Reset()                    { *m = RoomInfo{} }
 func (m *RoomInfo) String() string            { return proto1.CompactTextString(m) }
 func (*RoomInfo) ProtoMessage()               {}
-func (*RoomInfo) Descriptor() ([]byte, []int) { return fileDescriptor2, []int{4} }
+func (*RoomInfo) Descriptor() ([]byte, []int) { return fileDescriptor1, []int{4} }
 
 func (m *RoomInfo) GetTableNumber() int32 {
 	if m != nil {
@@ -238,9 +238,9 @@ var _CentreService_serviceDesc = grpc.ServiceDesc{
 	Metadata: "centre.proto",
 }
 
-func init() { proto1.RegisterFile("centre.proto", fileDescriptor2) }
+func init() { proto1.RegisterFile("centre.proto", fileDescriptor1) }
 
-var fileDescriptor2 = []byte{
+var fileDescriptor1 = []byte{
 	// 350 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x6c, 0x92, 0xcd, 0x4b, 0xeb, 0x40,
 	0x14, 0xc5, 0x9b, 0xf6, 0xf5, 0x23, 0x37, 0x69, 0xdf, 0xe3, 0xbe, 0xc5, 0xeb, 0x2b, 0x0a, 0x35,

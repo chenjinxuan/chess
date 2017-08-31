@@ -40,11 +40,11 @@ func route(sess *Session, p []byte) []byte {
 
 	// 读协议号
 	b := int16(binary.BigEndian.Uint16(p[4:6]))
-	if _, ok := define.RCode[b]; !ok {
-		log.Error("protocol number not defined.")
-		sess.Flag |= SESS_KICKED_OUT
-		return nil
-	}
+	//if _, ok := define.RCode[b]; !ok {
+	//	log.Error("protocol number not defined.")
+	//	sess.Flag |= SESS_KICKED_OUT
+	//	return nil
+	//}
 
 	// 根据协议号断做服务划分
 	// 协议号的划分采用分割协议区间, 用户可以自定义多个区间，用于转发到不同的后端服务
