@@ -8,6 +8,7 @@ docker rm -f chat-1
 docker build --no-cache --rm=true -t chat .
 docker run --rm=true -it -p 13001:13001 -p 13101:13101 \
 	--env-file ./.env \
+	-v /tmp:/data \
 	--name chat-1 \
 	chat \
 	--kafka-brokers 192.168.40.157:9092 \

@@ -120,6 +120,7 @@
     $ docker run -d \
         --restart=always \
         --env-file /path/to/.env \
+        -v /data:/data \
         -p 13001:13001 -p 13101:13101 \
         --name chat-1 \
         docker.airdroid.com/lanziliang/chat:tag \
