@@ -2,29 +2,41 @@ package grpc
 
 import (
 	pb "chess/api/proto"
-	"chess/common/config"
 	"chess/common/services"
+        "chess/common/define"
 )
 
-//var (
-//    AuthClient pb.AuthServiceClient
-//)
 
-func GetAuthGrpc() (AuthClient pb.AuthServiceClient) {
-	auth := services.GetService(config.C.GrpcServer[0])
+func GetAuthGrpc() (AuthClient pb.AuthServiceClient,ret int) {
+	auth := services.GetService(define.SRV_NAME_AUTH)
+	if auth==nil {
+	    ret = 0
+	    return nil,ret
+	}
 	AuthClient = pb.NewAuthServiceClient(auth)
-	return AuthClient
+    	ret=1
+	return AuthClient ,ret
 }
 
-func GetCentreGrpc() (CentreClient pb.CentreServiceClient) {
-	centre := services.GetService(config.C.GrpcServer[1])
+func GetCentreGrpc() (CentreClient pb.CentreServiceClient,ret int) {
+	centre := services.GetService(define.SRV_NAME_CENTRE)
+	if centre==nil {
+	    ret = 0
+	    return nil,ret
+	}
 	CentreClient = pb.NewCentreServiceClient(centre)
-	return CentreClient
+   	 ret=1
+	return CentreClient,ret
 }
 
 
-func GetTaskGrpc() (TaskClient pb.TaskServiceClient) {
-    task:= services.GetService(config.C.GrpcServer[2])
+func GetTaskGrpc() (TaskClient pb.TaskServiceClient,ret int) {
+    task:= services.GetService(define.SRV_NAME_TASK)
+    if task==nil {
+	ret = 0
+	return nil,ret
+    }
     TaskClient = pb.NewTaskServiceClient(task)
-    return TaskClient
+    ret=1
+    return TaskClient,ret
 }

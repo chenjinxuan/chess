@@ -244,6 +244,54 @@
                 }
             }
         },
+        "/game/{user_id}/last_game": {
+            "get": {
+                "tags": [
+                    "/game/:user_id - 游戏相关 "
+                ],
+                "summary": "上局牌局",
+                "description": "上局牌局",
+                "operationId": ".上局牌局",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "user_id",
+                        "description": "用户id",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "in": "query",
+                        "name": "token",
+                        "description": "token",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "table_id",
+                        "description": "table_id",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/c_game.LastGameResult"
+                        }
+                    }
+                }
+            }
+        },
         "/goods/list": {
             "get": {
                 "tags": [
@@ -381,6 +429,95 @@
                 }
             }
         },
+        "/user/{user_id}/bag/list": {
+            "get": {
+                "tags": [
+                    "/user/:user_id - 用户相关 "
+                ],
+                "summary": "用户背包",
+                "description": "用户背包",
+                "operationId": ".用户背包",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "user_id",
+                        "description": "用户id",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "in": "query",
+                        "name": "token",
+                        "description": "token",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/c_user.BagListResult"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/{user_id}/bag/use": {
+            "get": {
+                "tags": [
+                    "/user/:user_id - 用户相关 "
+                ],
+                "summary": "用户背包物品使用",
+                "description": "用户背包物品使用",
+                "operationId": ".用户背包物品使用",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "user_id",
+                        "description": "用户id",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "in": "query",
+                        "name": "token",
+                        "description": "token",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "goods_id",
+                        "description": "goods_id",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/define.BaseResult"
+                        }
+                    }
+                }
+            }
+        },
         "/user/{user_id}/checkin": {
             "get": {
                 "tags": [
@@ -417,6 +554,47 @@
                         "description": "",
                         "schema": {
                             "$ref": "#/definitions/c_user.CheckinResult"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/{user_id}/checkin/list": {
+            "get": {
+                "tags": [
+                    "/user/:user_id - 用户相关 "
+                ],
+                "summary": "用户签到列表",
+                "description": "用户签到列表",
+                "operationId": ".用户签到列表",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "user_id",
+                        "description": "用户id",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "in": "query",
+                        "name": "token",
+                        "description": "token",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/c_user.CheckinListResult"
                         }
                     }
                 }
@@ -1006,6 +1184,9 @@
                     "type": "integer",
                     "format": "int64"
                 },
+                "msg": {
+                    "type": "string"
+                },
                 "need_captcha": {
                     "description": "是否需要验证码",
                     "type": "boolean"
@@ -1013,6 +1194,11 @@
                 "refresh_token": {
                     "description": "当 Token 过期时，使用该 Token 获取一个新的",
                     "type": "string"
+                },
+                "ret": {
+                    "description": "1成功 0失败",
+                    "type": "integer",
+                    "format": "int64"
                 },
                 "token": {
                     "description": "请求授权的token",
@@ -1080,6 +1266,23 @@
                     "items": {
                         "$ref": "#/definitions/c_charge.ChargeGoodsInfo"
                     }
+                },
+                "msg": {
+                    "type": "string"
+                },
+                "ret": {
+                    "description": "1成功 0失败",
+                    "type": "integer",
+                    "format": "int64"
+                }
+            }
+        },
+        "c_game.LastGameResult": {
+            "title": "LastGameResult",
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/models.GamblingModel"
                 },
                 "msg": {
                     "type": "string"
@@ -1242,6 +1445,103 @@
                 }
             }
         },
+        "c_user.BagDetail": {
+            "title": "BagDetail",
+            "type": "object",
+            "properties": {
+                "goods_category_id": {
+                    "description": "商品类别",
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "goods_describe": {
+                    "description": "描述",
+                    "type": "string"
+                },
+                "goods_id": {
+                    "description": "商品id",
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "goods_type_id": {
+                    "description": "商品属性",
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "image": {
+                    "description": "图片",
+                    "type": "string"
+                },
+                "is_expire": {
+                    "description": "0为永久,其他为过期时间 时间戳",
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "name": {
+                    "description": "商品名",
+                    "type": "string"
+                },
+                "number": {
+                    "description": "数量",
+                    "type": "integer",
+                    "format": "int64"
+                }
+            }
+        },
+        "c_user.BagListResult": {
+            "title": "BagListResult",
+            "type": "object",
+            "properties": {
+                "list": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/c_user.BagDetail"
+                    }
+                },
+                "msg": {
+                    "type": "string"
+                },
+                "ret": {
+                    "description": "1成功 0失败",
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "user_id": {
+                    "description": "用户id",
+                    "type": "integer",
+                    "format": "int64"
+                }
+            }
+        },
+        "c_user.CheckinListResult": {
+            "title": "CheckinListResult",
+            "type": "object",
+            "properties": {
+                "already_checkin": {
+                    "description": "已经签到天数",
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "last_checkin_time": {
+                    "description": "上次签到时间",
+                    "type": "string"
+                },
+                "list": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.CheckinDaysRewardModel"
+                    }
+                },
+                "msg": {
+                    "type": "string"
+                },
+                "ret": {
+                    "description": "1成功 0失败",
+                    "type": "integer",
+                    "format": "int64"
+                }
+            }
+        },
         "c_user.CheckinResult": {
             "title": "CheckinResult",
             "type": "object",
@@ -1292,7 +1592,7 @@
                     "description": "最大牌",
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/c_user.UserBestCards"
+                        "$ref": "#/definitions/models.Card"
                     }
                 },
                 "inbound_rate": {
@@ -1462,22 +1762,6 @@
                 }
             }
         },
-        "c_user.UserBestCards": {
-            "title": "UserBestCards",
-            "type": "object",
-            "properties": {
-                "suit": {
-                    "description": "花色",
-                    "type": "integer",
-                    "format": "int64"
-                },
-                "value": {
-                    "description": "大小",
-                    "type": "integer",
-                    "format": "int64"
-                }
-            }
-        },
         "c_user.UserInfo": {
             "title": "UserInfo",
             "type": "object",
@@ -1507,6 +1791,11 @@
                     "format": "int64"
                 },
                 "id": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "is_chekin": {
+                    "description": "今天是否签到,,1已签0未签",
                     "type": "integer",
                     "format": "int64"
                 },
@@ -1570,6 +1859,197 @@
                 }
             }
         },
+        "models.Card": {
+            "title": "Card",
+            "type": "object",
+            "properties": {
+                "suit": {
+                    "description": "花色",
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "value": {
+                    "description": "牌值",
+                    "type": "integer",
+                    "format": "int64"
+                }
+            }
+        },
+        "models.CheckinDaysRewardModel": {
+            "title": "CheckinDaysRewardModel",
+            "type": "object",
+            "properties": {
+                "days": {
+                    "description": "签到的天数",
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "id": {
+                    "description": "签到奖励的id",
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "image": {
+                    "description": "签到奖励的奖品图片",
+                    "type": "string"
+                },
+                "image_describe": {
+                    "description": "描述",
+                    "type": "string"
+                },
+                "number": {
+                    "description": "签到奖励的金额",
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "status": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "type": {
+                    "description": "签到奖励的类型",
+                    "type": "integer",
+                    "format": "int64"
+                }
+            }
+        },
+        "models.GamblingModel": {
+            "title": "GamblingModel",
+            "type": "object",
+            "properties": {
+                "bb": {
+                    "description": "大盲注",
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "bb_pos": {
+                    "description": "大盲注位置",
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "button": {
+                    "description": "庄家",
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "cards": {
+                    "description": "牌",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Card"
+                    }
+                },
+                "end": {
+                    "description": "结束时间",
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "max": {
+                    "description": "最多玩家数",
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "players": {
+                    "description": "玩家",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Player"
+                    }
+                },
+                "pot": {
+                    "description": "奖池"
+                },
+                "room_id": {
+                    "description": "房间id",
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "sb": {
+                    "description": "小盲注",
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "sb_pos": {
+                    "description": "小盲注位置",
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "start": {
+                    "description": "开始时间",
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "table_id": {
+                    "description": "桌子id",
+                    "type": "string"
+                }
+            }
+        },
+        "models.Player": {
+            "title": "Player",
+            "type": "object",
+            "properties": {
+                "action": {
+                    "description": "动作",
+                    "type": "string"
+                },
+                "avatar": {
+                    "description": "头像",
+                    "type": "string"
+                },
+                "bet": {
+                    "description": "投注金额",
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "cards": {
+                    "description": "手牌",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.Card"
+                    }
+                },
+                "current_chips": {
+                    "description": "当前筹码",
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "former_chips": {
+                    "description": "开始筹码",
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "hand_final_value": {
+                    "description": "牌值",
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "hand_level": {
+                    "description": "牌等级",
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "id": {
+                    "description": "玩家id",
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "nickname": {
+                    "description": "昵称",
+                    "type": "string"
+                },
+                "pos": {
+                    "description": "位置",
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "win": {
+                    "description": "赢取金额",
+                    "type": "integer",
+                    "format": "int64"
+                }
+            }
+        },
         "models.UserTaskModel": {
             "title": "UserTaskModel",
             "type": "object",
@@ -1579,9 +2059,13 @@
                     "type": "integer",
                     "format": "int64"
                 },
+                "effect_time": {
+                    "$ref": "#/definitions/time.Time",
+                    "description": "生效时间"
+                },
                 "expire_time": {
                     "$ref": "#/definitions/time.Time",
-                    "description": "当任务类型为永久任务的时候才有过期时间"
+                    "description": "过期时间"
                 },
                 "image": {
                     "description": "任务图片",
@@ -1672,6 +2156,11 @@
                 "task_type_name": {
                     "description": "任务类型名字",
                     "type": "string"
+                },
+                "version": {
+                    "description": "版本号",
+                    "type": "integer",
+                    "format": "int64"
                 }
             }
         },

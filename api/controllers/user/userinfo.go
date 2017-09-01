@@ -8,6 +8,9 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
+    	"time"
+    "fmt"
+    "chess/common/log"
 )
 
 type UserInfo struct {
@@ -23,6 +26,7 @@ type UserInfo struct {
 	DiamondBalance  int    `json:"diamond_balance" description:"钻石余额"`
 	CheckinDays     int    `json:"checkin_days" description:"签到天数"`
 	LastCheckinTime string `json:"last_checkin_time" description:"上次签到时间"`
+        IsChekin        int    `json:"is_chekin" description:"今天是否签到,,1已签0未签"`
 }
 
 type UserInfoResult struct {
@@ -61,6 +65,11 @@ func GetUserInfo(c *gin.Context) {
 		c.JSON(http.StatusOK, result)
 		return
 	}
+	nowTime := time.Now()
+	lastCheckTime := user.LastCheckinTime.Format(define.FormatDate)
+	if lastCheckTime == nowTime.Format(define.FormatDate) {
+	   result.Data.IsChekin =1
+	}
 	result.Data.Id = user.Id
 	result.Data.NickName = user.Nickname
 	result.Data.MobileNumber = user.MobileNumber
@@ -87,15 +96,15 @@ type GetUserInfoDetailResult struct {
 	define.BaseResult
 	WinRate      float64         `json:"win_rate" description:"胜率"`
 	TotalGame    int             `json:"total_game" description:"总局数"`
-	Cards        []UserBestCards `json:"cards" description:"最大牌"`
+	Cards        []models.Card `json:"cards" description:"最大牌"`
 	BestWinner   int             `json:"best_winner" description:"最大赢取筹码"`
 	ShowdownRate float64         `json:"showdown_rate" description:"摊牌率"`
 	InboundRate  float64         `json:"inbound_rate" description:"入局率"`
 }
-type UserBestCards struct {
-	Suit  int `json:"suit" description:"花色"`  //程序统一标准：0是黑桃、1是红桃、2是梅花、3是方片
-	Value int `json:"value" description:"大小"` //0代表‘牌2’、1代表‘牌3’...etc
-}
+//type UserBestCards struct {
+//	Suit  int `json:"suit" description:"花色"`  //程序统一标准：0是黑桃、1是红桃、2是梅花、3是方片
+//	Value int `json:"value" description:"大小"` //0代表‘牌2’、1代表‘牌3’...etc
+//}
 
 // @Title 获取用户详细信息
 // @Description 获取用户详细信息
@@ -107,25 +116,35 @@ type UserBestCards struct {
 // @router /user/{user_id}/detail [get]
 func GetUserInfoDetail(c *gin.Context) {
 	var result GetUserInfoDetailResult
-	//UserId, err := strconv.Atoi(c.Param("user_id"))
-	//if err != nil {
-	//    result.Msg = "bind params fail ."
-	//    c.JSON(http.StatusOK, result)
-	//    return
-	//}
-	//获取相应的数据
-	result.WinRate = 0.5
-	result.TotalGame = 30
-	result.BestWinner = 1333
-	result.ShowdownRate = 0.6
-	result.InboundRate = 0.8
-	var cards UserBestCards
-	cards.Value = 1
-	cards.Suit = 1
-	for i := 0; i <= 4; i++ {
-		cards.Value = i
-		result.Cards = append(result.Cards, cards)
+	UserId, err := strconv.Atoi(c.Param("user_id"))
+	if err != nil {
+	    result.Msg = "bind params fail ."
+	    c.JSON(http.StatusOK, result)
+	    return
 	}
+	//获取相应的数据
+        data,err:=models.UserGameSts.Get(UserId)
+	if err != nil {
+	    if fmt.Sprint(err) == "not found" {
+		result.Ret = 1
+		c.JSON(http.StatusOK, result)
+		return
+	    }else {
+		log.Errorf("models.UserGameSts.Get",err)
+		result.Msg = "get fail ."
+		c.JSON(http.StatusOK, result)
+		return
+	    }
+	}
+        winRate,_:=strconv.Atoi(fmt.Sprintf("%.2f",data.Win/data.TotalGame))
+	result.WinRate = float64(winRate)
+        ShowdownRate ,_:=strconv.Atoi(fmt.Sprintf("%.2f",data.Showdown/data.TotalGame))
+	result.TotalGame = data.TotalGame
+	result.BestWinner = data.BestWinner
+	result.ShowdownRate = float64(ShowdownRate)
+    	InboundRate,_:=strconv.Atoi(fmt.Sprintf("%.2f",data.Inbound/data.TotalGame))
+	result.InboundRate = float64(InboundRate)
+	result.Cards=data.Cards
 	result.Ret = 1
 	c.JSON(http.StatusOK, result)
 	return

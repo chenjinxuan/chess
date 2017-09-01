@@ -33,7 +33,12 @@ func Logout(c *gin.Context) {
 		c.JSON(http.StatusOK, result)
 		return
 	}
-	AuthClient := grpcServer.GetAuthGrpc()
+	AuthClient,ret := grpcServer.GetAuthGrpc()
+	if ret == 0{
+	    result.Msg = "rpc fail"
+	    c.JSON(http.StatusOK, result)
+	    return
+	}
 	authResult, err := AuthClient.BlackToken(context.Background(), &pb.BlackTokenArgs{Code: define.AuthExpire, Token: params.Token})
 	if err != nil {
 		result.Msg = "logout fail ."

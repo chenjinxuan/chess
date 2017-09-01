@@ -130,7 +130,12 @@ func LoginMobile(c *gin.Context) {
 		}
 
 		// Create login token
-		AuthClient := grpcServer.GetAuthGrpc()
+		AuthClient,ret := grpcServer.GetAuthGrpc()
+		if ret == 0{
+		    result.Msg = "rpc fail"
+		    c.JSON(http.StatusOK, result)
+		    return
+		}
 		authResult, err := AuthClient.RefreshToken(context.Background(), &pb.RefreshTokenArgs{UserId: int32(user.Id), AppFrom: user.AppFrom, UniqueId: post.UniqueId})
 		if err != nil {
 			result.Msg = "login failed"

@@ -39,7 +39,12 @@ func RoomsList(c *gin.Context) {
 		return
 
 	}
-	CentreClient := grpcServer.GetCentreGrpc()
+	CentreClient,ret := grpcServer.GetCentreGrpc()
+	if ret == 0{
+	    result.Msg = "rpc fail"
+	    c.JSON(http.StatusOK, result)
+	    return
+	}
 	roomInfo, err := CentreClient.RoomList(context.Background(), &pb.RoomListArgs{})
 	for _, v := range data {
 		var info = new(RoomsInfo)
