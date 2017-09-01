@@ -40,7 +40,7 @@ func BagList(c *gin.Context)  {
     var result BagListResult
     userId, err := strconv.Atoi(c.Param("user_id"))
     if err != nil {
-	result.Msg = "bind fail ."
+	result.Msg = "get userId fail ."
 	c.JSON(http.StatusOK, result)
 	return
     }
@@ -109,19 +109,30 @@ func BagList(c *gin.Context)  {
 }
 
 type BagUseParmas struct {
-    GoodsId int `form:"goods_id"`
+    GoodsId int `form:"goods_id" description:"商品id"`
 }
+// @Title 用户背包物品使用
+// @Description 用户背包物品使用
+// @Summary 用户背包物品使用
+// @Accept json
+// @Param   user_id     path    int  true        "用户id"
+// @Param   token     query    string  true        "token"
+// @Param   goods_id     query    string  true        "goods_id"
+// @Success 200 {object} define.BaseResult
+// @router /user/{user_id}/bag/use [get]
 func BagUse(c *gin.Context)  {
     var result define.BaseResult
     var params BagUseParmas
     userId, err := strconv.Atoi(c.Param("user_id"))
     if err != nil {
-	result.Msg = "bind fail ."
+	result.Msg = "get userId fail ."
 	c.JSON(http.StatusOK, result)
 	return
     }
-    if err:=c.Bind(&userId);err!= nil {
-
+    if err:=c.Bind(&params);err!= nil {
+	result.Msg = "bind fail ."
+	c.JSON(http.StatusOK, result)
+	return
     }
     //查出bag
     bag,err:= models.UserBag.Get(userId)
@@ -130,7 +141,22 @@ func BagUse(c *gin.Context)  {
 	    //判断数量
 	    if v.Number <= 0 {
 		go models.UserBag.RemoveByGoodsId(userId,v.GoodsId)
+		result.Msg = "already receive fail."
+		c.JSON(http.StatusOK, result)
+		return
 	    }
+	    //对商品数量减一
+	    err=models.UserBag.UpdateInc(userId,v.GoodsId,-1)
+	    if err != nil {
+		log.Errorf("models.UserBag.UpdateInc", err)
+		result.Msg = "receive fail ."
+		c.JSON(http.StatusOK, result)
+		return
+	    }
+	    //查出商品信息
+	    result.Ret =1
+	    c.JSON(http.StatusOK, result)
+	    return
 	}
     }
 }

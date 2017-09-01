@@ -17,5 +17,5 @@ docker run --rm=true -it -p 11001:11001 -p 11101:11101 \
 	--env-file ./.env \
 	--name auth-1 \
 	auth \
-	--address 192.168.40.157 \
+	--address 192.168.60.164 \
 	--port 11001 --check-port 11101 --service-id auth-1

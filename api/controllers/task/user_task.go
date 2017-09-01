@@ -173,7 +173,12 @@ func List(c *gin.Context) {
 		return
 	}
         //通知是否要更新任务
-	TaskClient := grpcServer.GetTaskGrpc()
+	TaskClient,ret := grpcServer.GetTaskGrpc()
+	if ret == 0{
+	    result.Msg = "rpc fail"
+	    c.JSON(http.StatusOK, result)
+	    return
+	}
         go TaskClient.UpsetTask(context.Background(), &pb.UpsetTaskArgs{Id:int32(UserId)})
 
 	data, err := models.UserTask.Get(UserId)

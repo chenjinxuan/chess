@@ -19,6 +19,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/itsjamie/gin-cors"
 	"time"
+    "chess/api/controllers/game"
 )
 
 func InitRouter() {
@@ -98,6 +99,8 @@ func InitRouter() {
 		userRouter.POST("/profile/avatar", auth.Login(config.C.TokenSecret), c_user.ProfileAvatar)
 		userRouter.POST("/profile/gender", auth.Login(config.C.TokenSecret), c_user.ProfileGender)
 	    	userRouter.GET("/bag/list", auth.Login(config.C.TokenSecret), c_user.BagList)
+	    	userRouter.GET("/bag/use", auth.Login(config.C.TokenSecret), c_user.BagUse)
+
 
 
 
@@ -130,6 +133,11 @@ func InitRouter() {
 		taskRouter.GET("/receive", auth.Login(config.C.TokenSecret), c_task.ReceiveTaskReward)
 		taskRouter.GET("/list", auth.Login(config.C.TokenSecret), c_task.List)
 	}
+    // @SubApi /game/:user_id - 游戏相关 [/game/{user_id}/]
+        gameRouter := router.Group("/game/:user_id")
+    {
+	gameRouter.GET("/last_game",auth.Login(config.C.TokenSecret),c_game.LastGame)
+    }
 	//router.GET("/testquery",controllers.Get)
 	router.Run(config.Api.Port)
 }
