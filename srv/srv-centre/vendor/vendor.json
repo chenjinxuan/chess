@@ -5,44 +5,44 @@
 		{
 			"checksumSHA1": "L/UzqhKnStJKAOan0B7NWwmrM58=",
 			"path": "chess/common/config",
-			"revision": "f1522b0f26dfbffb553d5d79a32e14250b55fbfe",
-			"revisionTime": "2017-08-30T06:19:37Z"
+			"revision": "750aed932c8dae6b4712d50a88dfd28186fea9ba",
+			"revisionTime": "2017-09-01T03:20:33Z"
 		},
 		{
 			"checksumSHA1": "MFFw/6Q/HSwsThxyKLvINybvQu0=",
 			"path": "chess/common/consul",
-			"revision": "f1522b0f26dfbffb553d5d79a32e14250b55fbfe",
-			"revisionTime": "2017-08-30T06:19:37Z"
+			"revision": "750aed932c8dae6b4712d50a88dfd28186fea9ba",
+			"revisionTime": "2017-09-01T03:20:33Z"
 		},
 		{
 			"checksumSHA1": "7u5Va7EaOvxr5qK6KVEVsGWTitM=",
 			"path": "chess/common/db",
-			"revision": "f1522b0f26dfbffb553d5d79a32e14250b55fbfe",
-			"revisionTime": "2017-08-30T06:19:37Z"
+			"revision": "750aed932c8dae6b4712d50a88dfd28186fea9ba",
+			"revisionTime": "2017-09-01T03:20:33Z"
 		},
 		{
 			"checksumSHA1": "PJi9kBIv6yvLuCl/FcTUwFUY5h4=",
 			"path": "chess/common/define",
-			"revision": "f1522b0f26dfbffb553d5d79a32e14250b55fbfe",
-			"revisionTime": "2017-08-30T06:19:37Z"
+			"revision": "750aed932c8dae6b4712d50a88dfd28186fea9ba",
+			"revisionTime": "2017-09-01T03:20:33Z"
 		},
 		{
 			"checksumSHA1": "3PLcIK7yhm+9L60LrpgRzczEc/Q=",
 			"path": "chess/common/helper",
-			"revision": "f1522b0f26dfbffb553d5d79a32e14250b55fbfe",
-			"revisionTime": "2017-08-30T06:19:37Z"
+			"revision": "750aed932c8dae6b4712d50a88dfd28186fea9ba",
+			"revisionTime": "2017-09-01T03:20:33Z"
 		},
 		{
 			"checksumSHA1": "Y+us1CJfgnPsZixZzxqHKD89k0o=",
 			"path": "chess/common/log",
-			"revision": "f1522b0f26dfbffb553d5d79a32e14250b55fbfe",
-			"revisionTime": "2017-08-30T06:19:37Z"
+			"revision": "750aed932c8dae6b4712d50a88dfd28186fea9ba",
+			"revisionTime": "2017-09-01T03:20:33Z"
 		},
 		{
 			"checksumSHA1": "92l9uBBdZK6rFcUuJnBu+DWZFM0=",
 			"path": "chess/common/services",
-			"revision": "f1522b0f26dfbffb553d5d79a32e14250b55fbfe",
-			"revisionTime": "2017-08-30T06:19:37Z"
+			"revision": "750aed932c8dae6b4712d50a88dfd28186fea9ba",
+			"revisionTime": "2017-09-01T03:20:33Z"
 		},
 		{
 			"checksumSHA1": "tI2uUPh7qwQxNihd1LvtNTdjVks=",

@@ -15,3 +15,18 @@ func (m *TaskPriceReceiveModel) Insert() error {
 	_, err := Mysql.Chess.Exec(sqlStr, m.UserId, m.TaskId, m.RewardType, m.RewardNum)
 	return err
 }
+
+func (m *TaskPriceReceiveModel) GetAllByUserId(userId int) (list []int,err error){
+        sqlStr := `SELECT task_id FROM task_prize_receive WHERE user_id  =  ?`
+       rows,err:=Mysql.Chess.Query(sqlStr,userId)
+	if err != nil {
+	    return
+	}
+	defer rows.Close()
+    for rows.Next() {
+	var i int
+	err=rows.Scan(&i)
+	list = append(list,i)
+    }
+    return
+}
