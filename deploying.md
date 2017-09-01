@@ -59,12 +59,15 @@
 
  ### 各服务启动命令
  
+ > 需要用到kafka服务，chat会保留一定数量的消息在内存中（默认128条），这个消息队列会定期持久化到本地磁盘，以便重启时候加载。 持久化采用boltdb，零配置, 数据存储在 VOLUME /data。 
+ 
 ```
 --address       注册到consul的外部服务访问ip
 --port          注册到consul的外部服务访问端口（服务监听端口）
 --check-port    consul健康检查端口
 --services      使用到服务，用于consul服务发现
 ```
+
     
 1. agent - 网关服务
 
@@ -127,9 +130,6 @@
         --check-port 13101 \
         --service-id chat-1
     ```    
-
-> 需要用到kafka服务，chat会保留一定数量的消息在内存中（默认128条），这个消息队列会定期持久化到本地磁盘，以便重启时候加载。 持久化采用boltdb，零配置, 数据存储在 VOLUME /data。 
-
 
 5. room - 游戏服
 
