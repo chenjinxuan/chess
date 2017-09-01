@@ -83,7 +83,7 @@ func main() {
 			//初始化handler
 			mgr := handler.GetTaskHandlerMgr()
 			if mgr == nil {
-				log.Errorf("Get CouponGenMgr fail")
+				log.Errorf("Get GetTaskHandlerMgr fail")
 				os.Exit(-1)
 			}
 			mgr.Loop()
@@ -91,7 +91,7 @@ func main() {
 			//初始化update
 			upsetMgr := handler.GetTaskUpsetMgr()
 			if upsetMgr == nil {
-				log.Errorf("Get CouponGenMgr fail")
+				log.Errorf("Get GetTaskHandlerMgr fail")
 				os.Exit(-1)
 			}
 			upsetMgr.LoopGetALLTask()

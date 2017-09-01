@@ -78,6 +78,9 @@ func (m *StsHandlerManager) Loop() {
 				   var  handVaule int32
 				    var winner int32
 				    for _,v:=range gameInfo.Player {
+					if v==nil {
+					    continue
+					}
 					if handLevel==0 {
 					    handLevel=v.HandLevel
 					    handVaule=v.HandFinalValue
@@ -91,6 +94,9 @@ func (m *StsHandlerManager) Loop() {
 					}
 				    }
 				    for _,v:=range gameInfo.Player {
+					if v==nil {
+					    continue
+					}
 					//取出该玩家信息
 					userInfo,err:=models.UserGameSts.Get(int(v.Id))
 					if err != nil {
