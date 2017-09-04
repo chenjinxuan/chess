@@ -39,8 +39,14 @@ message Player {
     repeated CardsInfo cards = 10;
     int32 hand_level=11;
     int32 hand_final_value =12;
+    repeated PlayerAction actions =13;
 }
 message StsRes {
     int32 ret = 1;
     string msg = 2;
+}
+
+message PlayerAction {
+    string action =1;
+    int32 bet =2;
 }

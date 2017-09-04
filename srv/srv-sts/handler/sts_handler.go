@@ -137,8 +137,10 @@ func (m *StsHandlerManager) Loop() {
 					if v.Bet>gameInfo.Bb {
 					    userInfo.Inbound++
 					}
-					//摊牌数
-
+					//摊牌数  计算动作次数,,大于4次就是摊牌
+					if len(v.Actions)>=4 {
+					    userInfo.Showdown++
+					}
 
 					//总局数
 					userInfo.TotalGame++

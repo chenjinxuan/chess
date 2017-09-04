@@ -35,10 +35,17 @@ type Player struct {
 	FormerChips    int     `bson:"former_chips" json:"former_chips" description:"开始筹码"`
 	CurrentChips   int     `bson:"current_chips" json:"current_chips" description:"当前筹码"`
 	Action         string  `bson:"action" json:"action" description:"动作"`
+	Actions         []*ActionData  `bson:"actions" json:"actions" description:"四轮动作"`
 	Cards          []*Card `bson:"cards" json:"cards" description:"手牌"`
 	HandLevel      int     `bson:"hand_level" json:"hand_level" description:"牌等级"`
 	HandFinalValue int     `bson:"hand_final_value" json:"hand_final_value" description:"牌值"`
 }
+
+type ActionData struct {
+	Action string `bson:"action" json:"action" description:"动作"`
+	Bet int  `bson:"bet" json:"bet" description:"该轮总下注"`
+}
+
 var Gambling = new(GamblingModel)
 func (m *GamblingModel) Upsert() error {
 	return Mongo.Chess.M(MongoDBStr, MongoColGambling, func(c *mgo.Collection) error {
