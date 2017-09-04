@@ -94,9 +94,15 @@ func main() {
 				log.Errorf("Get GetTaskHandlerMgr fail")
 				os.Exit(-1)
 			}
-			upsetMgr.LoopGetALLTask()
 			upsetMgr.Loop()
 			upsetMgr.SubLoop()
+		        ChargeMgr:=handler.GetTaskChargeMgr()
+			if ChargeMgr == nil {
+			    log.Errorf("Get GetTaskHandlerMgr fail")
+			    os.Exit(-1)
+			}
+		        ChargeMgr.Loop()
+		    	ChargeMgr.SubLoop()
 			// 注册服务
 			s := grpc.NewServer()
 			ins := &server{}

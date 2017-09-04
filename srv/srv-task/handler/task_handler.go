@@ -145,7 +145,7 @@ func (m *TaskHandlerManager) SubLoop() {
 	}()
 }
 
-func (m *TaskHandlerManager) Loop() {
+func (m *TaskHandlerManager) Loop() {//可能会出现,,两个动作同时发生的情况
 	go func() {
 		for {
 			select {

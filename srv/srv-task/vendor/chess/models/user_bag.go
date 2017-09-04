@@ -27,7 +27,7 @@ func (m *UserBagModel) Get(userId int) (bag UserBagMongoModel, err error) {
     return
 }
 
-func (m *UserBagModel) Upsert(userId int, session *UserBagMongoModel) error {
+func (m *UserBagModel) Upsert(userId int, session UserBagMongoModel) error {
     return Mongo.Chess.M(MongoDBStr, MongoColUserBag, func(c *mgo.Collection) error {
 	query := bson.M{
 	    "user_id": userId,

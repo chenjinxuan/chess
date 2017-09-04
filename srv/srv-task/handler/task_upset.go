@@ -34,7 +34,8 @@ func GetTaskUpsetMgr() *TaskUpsetManager {
 func (m *TaskUpsetManager) Init() (err error) {
 	log.Info("init TaskUpset ,manager ...")
 	m.UserId = make(chan int, 2)
-	return nil
+        err =m.initAllTask()
+	return err
 }
 func (m *TaskUpsetManager) initAllTask() (err error) {
 	data, err := models.UserTask.GetAll()
