@@ -204,6 +204,7 @@ message RoomPlayerStandupAck{
     string table_id = 2;
     int32 player_id = 3;
     int32 player_pos = 4;
+    bool force = 5;
 }
 
 // 2114, 玩家坐下

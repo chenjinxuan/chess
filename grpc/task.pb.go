@@ -28,7 +28,7 @@ type GameInfoArgs struct {
 func (m *GameInfoArgs) Reset()                    { *m = GameInfoArgs{} }
 func (m *GameInfoArgs) String() string            { return proto1.CompactTextString(m) }
 func (*GameInfoArgs) ProtoMessage()               {}
-func (*GameInfoArgs) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{0} }
+func (*GameInfoArgs) Descriptor() ([]byte, []int) { return fileDescriptor5, []int{0} }
 
 func (m *GameInfoArgs) GetRoomType() int32 {
 	if m != nil {
@@ -76,7 +76,7 @@ type TaskPlayerInfo struct {
 func (m *TaskPlayerInfo) Reset()                    { *m = TaskPlayerInfo{} }
 func (m *TaskPlayerInfo) String() string            { return proto1.CompactTextString(m) }
 func (*TaskPlayerInfo) ProtoMessage()               {}
-func (*TaskPlayerInfo) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{1} }
+func (*TaskPlayerInfo) Descriptor() ([]byte, []int) { return fileDescriptor5, []int{1} }
 
 func (m *TaskPlayerInfo) GetId() int32 {
 	if m != nil {
@@ -114,7 +114,7 @@ type TaskRes struct {
 func (m *TaskRes) Reset()                    { *m = TaskRes{} }
 func (m *TaskRes) String() string            { return proto1.CompactTextString(m) }
 func (*TaskRes) ProtoMessage()               {}
-func (*TaskRes) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{2} }
+func (*TaskRes) Descriptor() ([]byte, []int) { return fileDescriptor5, []int{2} }
 
 func (m *TaskRes) GetRet() int32 {
 	if m != nil {
@@ -141,7 +141,7 @@ type PlayerActionArgs struct {
 func (m *PlayerActionArgs) Reset()                    { *m = PlayerActionArgs{} }
 func (m *PlayerActionArgs) String() string            { return proto1.CompactTextString(m) }
 func (*PlayerActionArgs) ProtoMessage()               {}
-func (*PlayerActionArgs) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{3} }
+func (*PlayerActionArgs) Descriptor() ([]byte, []int) { return fileDescriptor5, []int{3} }
 
 func (m *PlayerActionArgs) GetRoomType() int32 {
 	if m != nil {
@@ -185,7 +185,7 @@ type UpsetTaskArgs struct {
 func (m *UpsetTaskArgs) Reset()                    { *m = UpsetTaskArgs{} }
 func (m *UpsetTaskArgs) String() string            { return proto1.CompactTextString(m) }
 func (*UpsetTaskArgs) ProtoMessage()               {}
-func (*UpsetTaskArgs) Descriptor() ([]byte, []int) { return fileDescriptor4, []int{4} }
+func (*UpsetTaskArgs) Descriptor() ([]byte, []int) { return fileDescriptor5, []int{4} }
 
 func (m *UpsetTaskArgs) GetId() int32 {
 	if m != nil {
@@ -346,9 +346,9 @@ var _TaskService_serviceDesc = grpc.ServiceDesc{
 	Metadata: "task.proto",
 }
 
-func init() { proto1.RegisterFile("task.proto", fileDescriptor4) }
+func init() { proto1.RegisterFile("task.proto", fileDescriptor5) }
 
-var fileDescriptor4 = []byte{
+var fileDescriptor5 = []byte{
 	// 379 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xa4, 0x92, 0xcf, 0x8e, 0xda, 0x30,
 	0x10, 0xc6, 0x1b, 0x12, 0x08, 0x19, 0x5a, 0x84, 0xdc, 0x3f, 0xa4, 0xad, 0xaa, 0xa2, 0x9c, 0xb8,

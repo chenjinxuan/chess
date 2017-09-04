@@ -115,8 +115,7 @@ func main() {
 			laddr := fmt.Sprintf(":%d", c.Int("port"))
 			lis, err := net.Listen("tcp", laddr)
 			if err != nil {
-				log.Panic(err)
-				os.Exit(-1)
+				panic(err)
 			}
 			log.Info("listening on:", lis.Addr())
 
@@ -125,6 +124,7 @@ func main() {
 			s := grpc.NewServer()
 			ins := &server{}
 			ins.init(c)
+			log.Info("123")
 			pb.RegisterChatServiceServer(s, ins)
 			// 开始服务
 			return s.Serve(lis)

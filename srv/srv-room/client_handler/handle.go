@@ -122,7 +122,7 @@ func P_room_player_standup_req(p *Player, data []byte) []byte {
 		return nil
 	}
 	log.Debug("P_room_player_standup_req", req)
-	p.Standup()
+	p.Standup(false)
 	return nil
 }
 

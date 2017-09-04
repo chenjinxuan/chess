@@ -3,46 +3,46 @@
 	"ignore": "",
 	"package": [
 		{
-			"checksumSHA1": "L/UzqhKnStJKAOan0B7NWwmrM58=",
+			"checksumSHA1": "b7SMIyyAyLMkVvD4mjWkdlvevpQ=",
 			"path": "chess/common/config",
-			"revision": "750aed932c8dae6b4712d50a88dfd28186fea9ba",
-			"revisionTime": "2017-09-01T03:20:33Z"
+			"revision": "847202ea2e1883f3c512009ae2bf651dbf1af357",
+			"revisionTime": "2017-09-01T08:49:56Z"
 		},
 		{
 			"checksumSHA1": "MFFw/6Q/HSwsThxyKLvINybvQu0=",
 			"path": "chess/common/consul",
-			"revision": "750aed932c8dae6b4712d50a88dfd28186fea9ba",
-			"revisionTime": "2017-09-01T03:20:33Z"
+			"revision": "847202ea2e1883f3c512009ae2bf651dbf1af357",
+			"revisionTime": "2017-09-01T08:49:56Z"
 		},
 		{
 			"checksumSHA1": "7u5Va7EaOvxr5qK6KVEVsGWTitM=",
 			"path": "chess/common/db",
-			"revision": "750aed932c8dae6b4712d50a88dfd28186fea9ba",
-			"revisionTime": "2017-09-01T03:20:33Z"
+			"revision": "847202ea2e1883f3c512009ae2bf651dbf1af357",
+			"revisionTime": "2017-09-01T08:49:56Z"
 		},
 		{
-			"checksumSHA1": "PJi9kBIv6yvLuCl/FcTUwFUY5h4=",
+			"checksumSHA1": "zsQFlj0p/HrFBqnxMU0lFwEOzQ0=",
 			"path": "chess/common/define",
-			"revision": "750aed932c8dae6b4712d50a88dfd28186fea9ba",
-			"revisionTime": "2017-09-01T03:20:33Z"
+			"revision": "847202ea2e1883f3c512009ae2bf651dbf1af357",
+			"revisionTime": "2017-09-01T08:49:56Z"
 		},
 		{
 			"checksumSHA1": "3PLcIK7yhm+9L60LrpgRzczEc/Q=",
 			"path": "chess/common/helper",
-			"revision": "750aed932c8dae6b4712d50a88dfd28186fea9ba",
-			"revisionTime": "2017-09-01T03:20:33Z"
+			"revision": "847202ea2e1883f3c512009ae2bf651dbf1af357",
+			"revisionTime": "2017-09-01T08:49:56Z"
 		},
 		{
 			"checksumSHA1": "Y+us1CJfgnPsZixZzxqHKD89k0o=",
 			"path": "chess/common/log",
-			"revision": "750aed932c8dae6b4712d50a88dfd28186fea9ba",
-			"revisionTime": "2017-09-01T03:20:33Z"
+			"revision": "847202ea2e1883f3c512009ae2bf651dbf1af357",
+			"revisionTime": "2017-09-01T08:49:56Z"
 		},
 		{
 			"checksumSHA1": "92l9uBBdZK6rFcUuJnBu+DWZFM0=",
 			"path": "chess/common/services",
-			"revision": "750aed932c8dae6b4712d50a88dfd28186fea9ba",
-			"revisionTime": "2017-09-01T03:20:33Z"
+			"revision": "847202ea2e1883f3c512009ae2bf651dbf1af357",
+			"revisionTime": "2017-09-01T08:49:56Z"
 		},
 		{
 			"checksumSHA1": "tI2uUPh7qwQxNihd1LvtNTdjVks=",

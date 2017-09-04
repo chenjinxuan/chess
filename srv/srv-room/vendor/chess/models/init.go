@@ -11,6 +11,8 @@ const (
 	MongoColSession  = "session"
 	MongoColUserTask = "user_task"
 	MongoColGambling = "gambling"
+        MongoColUserBag  = "user_bag"
+        MongoColUserGameSts = "user_game_sts"
 )
 
 var (
