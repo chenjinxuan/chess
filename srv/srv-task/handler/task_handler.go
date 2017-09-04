@@ -17,7 +17,7 @@ type TaskHandlerManager struct {
 	TaskRewardType                 []models.TaskRewardTypeModel
 	RoomType                       map[int]models.RoomsModel
 	Type                           int
-	GameOver                       chan GameInfoArgs
+	GameOver                       chan GameTableInfoArgs
 	PlayerEvent                    chan PlayerActionArgs
 	TaskHandlerGameOverRedisKey    string
 	TaskHandlerPlayerEventRedisKey string
@@ -41,7 +41,7 @@ func (m *TaskHandlerManager) Init() (err error) {
 	log.Info("init TaskHandler ,manager ...")
 	m.TaskHandlerGameOverRedisKey = define.TaskLoopHandleGameOverRedisKey
 	m.TaskHandlerPlayerEventRedisKey = define.TaskLoopHandlePlayerEventRedisKey
-	m.GameOver = make(chan GameInfoArgs, 2)
+	m.GameOver = make(chan GameTableInfoArgs, 2)
 	m.PlayerEvent = make(chan PlayerActionArgs, 2)
 	err = m.initTaskRequired()
 	if err != nil {
@@ -111,7 +111,7 @@ func (m *TaskHandlerManager) SubLoop() {
 			}
 			log.Debugf("get over channel info(%s)", res)
 			key := res[1]
-			gameInfo := GameInfoArgs{}
+			gameInfo := GameTableInfoArgs{}
 			err = json.Unmarshal([]byte(key), &gameInfo)
 			if err != nil {
 				log.Errorf("game info  could not be marshaled")
@@ -150,11 +150,37 @@ func (m *TaskHandlerManager) Loop() {//可能会出现,,两个动作同时发生
 		for {
 			select {
 			case _gameInfo := <-m.GameOver:
-				func(gameInfo GameInfoArgs) {
+				func(gameInfo GameTableInfoArgs) {
 					//判断现有的任务要求 类型,中奖类型
-					overTime := time.Unix(int64(gameInfo.Time), 0)
+					overTime := time.Unix(int64(gameInfo.End), 0)
+				        //判断胜利者
+				    //比牌型
+				    var handLevel int32
+				    var  handVaule int32
+				    var winner []int32
+				    for _,v:=range gameInfo.Players {
+					if v==nil {
+					    continue
+					}
+					if handLevel==0 {
+					    handLevel=v.HandLevel
+					    handVaule=v.HandFinalValue
+					    winner=append(winner,v.Id)
+					}else {
+					    if (handLevel==v.HandLevel && handVaule<= v.HandFinalValue) ||(handLevel<v.HandLevel){
+						handLevel=v.HandLevel
+						handVaule=v.HandFinalValue
+						if  handLevel==v.HandLevel && handVaule == v.HandFinalValue{
+						    winner=append(winner,v.Id)
+						}else {
+						    winner = nil
+						    winner=append(winner,v.Id)
+						}
+					    }
+					}
+				    }
 					//循环查出所有该局用户的任务信息并更新信息
-					for _, v := range gameInfo.Players {
+					for _, v := range gameInfo.Players{
 						taskList, err := models.UserTask.Get(int(v.Id))
 						if err != nil {
 							log.Errorf("get user(%v) tasklist fail (%s)", v.Id, err)
@@ -171,15 +197,21 @@ func (m *TaskHandlerManager) Loop() {//可能会出现,,两个动作同时发生
 								}
 
 							}
-							if taskInfo.TaskRequiredMatchType != 0 { //是否要求赛事类型
-								if taskInfo.TaskRequiredMatchType != int(gameInfo.MatchType) {
-									newTaskList.List = append(newTaskList.List, taskInfo)
-									continue
-								}
-							}
+							//if taskInfo.TaskRequiredMatchType != 0 { //是否要求赛事类型
+							//	if taskInfo.TaskRequiredMatchType != int(gameInfo.MatchType) {v
+							//		newTaskList.List = append(newTaskList.List, taskInfo)
+							//		continue
+							//	}
+							//}
 
 							if taskInfo.IsWin != define.RequiredCommon { //是否需要胜利
-								if v.Id != gameInfo.Winner && taskInfo.IsWin == define.RequiredWin {
+							    w:=0
+							    for _,winnerId:=range winner {
+								if v.Id==winnerId {
+								    w=1
+								}
+							    }
+								if w==1 && taskInfo.IsWin == define.RequiredWin {
 									newTaskList.List = append(newTaskList.List, taskInfo)
 									continue
 								}
@@ -195,7 +227,7 @@ func (m *TaskHandlerManager) Loop() {//可能会出现,,两个动作同时发生
 								}
 							}
 							if taskInfo.TaskTypeExpireType == define.PermanentTask { //是否过期
-								if taskInfo.ExpireTime.Unix() <= int64(gameInfo.Time) {
+								if taskInfo.ExpireTime.Unix() <= int64(gameInfo.End) {
 									//删除任务
 									err = models.UserTask.RemoveByTaskId(int(v.Id), taskInfo.TaskId)
 									if err != nil {
@@ -220,7 +252,7 @@ func (m *TaskHandlerManager) Loop() {//可能会出现,,两个动作同时发生
 								}
 							}
 							//排除不符合任务要求后,,,更新任务
-							taskInfo.LastUpdate = int64(gameInfo.Time)
+							taskInfo.LastUpdate = int64(gameInfo.End)
 							taskInfo.AlreadyCompleted = taskInfo.AlreadyCompleted + 1
 
 							newTaskList.List = append(newTaskList.List, taskInfo)

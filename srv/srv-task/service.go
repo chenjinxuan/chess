@@ -25,10 +25,10 @@ type server struct {
 func (s *server) init() {
 }
 
-func (s *server) GameOver(ctx context.Context, args *GameInfoArgs) (*TaskRes, error) {
+func (s *server) GameOver(ctx context.Context, args *GameTableInfoArgs) (*TaskRes, error) {
 	log.Debug("gameOver receive.")
 	//判断数据是否是否收到
-	if args.Winner != 0 {
+	if args.RoomId != 0 {
 		//存入redis 队列
 		dataByte, err := json.Marshal(args)
 		if err != nil {

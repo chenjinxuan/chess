@@ -77,7 +77,7 @@ func (m *StsHandlerManager) Loop() {
 				   var handLevel int32
 				   var  handVaule int32
 				    var winner int32
-				    for _,v:=range gameInfo.Player {
+				    for _,v:=range gameInfo.Players {
 					if v==nil {
 					    continue
 					}
@@ -93,7 +93,7 @@ func (m *StsHandlerManager) Loop() {
 					    }
 					}
 				    }
-				    for _,v:=range gameInfo.Player {
+				    for _,v:=range gameInfo.Players {
 					if v==nil {
 					    continue
 					}

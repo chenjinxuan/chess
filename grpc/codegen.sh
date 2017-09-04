@@ -39,3 +39,11 @@ cp centre.pb.go $GOPATH/src/chess/srv/srv-centre/proto/
 
 # api
 cp auth.pb.go $GOPATH/src/chess/api/proto/
+
+
+# srv-task
+cp task.pb.go $GOPATH/src/chess/srv/srv-task/proto/
+
+# srv-sts
+
+cp sts.pb.go $GOPATH/src/chess/srv/srv-sts/proto/

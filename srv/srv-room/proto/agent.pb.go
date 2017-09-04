@@ -67,8 +67,6 @@ It has these top-level messages:
 	Player
 	StsRes
 	PlayerAction
-	GameInfoArgs
-	TaskPlayerInfo
 	TaskRes
 	PlayerActionArgs
 	UpsetTaskArgs
