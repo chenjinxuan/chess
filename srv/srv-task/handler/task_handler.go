@@ -165,7 +165,7 @@ func (m *TaskHandlerManager) Loop() {//可能会出现,,两个动作同时发生
 						for _, taskInfo := range taskList.List {
 
 							if taskInfo.TaskRequiredRoomType != 0 { //是否要求房间场次类型
-								if taskInfo.TaskRequiredRoomType != m.RoomType[int(gameInfo.RoomType)].RoomsTypeId {
+								if taskInfo.TaskRequiredRoomType != m.RoomType[int(gameInfo.RoomId)].RoomsTypeId {
 									newTaskList.List = append(newTaskList.List, taskInfo)
 									continue
 								}
@@ -256,7 +256,7 @@ func (m *TaskHandlerManager) Loop() {//可能会出现,,两个动作同时发生
 						}
 
 						if taskInfo.TaskRequiredRoomType != 0 { //是否要求房间场次类型
-							if taskInfo.TaskRequiredRoomType != m.RoomType[int(playAction.RoomType)].RoomsTypeId {
+							if taskInfo.TaskRequiredRoomType != m.RoomType[int(playAction.RoomId)].RoomsTypeId {
 								continue
 							}
 
