@@ -1,8 +1,6 @@
 package kafka
 
 import (
-	"log"
-
 	pb "chess/srv/srv-chat/proto"
 	"github.com/Shopify/sarama"
 	cli "gopkg.in/urfave/cli.v2"
@@ -22,13 +20,13 @@ func initKafka(c *cli.Context) {
 	config.Producer.Return.Errors = false
 	producer, err := sarama.NewAsyncProducer(addrs, config)
 	if err != nil {
-		log.Fatalln(err)
+		panic(err)
 	}
 
 	kAsyncProducer = producer
 	cli, err := sarama.NewClient(addrs, nil)
 	if err != nil {
-		log.Fatalln(err)
+		panic(err)
 	}
 	kClient = cli
 }

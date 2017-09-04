@@ -52,6 +52,7 @@ type Table struct {
 	MinChips int
 	remain   int
 	allin    int
+	dealIdx int  // 牌局进行到第几轮
 	EndChan  chan int         // 牌局结束通知
 	exitChan chan interface{} // 销毁牌桌
 	lock     sync.Mutex
@@ -347,6 +348,8 @@ func (t *Table) start() {
 		RoomId:  t.RoomId,
 		TableId: t.Id,
 		Max:     t.Max,
+		Sb : t.SmallBlind,
+		Bb:t.BigBlind,
 		Start:   time.Now().Unix(),
 		Players: make([]*models.Player, t.Max, MaxN),
 	}
@@ -371,6 +374,7 @@ func (t *Table) start() {
 			Avatar:         p.Avatar,
 			Pos:            p.Pos,
 			Action:         ActReady,
+			Actions: make([]*models.ActionData, 4),
 			FormerChips:    p.Chips,
 			HandLevel:      -1,
 			HandFinalValue: -1,
@@ -638,6 +642,7 @@ showdown:
 
 func (t *Table) action(pos int) {
 	if t.allin+1 >= t.remain {
+		t.dealIdx++
 		return
 	}
 
@@ -696,6 +701,7 @@ func (t *Table) action(pos int) {
 		pos = raised
 		skip = pos
 	}
+	t.dealIdx++
 }
 
 // 计算奖池
@@ -872,6 +878,8 @@ func (t *Table) betting(pos, n int) (raised bool) {
 
 	t.gambling.Players[pos-1].Action = p.Action
 	t.gambling.Players[pos-1].Bet += p.Bet
+	t.gambling.Players[pos-1].Actions[t.dealIdx].Action = p.Action
+	t.gambling.Players[pos-1].Actions[t.dealIdx].Bet += p.Bet
 
 	// 2106， 通报玩家下注结果
 	t.BroadcastAll(define.Code["room_player_bet_ack"], &pb.RoomPlayerBetAck{

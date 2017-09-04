@@ -24,6 +24,7 @@ const (
 	ActCheck   = "check"   // 让牌
 	ActRaise   = "raise"   // 加注
 	ActFold    = "fold"    // 弃牌
+	ActFlee    = "flee"  //逃跑
 	ActAllin   = "allin"   // 全押
 )
 
@@ -46,6 +47,7 @@ type Player struct {
 
 	ActBet chan *pb.RoomPlayerBetReq
 	timer  *time.Timer // action timer
+	notOperating int // 未操作次数
 
 	Flag   int // 会话标记
 	Stream pb.RoomService_StreamServer
@@ -166,6 +168,10 @@ func (p *Player) GetActionBet(timeout time.Duration) (*pb.RoomPlayerBetReq, erro
 	case <-p.Table.EndChan:
 		return nil, nil
 	case <-p.timer.C:
+		p.notOperating++
+		if p.notOperating >= 2 {
+			p.Standup()
+		}
 		return nil, errors.New("timeout")
 	}
 }
@@ -303,15 +309,40 @@ func (p *Player) Join(rid int, tid string) (table *Table) {
 	return
 }
 
-// 站起
-func (p *Player) Standup() {
+// 逃跑
+func (p *Player) Flee() {
 	table := p.Table
 	if table == nil {
 		log.Errorf("玩家%d不在牌桌上！", p.Id)
 		return
 	}
 
-	if table.N == 1 {
+	// 牌局未结束
+	if len(p.Cards) > 0 && table.gambling != nil {
+		table.lock.Lock()
+		defer table.lock.Unlock()
+		if table.gambling.Players[p.Pos-1] != nil {
+			table.gambling.Players[p.Pos-1].Action = ActFlee
+			if table.gambling.Players[p.Pos-1].Actions[table.dealIdx] == nil {
+				table.gambling.Players[p.Pos-1].Actions[table.dealIdx] = &models.ActionData{
+					Action:ActFlee,
+				}
+			} else {
+				table.gambling.Players[p.Pos-1].Actions[table.dealIdx].Action = ActFlee
+			}
+		}
+	}
+}
+
+// 站起
+func (p *Player) Standup(force bool) {
+	table := p.Table
+	if table == nil {
+		log.Errorf("玩家%d不在牌桌上！", p.Id)
+		return
+	}
+
+	if table.N == 1 && !force {
 		log.Errorf("牌桌上只剩一位玩家，不允许站起操作！", p.Id)
 		return
 	}
@@ -320,13 +351,14 @@ func (p *Player) Standup() {
 		log.Errorf("玩家%d当前已是站起状态！", p.Id)
 		return
 	}
-	if p.Action == ActBetting { // 弃牌
+	if p.Action == ActBetting && !force { // 弃牌
 		p.ActBet <- &pb.RoomPlayerBetReq{
 			TableId: table.Id,
 			Bet:     -1,
 		}
 	}
 
+	p.Flee()
 	table.DelPlayer(p, false)
 	table.AddBystander(p)
 
@@ -451,6 +483,7 @@ func (p *Player) Leave() (table *Table) {
 	}(p.TotalChips, p.CurrChips+p.Chips)
 
 	if p.Action != ActStandup {
+		p.Flee()
 		// 2104, 广播离开房间的玩家
 		table.BroadcastAll(define.Code["room_player_gone_ack"], &pb.RoomPlayerGoneAck{
 			BaseAck: &pb.BaseAck{Ret: 1, Msg: "ok"},

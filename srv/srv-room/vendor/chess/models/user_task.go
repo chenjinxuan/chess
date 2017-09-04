@@ -37,7 +37,7 @@ type UserTaskModel struct {
 var UserTask = new(UserTaskModel)
 
 func (m *UserTaskModel) GetInit() (list []UserTaskModel, err error) {
-	sqlStr := `SELECT a.id,a.parent_id,b.id,b.name,b.expire_type,a.name,a.image,a.image_describe,a.task_reward_type_id,a.reward_num,c.id,c.room_type,c.match_type,c.hand_level,c.player_action,a.required_describe,a.required_num,a.is_win,a.expire_time,a.effect_time,a.version
+	sqlStr := `SELECT a.id,a.parent_id,b.id,b.name,b.expire_type,a.name,a.image,a.image_describe,a.task_reward_type_id,a.reward_num,c.id,c.room_type,c.match_type,c.hand_level,c.player_action,a.required_describe,a.required_num,a.is_win,a.expire_time,effect_time,version
     FROM task AS a
     LEFT JOIN task_type AS b ON a.task_type_id = b.id
     LEFT JOIN task_required AS c ON a.task_required_id = c.id
@@ -63,7 +63,7 @@ func (m *UserTaskModel) GetAll() (list []UserTaskModel, err error) {
     FROM task AS a
     LEFT JOIN task_type AS b ON a.task_type_id = b.id
     LEFT JOIN task_required AS c ON a.task_required_id = c.id
-    WHERE a.status = 1 AND a.expire_time > now()`
+    WHERE a.status = 1 AND a.expire_time > n`
     rows, err := Mysql.Chess.Query(sqlStr)
     if err != nil {
 	return
