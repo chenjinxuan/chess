@@ -24,7 +24,7 @@ const (
 	ActCheck   = "check"   // 让牌
 	ActRaise   = "raise"   // 加注
 	ActFold    = "fold"    // 弃牌
-	ActFlee    = "flee"  //逃跑
+	ActFlee    = "flee"    //逃跑
 	ActAllin   = "allin"   // 全押
 )
 
@@ -45,9 +45,9 @@ type Player struct {
 
 	Table *Table
 
-	ActBet chan *pb.RoomPlayerBetReq
-	timer  *time.Timer // action timer
-	notOperating int // 未操作次数
+	ActBet       chan *pb.RoomPlayerBetReq
+	timer        *time.Timer // action timer
+	notOperating int         // 未操作次数
 
 	Flag   int // 会话标记
 	Stream pb.RoomService_StreamServer
@@ -164,14 +164,16 @@ func (p *Player) GetActionBet(timeout time.Duration) (*pb.RoomPlayerBetReq, erro
 
 	select {
 	case m := <-p.ActBet:
+		p.notOperating = 0
 		return m, nil
 	case <-p.Table.EndChan:
 		return nil, nil
 	case <-p.timer.C:
 		p.notOperating++
 		if p.notOperating >= 2 {
-			p.Standup()
+			p.Standup(true)
 		}
+		p.notOperating = 0
 		return nil, errors.New("timeout")
 	}
 }
@@ -325,7 +327,7 @@ func (p *Player) Flee() {
 			table.gambling.Players[p.Pos-1].Action = ActFlee
 			if table.gambling.Players[p.Pos-1].Actions[table.dealIdx] == nil {
 				table.gambling.Players[p.Pos-1].Actions[table.dealIdx] = &models.ActionData{
-					Action:ActFlee,
+					Action: ActFlee,
 				}
 			} else {
 				table.gambling.Players[p.Pos-1].Actions[table.dealIdx].Action = ActFlee
@@ -368,6 +370,7 @@ func (p *Player) Standup(force bool) {
 		TableId:   table.Id,
 		PlayerId:  int32(p.Id),
 		PlayerPos: int32(p.Pos),
+		Force:     force,
 	})
 	// 2122, 通知自动坐下等待玩家数
 	p.SendMessage(define.Code["room_player_autositdown_ack"], &pb.RoomPlayerAutoSitdownAck{

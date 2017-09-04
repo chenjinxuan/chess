@@ -13,7 +13,10 @@ type CheckinDaysRewardModel  struct {
 }
 
 const (
-    CheckinDaysRewardTypeGold = 1
+    CHECKIN_DAYS_REWARD_TYPE_GOLD = 1
+    CHECKIN_DAYS_REWARD_MORE_EIGHT = 8 //签到超过7天 取第八天
+    CHECKIN_DAYS_REWARD_MORE_SEVEN = 7
+    CHECKIN_DAYS_REWARD_MORE = 9 //签到超过7天 的奖励取第九天
 )
 var CheckinDaysReward = new(CheckinDaysRewardModel)
 

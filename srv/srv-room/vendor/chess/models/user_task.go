@@ -63,7 +63,7 @@ func (m *UserTaskModel) GetAll() (list []UserTaskModel, err error) {
     FROM task AS a
     LEFT JOIN task_type AS b ON a.task_type_id = b.id
     LEFT JOIN task_required AS c ON a.task_required_id = c.id
-    WHERE a.status = 1 AND a.expire_time > n`
+    WHERE a.status = 1 AND a.expire_time > now()`
     rows, err := Mysql.Chess.Query(sqlStr)
     if err != nil {
 	return

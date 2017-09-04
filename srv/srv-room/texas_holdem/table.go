@@ -446,6 +446,7 @@ func (t *Table) start() {
 	t.Cards = nil
 	t.remain = 0
 	t.allin = 0
+	t.dealIdx = 0
 	t.Status = 1
 	t.Each(0, func(p *Player) bool {
 		if p.Action == ActReady {
@@ -876,10 +877,19 @@ func (t *Table) betting(pos, n int) (raised bool) {
 		t.allin++
 	}
 
-	t.gambling.Players[pos-1].Action = p.Action
-	t.gambling.Players[pos-1].Bet += p.Bet
-	t.gambling.Players[pos-1].Actions[t.dealIdx].Action = p.Action
-	t.gambling.Players[pos-1].Actions[t.dealIdx].Bet += p.Bet
+	if t.gambling.Players[pos-1].Action != ActFlee {
+		t.gambling.Players[pos-1].Action = p.Action
+		t.gambling.Players[pos-1].Bet += p.Bet
+		if t.gambling.Players[pos-1].Actions[t.dealIdx] == nil {
+			t.gambling.Players[pos-1].Actions[t.dealIdx] = &models.ActionData{
+				Action: p.Action,
+				Bet: p.Bet,
+			}
+		} else {
+			t.gambling.Players[pos-1].Actions[t.dealIdx].Action = p.Action
+			t.gambling.Players[pos-1].Actions[t.dealIdx].Bet += p.Bet
+		}
+	}
 
 	// 2106， 通报玩家下注结果
 	t.BroadcastAll(define.Code["room_player_bet_ack"], &pb.RoomPlayerBetAck{
