@@ -66,8 +66,7 @@ It has these top-level messages:
 	CardsInfo
 	Player
 	StsRes
-	GameInfoArgs
-	TaskPlayerInfo
+	PlayerAction
 	TaskRes
 	PlayerActionArgs
 	UpsetTaskArgs
