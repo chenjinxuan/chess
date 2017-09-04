@@ -817,12 +817,18 @@ definitions:
         description: 是否是新用户
         type: integer
         format: int64
+      msg:
+        type: string
       need_captcha:
         description: 是否需要验证码
         type: boolean
       refresh_token:
         description: 当 Token 过期时，使用该 Token 获取一个新的
         type: string
+      ret:
+        description: 1成功 0失败
+        type: integer
+        format: int64
       token:
         description: 请求授权的token
         type: string
@@ -1264,7 +1270,7 @@ definitions:
       id:
         type: integer
         format: int64
-      is_chekin:
+      is_checkin:
         description: 今天是否签到,,1已签0未签
         type: integer
         format: int64

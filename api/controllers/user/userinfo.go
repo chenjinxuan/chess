@@ -26,7 +26,7 @@ type UserInfo struct {
 	DiamondBalance  int    `json:"diamond_balance" description:"钻石余额"`
 	CheckinDays     int    `json:"checkin_days" description:"签到天数"`
 	LastCheckinTime string `json:"last_checkin_time" description:"上次签到时间"`
-	IsChekin        int    `json:"is_chekin" description:"今天是否签到,,1已签0未签"`
+	IsCheckin        int    `json:"is_checkin" description:"今天是否签到,,1已签0未签"`
 }
 
 type UserInfoResult struct {
@@ -68,7 +68,7 @@ func GetUserInfo(c *gin.Context) {
 	nowTime := time.Now()
 	lastCheckTime := user.LastCheckinTime.Format(define.FormatDate)
 	if lastCheckTime == nowTime.Format(define.FormatDate) {
-		result.Data.IsChekin = 1
+		result.Data.IsCheckin = 1
 	}
 	result.Data.Id = user.Id
 	result.Data.NickName = user.Nickname

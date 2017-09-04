@@ -91,6 +91,8 @@ func (m *TaskUpsetManager) Loop() {
 			select {
 			case userId := <-m.UserId:
 				func(userId int) {
+				        m.Mutex.Lock()
+				        defer m.Mutex.Unlock()
 					var taskMap = m.TaskAll
 					//一直取出
 					//取出所有该用户已经领取的任务id

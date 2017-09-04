@@ -5,9 +5,9 @@ package proto;
 
 service StsService {
     // 获取游戏信息
-    rpc GameInfo(GameInfoArgs) returns (StsRes){}
+    rpc GameInfo(GameTableInfoArgs) returns (StsRes){}
 }
-message GameInfoArgs {
+message GameTableInfoArgs {
     int32 room_id = 1; //房间场类型
     string table_id =2;
     int32 max = 3;

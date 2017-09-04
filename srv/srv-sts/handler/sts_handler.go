@@ -11,7 +11,7 @@ import (
 )
 
 type StsHandlerManager struct {
-	GameInfo chan GameInfoArgs
+	GameInfo chan GameTableInfoArgs
 }
 
 var StsMgr *StsHandlerManager
@@ -30,7 +30,7 @@ func GetStsHandlerMgr() *StsHandlerManager {
 
 func (m *StsHandlerManager) Init() (err error) {
 	log.Info("init StsHandler ,manager ...")
-        m.GameInfo=make(chan GameInfoArgs)
+        m.GameInfo=make(chan GameTableInfoArgs)
 	return nil
 }
 
@@ -55,7 +55,7 @@ func (m *StsHandlerManager) SubLoop() {
 			}
 			log.Debugf("get over channel info(%s)", res)
 			key := res[1]
-			gameInfo := GameInfoArgs{}
+			gameInfo := GameTableInfoArgs{}
 			err = json.Unmarshal([]byte(key), &gameInfo)
 			if err != nil {
 				log.Errorf("game info  could not be marshaled")
@@ -71,7 +71,7 @@ func (m *StsHandlerManager) Loop() {
 		for {
 			select {
 			case _gameInfo := <-m.GameInfo:
-				func(gameInfo GameInfoArgs) {//玩家统计
+				func(gameInfo GameTableInfoArgs) {//玩家统计
 				//查出该局所有玩家
 				    //比牌型
 				   var handLevel int32
