@@ -14,7 +14,7 @@ type server struct {
 func (s *server) init() {
 }
 
-func (s *server) GameInfo(ctx context.Context, args *GameInfoArgs) (*StsRes, error) {
+func (s *server) GameInfo(ctx context.Context, args *GameTableInfoArgs) (*StsRes, error) {
 	log.Debug("gameInfo receive.")
 	//判断数据是否是否收到
 	if args.RoomId != 0 {

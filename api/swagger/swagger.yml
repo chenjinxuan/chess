@@ -370,6 +370,11 @@ paths:
         description: token
         required: true
         type: string
+      - in: query
+        name: is_more
+        description: is_more 领取额外奖励的时候为1
+        required: true
+        type: string
       responses:
         "200":
           description: ""
@@ -1061,6 +1066,10 @@ definitions:
         description: 已经签到天数
         type: integer
         format: int64
+      is_more:
+        description: 是否已经领取7天之后的额外奖励 1为已领取
+        type: integer
+        format: int64
       last_checkin_time:
         description: 上次签到时间
         type: string
@@ -1261,7 +1270,7 @@ definitions:
       id:
         type: integer
         format: int64
-      is_chekin:
+      is_checkin:
         description: 今天是否签到,,1已签0未签
         type: integer
         format: int64
