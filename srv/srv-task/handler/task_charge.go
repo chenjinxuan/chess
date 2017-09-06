@@ -9,11 +9,10 @@ import (
     "sync"
     "time"
     "encoding/json"
-    "fmt"
 )
 
 type TaskChargeManager struct {
-    GoodsMap map[int]models.GoodsModel
+    ChargeGoodsMap map[string]models.ChargeGoodsModel
     Charge  chan ChargeInfo
     Mutex   sync.Mutex
 }
@@ -39,13 +38,13 @@ func (m *TaskChargeManager) Init() (err error) {
     return err
 }
 func (m *TaskChargeManager) initAllGoods() (err error) {
-    data, err := models.Goods.List()
+    data, err := models.ChargeGoods.List()
     if err != nil {
 	return
     }
-    m.GoodsMap = make(map[int]models.GoodsModel)
+    m.ChargeGoodsMap = make(map[string]models.ChargeGoodsModel)
     for _, v := range data {
-	m.GoodsMap[v.Id] = v
+	m.ChargeGoodsMap[v.ChargeGoodsId] = v
     }
     return
 }
@@ -54,15 +53,15 @@ func (m *TaskChargeManager) initAllGoods() (err error) {
 func (m *TaskChargeManager) LoopGetALLGoods() {
     go func() {
 	for {
-	    data, err := models.Goods.List()
+	    data, err := models.ChargeGoods.List()
 	    if err != nil {
 		log.Errorf("models.UserTask.GetAll fail (%s)", err)
 	    }
 	    m.Mutex.Lock()
-	    m.GoodsMap = nil
-	    m.GoodsMap = make(map[int]models.GoodsModel)
+	    m.ChargeGoodsMap = nil
+	    m.ChargeGoodsMap = make(map[string]models.ChargeGoodsModel)
 	    for _, v := range data {
-		m.GoodsMap[v.Id] = v
+		m.ChargeGoodsMap[v.ChargeGoodsId] = v
 	    }
 	    m.Mutex.Unlock()
 	    time.Sleep(time.Duration(60) * time.Second)
@@ -74,7 +73,6 @@ func (m *TaskChargeManager) LoopGetALLGoods() {
 type ChargeInfo struct {
     UserId int `json:"user_id"`
     ChargeGoodsId string `json:"charge_goods_id"`
-    GoodsId int `json:"goods_id"`
     Price   int `json:"price"`
     BuyTime int64 `json:"buy_time"`
     From    string `json:"from"`
@@ -83,16 +81,20 @@ type ChargeInfo struct {
 func (m *TaskChargeManager) SubLoop() {
     go func() {
 	for {
-	    data, err := task_redis.Redis.Task.Spop(define.TaskChargeGoodsRedisKey)
+	    res, err := task_redis.Redis.Task.Brpop(define.TaskChargeGoodsRedisKey,60)
 	    if err != nil {
 		if err == redis.ErrNil {
-		    time.Sleep(time.Duration(10) * time.Second)
-		    log.Debug("upset QueueTimeout. ")
-		    continue
+		    log.Debug("QueueTimeout...")
+
+		} else {
+		    log.Errorf("Get userbag channel info fail (%s)", err)
 		}
+		continue
 	    }
+	    log.Debugf("get userbag channel info(%s)", res)
+	    key := res[1]
 	    var charge ChargeInfo
-	    err=json.Unmarshal([]byte(data),&charge)
+	    err=json.Unmarshal([]byte(key),&charge)
 	    if err != nil {
 
 	    }
@@ -109,34 +111,7 @@ func (m *TaskChargeManager) Loop() {
 	    case charge := <-m.Charge:
 		func(charge ChargeInfo) {
 		 //处理支付项目发过来的消息
-		    //购买商品,,要给用户的背包加商品
-		    //先查出用户是否有这个商品
-		    data,err:=models.UserBag.Get(charge.UserId)
-		    if err != nil {
-			if fmt.Sprint(err) == "not found" {
-			   var data models.UserBagMongoModel
-			    data.UserId =charge.UserId
-			}else {
-			    log.Errorf("models.UserBag.Get",err)
-			    return
-			}
-		    }
-		    goodsExist := 0 
-		    for _,v:=range data.List{
-			if v.GoodsId == charge.GoodsId {
-			    v.Number++
-			    goodsExist=1
-			}
-		    }
-		    if goodsExist == 0 {
-			info :=models.UserBagModel{GoodsId:charge.GoodsId,Number:1}
-			data.List=append(data.List,info)
-		    }
-		    //更新
-		    err = models.UserBag.Upsert(charge.GoodsId,data)
-		    if err != nil {
-			log.Errorf("models.UserBag.Upsert",err)
-		    }
+
 		}(charge)
 	    }
 	}

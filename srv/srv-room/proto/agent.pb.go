@@ -70,6 +70,7 @@ It has these top-level messages:
 	TaskRes
 	PlayerActionArgs
 	UpsetTaskArgs
+	UpdateBagArgs
 */
 package proto
 

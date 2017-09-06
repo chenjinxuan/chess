@@ -96,13 +96,21 @@ func main() {
 			}
 			upsetMgr.Loop()
 			upsetMgr.SubLoop()
-		        ChargeMgr:=handler.GetTaskChargeMgr()
-			if ChargeMgr == nil {
-			    log.Errorf("Get GetTaskHandlerMgr fail")
+
+		        userBagMgr := handler.GetTaskUserBagMgr()
+			if userBagMgr == nil {
+			    log.Errorf("Get GetTaskUserBagMgr fail")
 			    os.Exit(-1)
 			}
-		        ChargeMgr.Loop()
-		    	ChargeMgr.SubLoop()
+		        userBagMgr.Loop()
+		        userBagMgr.SubLoop()
+		        //ChargeMgr:=handler.GetTaskChargeMgr()
+                        //if ChargeMgr == nil {
+			 //   log.Errorf("Get GetTaskHandlerMgr fail")
+			 //   os.Exit(-1)
+                        //}
+		        //ChargeMgr.Loop()
+		    	//ChargeMgr.SubLoop()
 			// 注册服务
 			s := grpc.NewServer()
 			ins := &server{}

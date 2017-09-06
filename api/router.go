@@ -20,6 +20,7 @@ import (
 	"github.com/itsjamie/gin-cors"
 	"time"
     "chess/api/controllers/game"
+    "strconv"
 )
 
 func InitRouter() {
@@ -137,7 +138,8 @@ func InitRouter() {
         gameRouter := router.Group("/game/:user_id")
     {
 	gameRouter.GET("/last_game",auth.Login(config.C.TokenSecret),c_game.LastGame)
+	gameRouter.GET("/game_list",auth.Login(config.C.TokenSecret),c_game.GameList)
     }
 	//router.GET("/testquery",controllers.Get)
-	router.Run(config.Api.Port)
+	router.Run(":"+strconv.Itoa(*http_port))
 }

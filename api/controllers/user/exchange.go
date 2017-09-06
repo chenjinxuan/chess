@@ -8,6 +8,10 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	grpcServer "chess/api/grpc"
+	pb "chess/api/proto"
+	"golang.org/x/net/context"
+    "fmt"
 )
 
 type ExchangeParams struct {
@@ -83,6 +87,17 @@ func Exchange(c *gin.Context) {
 		c.JSON(http.StatusOK, result)
 		return
 	}
+        //通知任务系统
+    //通知是否要更新任务
+	TaskClient,ret := grpcServer.GetTaskGrpc()
+	if ret == 0{
+	    result.Msg = "rpc fail"
+	    c.JSON(http.StatusOK, result)
+	    return
+	}
+    res,err:=TaskClient.IncrUserBag(context.Background(), &pb.UpdateBagArgs{UserId:int32(user_id),GoodsId:int32(params.GoodsId)})
+    fmt.Println(res.Ret,res.Msg)
+    fmt.Sprint(err)
 	result.Ret = 1
 	c.JSON(http.StatusOK, result)
 	return

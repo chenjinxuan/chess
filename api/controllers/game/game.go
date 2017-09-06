@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
+    "strconv"
 )
 
 type LastGameResult struct {
@@ -53,4 +54,71 @@ func LastGame(c *gin.Context) {
 	result.Ret = 1
 	c.JSON(http.StatusOK, result)
 	return
+}
+
+type GameListParams struct {
+    PageSize int `form:"page_size"`
+    PageNum int `form:"page_num"`
+}
+
+type GameListResult struct {
+    define.BaseResult
+    Count int `json:"count"`
+    List []models.GamblingModel `json:"list"`
+}
+// @Title  牌局记录
+// @Description 牌局记录 没传分页要求时默认取10条
+// @Summary 牌局记录
+// @Accept json
+// @Param   user_id     path    int  true        "用户id"
+// @Param   token     query    string  true        "token"
+// @Param   page_size     query    string  true        "分页大小"
+// @Param   page_num     query    string  true        "第几页"
+// @Success 200 {object} c_game.GameListResult
+// @router /game/{user_id}/game_list [get]
+func GameList(c *gin.Context)  {
+    var result GameListResult
+    var params GameListParams
+    userId, err := strconv.Atoi(c.Param("user_id"))
+    if err != nil {
+	result.Msg = "get userId fail ."
+	c.JSON(http.StatusOK, result)
+	return
+    }
+    //init
+    params.PageNum=1
+    params.PageSize=10
+    if err := c.Bind(&params); err != nil {
+	result.Msg = "bind fail ."
+	c.JSON(http.StatusOK, result)
+	return
+    }
+    result.Count,err=models.Gambling.GetCountByUserId(userId)
+    if err != nil {
+	log.Errorf("models.Gambling.GetCountByUserId", err)
+	result.Msg = "get count info fail ."
+	c.JSON(http.StatusOK, result)
+	return
+    }
+    if result.Count == 0 {
+	result.Ret = 1
+	c.JSON(http.StatusOK, result)
+	return
+    }
+    //查出数据
+    result.List,err=models.Gambling.GetByUserId(userId,params.PageSize,params.PageNum)
+    if err != nil {
+	if fmt.Sprint(err) == "not found" {
+	    result.Ret = 1
+	    c.JSON(http.StatusOK, result)
+	    return
+	}
+	log.Errorf("models.Gambling.GetByUserId", err)
+	result.Msg = "get info fail ."
+	c.JSON(http.StatusOK, result)
+	return
+    }
+    result.Ret=1
+    c.JSON(http.StatusOK, result)
+    return
 }

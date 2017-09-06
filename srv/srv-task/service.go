@@ -6,18 +6,10 @@ import (
 	. "chess/srv/srv-task/proto"
 	"chess/srv/srv-task/redis"
 	"encoding/json"
-	"errors"
 	"golang.org/x/net/context"
-	"regexp"
 	"strconv"
 )
 
-var (
-	ERROR_METHOD_NOT_SUPPORTED = errors.New("method not supoorted")
-)
-var (
-	uuid_regexp = regexp.MustCompile(`^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$`)
-)
 
 type server struct {
 }
@@ -26,7 +18,7 @@ func (s *server) init() {
 }
 
 func (s *server) GameOver(ctx context.Context, args *GameTableInfoArgs) (*TaskRes, error) {
-	log.Debug("gameOver receive.")
+	log.Debugf("gameOver receive.",args.TableId,args.End)
 	//判断数据是否是否收到
 	if args.RoomId != 0 {
 		//存入redis 队列
@@ -44,7 +36,7 @@ func (s *server) GameOver(ctx context.Context, args *GameTableInfoArgs) (*TaskRe
 }
 
 func (s *server) PlayerEvent(ctx context.Context, args *PlayerActionArgs) (*TaskRes, error) {
-	log.Debug("PlayerEvent receive.")
+	log.Debugf("PlayerEvent receive.",args.Id)
 	//判断数据是否是否收到
 	if args.Id != 0 {
 		//存入redis 队列
@@ -61,7 +53,7 @@ func (s *server) PlayerEvent(ctx context.Context, args *PlayerActionArgs) (*Task
 }
 
 func (s *server) UpsetTask(ctx context.Context, args *UpsetTaskArgs) (*TaskRes, error) {
-	log.Debug("Upset receive.")
+	log.Debugf("Upset receive.")
 	//判断数据是否是否收到
 	if args.Id != 0 {
 		//存入redis 队列
@@ -69,4 +61,20 @@ func (s *server) UpsetTask(ctx context.Context, args *UpsetTaskArgs) (*TaskRes, 
 		return &TaskRes{Ret: 1, Msg: ""}, nil
 	}
 	return &TaskRes{Ret: 0, Msg: "recive fail."}, nil
+}
+
+func (s *server) IncrUserBag(ctx context.Context, args *UpdateBagArgs) (*TaskRes, error) {
+    log.Debug(" UpsetUserBag receive.")
+    if args.UserId!=0 {
+	//存入redis 队列
+	dataByte, err := json.Marshal(args)
+	if err != nil {
+	    log.Errorf("UpsetUserBag err %s", err)
+	    return &TaskRes{Ret: 0, Msg: "recive fail."}, err
+	}
+	data := string(dataByte)
+	task_redis.Redis.Task.Lpush(define.TaskUserBagRedisKey, data)
+	return &TaskRes{Ret: 1, Msg: ""}, nil
+    }
+    return &TaskRes{Ret: 0, Msg: "recive fail."}, nil
 }

@@ -10,7 +10,7 @@ import (
 	//"treasure/log"
 	"fmt"
 	"strings"
-	"treasure/log"
+	"chess/common/log"
 )
 
 var (
@@ -101,8 +101,8 @@ func (c *Client) GetTokenByCode(code string) (Token, error) {
 		return tk, err
 	}
 	err = json.Unmarshal([]byte(resp), &tk)
-	log.Log.Debug(string(resp))
-	log.Log.Debug(fmt.Sprintf("wechat-login-debug: - token: %v, union id :  %v", tk.AccessToken, tk.UnionId))
+	log.Debug(string(resp))
+	log.Debug(fmt.Sprintf("wechat-login-debug: - token: %v, union id :  %v", tk.AccessToken, tk.UnionId))
 	if tk.AccessToken == "" {
 		err = errors.New("cant get token by this code")
 	}
@@ -145,7 +145,7 @@ func (c *Client) GetJsApiTicketByToken(token string) (JsApiTicket, error) {
 	if err != nil {
 		return ticket, err
 	}
-	log.Log.Debug("js api ticket get resp debug: ", string(resp))
+	log.Debug("js api ticket get resp debug: ", string(resp))
 	err = json.Unmarshal([]byte(resp), &ticket)
 	return ticket, err
 }
@@ -157,7 +157,7 @@ func (c *Client) GetAccessToken() (AccessToken, error) {
 	if err != nil {
 		return accessToken, err
 	}
-	log.Log.Debug("get access token debug: ", string(resp))
+	log.Debug("get access token debug: ", string(resp))
 	err = json.Unmarshal([]byte(resp), &accessToken)
 	return accessToken, err
 }

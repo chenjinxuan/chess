@@ -159,7 +159,7 @@ func (m *TaskHandlerManager) Loop() {//可能会出现,,两个动作同时发生
 				    var  handVaule int32
 				    var winner []int32
 				    for _,v:=range gameInfo.Players {
-					if v==nil {
+					if v.Id==0 {
 					    continue
 					}
 					if handLevel==0 {
@@ -181,6 +181,9 @@ func (m *TaskHandlerManager) Loop() {//可能会出现,,两个动作同时发生
 				    }
 					//循环查出所有该局用户的任务信息并更新信息
 					for _, v := range gameInfo.Players{
+					    if v.Id==0 {
+						continue
+					    }
 						taskList, err := models.UserTask.Get(int(v.Id))
 						if err != nil {
 							log.Errorf("get user(%v) tasklist fail (%s)", v.Id, err)
