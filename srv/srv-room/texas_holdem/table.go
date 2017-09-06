@@ -829,6 +829,8 @@ func (t *Table) showdown() {
 		log.Error("t.gambling.Upsert: ", err)
 	}
 
+	go NotifyGameOver(t.gambling)
+
 	t.Status = 0
 }
 
@@ -878,8 +880,12 @@ func (t *Table) betting(pos, n int) (raised bool) {
 	}
 
 	if t.gambling.Players[pos-1].Action != ActFlee {
-		t.gambling.Players[pos-1].Action = p.Action
-		t.gambling.Players[pos-1].Bet += p.Bet
+		if n < 0 {
+			n = 0
+		}
+
+		//t.gambling.Players[pos-1].Action = p.Action
+		t.gambling.Players[pos-1].Bet += n
 		if t.gambling.Players[pos-1].Actions[t.dealIdx] == nil {
 			t.gambling.Players[pos-1].Actions[t.dealIdx] = &models.ActionData{
 				Action: p.Action,
@@ -887,7 +893,7 @@ func (t *Table) betting(pos, n int) (raised bool) {
 			}
 		} else {
 			t.gambling.Players[pos-1].Actions[t.dealIdx].Action = p.Action
-			t.gambling.Players[pos-1].Actions[t.dealIdx].Bet += p.Bet
+			t.gambling.Players[pos-1].Actions[t.dealIdx].Bet += n
 		}
 	}
 

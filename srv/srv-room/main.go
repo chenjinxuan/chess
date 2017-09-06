@@ -57,7 +57,7 @@ func main() {
 			},
 			&cli.StringSliceFlag{
 				Name:  "services",
-				Value: cli.NewStringSlice("centre", "chat"),
+				Value: cli.NewStringSlice("centre", "chat", "task", "sts"),
 				Usage: "auto-discovering services",
 			},
 		},
