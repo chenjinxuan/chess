@@ -8,6 +8,7 @@ import (
 	"chess/srv/srv-sts/redis"
 	"encoding/json"
 	"github.com/garyburd/redigo/redis"
+    "github.com/moby/moby/oci"
 )
 
 type StsHandlerManager struct {
@@ -74,9 +75,10 @@ func (m *StsHandlerManager) Loop() {
 				func(gameInfo GameTableInfoArgs) {//玩家统计
 				//查出该局所有玩家
 				    //比牌型
-				   var handLevel int32
-				   var  handVaule int32
-				    var winner int32
+				    //比牌型
+				    var handLevel int32
+				    var  handVaule int32
+				    var winner []int32
 				    for _,v:=range gameInfo.Players {
 					if v==nil {
 					    continue
@@ -84,12 +86,17 @@ func (m *StsHandlerManager) Loop() {
 					if handLevel==0 {
 					    handLevel=v.HandLevel
 					    handVaule=v.HandFinalValue
-					    winner=v.Id
+					    winner=append(winner,v.Id)
 					}else {
 					    if (handLevel==v.HandLevel && handVaule<= v.HandFinalValue) ||(handLevel<v.HandLevel){
 						handLevel=v.HandLevel
 						handVaule=v.HandFinalValue
-						winner=v.Id
+						if  handLevel==v.HandLevel && handVaule == v.HandFinalValue{
+						    winner=append(winner,v.Id)
+						}else {
+						    winner = nil
+						    winner=append(winner,v.Id)
+						}
 					    }
 					}
 				    }
@@ -105,8 +112,10 @@ func (m *StsHandlerManager) Loop() {
 					}
 					//对比数据
 					//胜利数
-					if v.Id == winner {
-					    userInfo.Win++
+					for _,winnerId:=range winner {
+					    if winnerId == v.Id{
+						userInfo.Win++
+					    }
 					}
 					if userInfo.BestWinner<int(v.Win) {
 					    userInfo.BestWinner=int(v.Win)
