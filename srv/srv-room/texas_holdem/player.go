@@ -170,10 +170,11 @@ func (p *Player) GetActionBet(timeout time.Duration) (*pb.RoomPlayerBetReq, erro
 		return nil, nil
 	case <-p.timer.C:
 		p.notOperating++
+		log.Debugf("玩家%d操作超时,超时次数%d", p.Id, p.notOperating)
 		if p.notOperating >= 2 {
 			p.Standup(true)
+			p.notOperating = 0
 		}
-		p.notOperating = 0
 		return nil, errors.New("timeout")
 	}
 }

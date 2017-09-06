@@ -30,6 +30,7 @@ cp room.pb.go $GOPATH/src/chess/srv/srv-room/proto/
 cp centre.pb.go $GOPATH/src/chess/srv/srv-room/proto/
 cp chat.pb.go $GOPATH/src/chess/srv/srv-room/proto/
 cp task.pb.go $GOPATH/src/chess/srv/srv-room/proto/
+cp sts.pb.go $GOPATH/src/chess/srv/srv-room/proto/
 
 # srv-chat
 cp chat.pb.go $GOPATH/src/chess/srv/srv-chat/proto/
