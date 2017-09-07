@@ -8,7 +8,7 @@ import (
 	"chess/srv/srv-sts/redis"
 	"encoding/json"
 	"github.com/garyburd/redigo/redis"
-    "github.com/moby/moby/oci"
+    "fmt"
 )
 
 type StsHandlerManager struct {
@@ -80,7 +80,7 @@ func (m *StsHandlerManager) Loop() {
 				    var  handVaule int32
 				    var winner []int32
 				    for _,v:=range gameInfo.Players {
-					if v==nil {
+					if v.Id==0 {
 					    continue
 					}
 					if handLevel==0 {
@@ -101,14 +101,19 @@ func (m *StsHandlerManager) Loop() {
 					}
 				    }
 				    for _,v:=range gameInfo.Players {
-					if v==nil {
+					if v.Id == 0 {
 					    continue
 					}
 					//取出该玩家信息
 					userInfo,err:=models.UserGameSts.Get(int(v.Id))
 					if err != nil {
-					    log.Errorf("models.UserGameSts.Get",err)
- 						continue
+					    if fmt.Sprint(err)=="not found" {
+						userInfo=models.UserGameStsModel{UserId:int(v.Id)}
+					    }else {
+						log.Errorf("models.UserGameSts.Get",err)
+						continue
+					    }
+
 					}
 					//对比数据
 					//胜利数
@@ -147,7 +152,13 @@ func (m *StsHandlerManager) Loop() {
 					    userInfo.Inbound++
 					}
 					//摊牌数  计算动作次数,,大于4次就是摊牌
-					if len(v.Actions)>=4 {
+					num:=0
+					for _,z:=range v.Actions{
+					    if z.Action!="" {
+						num++
+					    }
+					}
+					if num>=4 {
 					    userInfo.Showdown++
 					}
 

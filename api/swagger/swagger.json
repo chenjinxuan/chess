@@ -244,6 +244,61 @@
                 }
             }
         },
+        "/game/{user_id}/game_list": {
+            "get": {
+                "tags": [
+                    "/game/:user_id - 游戏相关 "
+                ],
+                "summary": "牌局记录",
+                "description": "牌局记录 没传分页要求时默认取10条",
+                "operationId": ".牌局记录",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "user_id",
+                        "description": "用户id",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "in": "query",
+                        "name": "token",
+                        "description": "token",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "page_size",
+                        "description": "分页大小",
+                        "required": true,
+                        "type": "string"
+                    },
+                    {
+                        "in": "query",
+                        "name": "page_num",
+                        "description": "第几页",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "",
+                        "schema": {
+                            "$ref": "#/definitions/c_game.GameListResult"
+                        }
+                    }
+                }
+            }
+        },
         "/game/{user_id}/last_game": {
             "get": {
                 "tags": [
@@ -1284,6 +1339,30 @@
                 }
             }
         },
+        "c_game.GameListResult": {
+            "title": "GameListResult",
+            "type": "object",
+            "properties": {
+                "count": {
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "list": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.GamblingModel"
+                    }
+                },
+                "msg": {
+                    "type": "string"
+                },
+                "ret": {
+                    "description": "1成功 0失败",
+                    "type": "integer",
+                    "format": "int64"
+                }
+            }
+        },
         "c_game.LastGameResult": {
             "title": "LastGameResult",
             "type": "object",
@@ -1871,6 +1950,21 @@
                 }
             }
         },
+        "models.ActionData": {
+            "title": "ActionData",
+            "type": "object",
+            "properties": {
+                "action": {
+                    "description": "动作",
+                    "type": "string"
+                },
+                "bet": {
+                    "description": "该轮总下注",
+                    "type": "integer",
+                    "format": "int64"
+                }
+            }
+        },
         "models.Card": {
             "title": "Card",
             "type": "object",
@@ -2004,6 +2098,13 @@
                 "action": {
                     "description": "动作",
                     "type": "string"
+                },
+                "actions": {
+                    "description": "四轮动作",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.ActionData"
+                    }
                 },
                 "avatar": {
                     "description": "头像",

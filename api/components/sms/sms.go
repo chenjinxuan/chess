@@ -273,7 +273,7 @@ func getMobileCheckKey(mobile string) string {
 
 func GetCheckMobileCount(mobile string) (int, error) {
 	key := getMobileCheckKey(mobile)
-	isExist, err := redis.Redis.Sms.Exists(key)
+	isExist, err := api_redis.Redis.Sms.Exists(key)
 	if err != nil {
 		return 0, errors.New("system error")
 	}
@@ -283,7 +283,7 @@ func GetCheckMobileCount(mobile string) (int, error) {
 	}
 
 	// 获取当前count
-	countStr, err := redis.Redis.Sms.Get(key)
+	countStr, err := api_redis.Redis.Sms.Get(key)
 	if err != nil {
 		return 0, errors.New("system error")
 	}
@@ -298,18 +298,18 @@ func GetCheckMobileCount(mobile string) (int, error) {
 
 func MobileCheckLimitCountPlus(mobile string, cSms *config.ApiConfig) error {
 	key := getMobileCheckKey(mobile)
-	isExist, err := redis.Redis.Sms.Exists(key)
+	isExist, err := api_redis.Redis.Sms.Exists(key)
 	if err != nil {
 		return err
 	}
 	// 检查key是否存在
 	if !isExist {
-		err = redis.Redis.Sms.Setex(key, "1", int64(cSms.SmsTime))
+		err = api_redis.Redis.Sms.Setex(key, "1", int64(cSms.SmsTime))
 		return err
 	}
 
 	// 获取当前count
-	countStr, err := redis.Redis.Sms.Get(key)
+	countStr, err := api_redis.Redis.Sms.Get(key)
 	if err != nil {
 		return err
 	}
@@ -317,20 +317,20 @@ func MobileCheckLimitCountPlus(mobile string, cSms *config.ApiConfig) error {
 	count, err := strconv.Atoi(countStr)
 	//
 	c := count + 1
-	err = redis.Redis.Sms.Setex(key, strconv.Itoa(c), int64(cSms.SmsTime))
+	err = api_redis.Redis.Sms.Setex(key, strconv.Itoa(c), int64(cSms.SmsTime))
 	return nil
 }
 
 func SendMobileLimit(mobile string, cSms *config.ApiConfig) error {
 	key := "mobile-send-" + mobile
 	// sms := databases.Redis.Sms
-	isExist, err := redis.Redis.Sms.Exists(key)
+	isExist, err := api_redis.Redis.Sms.Exists(key)
 	if err != nil {
 		return errors.New("system error")
 	}
 	// 检查key是否存在
 	if !isExist {
-		err = redis.Redis.Sms.Setex(key, "1", int64(cSms.SmsTime))
+		err = api_redis.Redis.Sms.Setex(key, "1", int64(cSms.SmsTime))
 		if err != nil {
 			return err
 		}
@@ -338,7 +338,7 @@ func SendMobileLimit(mobile string, cSms *config.ApiConfig) error {
 	}
 
 	// 获取当前count
-	countStr, err := redis.Redis.Sms.Get(key)
+	countStr, err := api_redis.Redis.Sms.Get(key)
 	if err != nil {
 		return errors.New("system error")
 	}
@@ -346,7 +346,7 @@ func SendMobileLimit(mobile string, cSms *config.ApiConfig) error {
 	count, err := strconv.Atoi(countStr)
 	//
 	c := count + 1
-	err = redis.Redis.Sms.Setex(key, strconv.Itoa(c), int64(cSms.SmsTime))
+	err = api_redis.Redis.Sms.Setex(key, strconv.Itoa(c), int64(cSms.SmsTime))
 	if err != nil {
 		return errors.New("system error,cant update count")
 	}

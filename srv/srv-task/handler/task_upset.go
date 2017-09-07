@@ -81,6 +81,9 @@ func (m *TaskUpsetManager) SubLoop() {
 				}
 			}
 			userId, err := strconv.Atoi(userIdStr)
+			if userId == 0 {
+			    continue
+			}
 			m.UserId <- userId
 		}
 	}()

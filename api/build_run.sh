@@ -12,8 +12,8 @@ govendor update chess/common/storage
 govendor update chess/models
 
 docker rm -f -1
-docker build --no-cache --rm=true -t task .
-docker run --rm=true -it -p 15001:15001 -p 15101:15101 \
+docker build --no-cache --rm=true -t api .
+docker run --rm=true -it -p 10086:10086 -p 10096:10096 -p 8899:8899 \
 	--env-file ./.env \
-	--name task-1 \
-	task --address 192.168.60.164 --port 15001 --check-port 15101 --service-id task-1
+	--name api-1 \
+	api -address 192.168.60.164 --port 10086 --check-port 10096  --http-port 8899 --service-id api-1
