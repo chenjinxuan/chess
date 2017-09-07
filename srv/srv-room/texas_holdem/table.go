@@ -52,7 +52,7 @@ type Table struct {
 	MinChips int
 	remain   int
 	allin    int
-	dealIdx int  // 牌局进行到第几轮
+	dealIdx  int              // 牌局进行到第几轮
 	EndChan  chan int         // 牌局结束通知
 	exitChan chan interface{} // 销毁牌桌
 	lock     sync.Mutex
@@ -324,22 +324,11 @@ func (t *Table) Each(start int, f func(p *Player) bool) {
 	}
 }
 
-func (t *Table) EachBystander(start int, f func(p *Player) bool) {
-	if t.BystanderCap() == 0 {
-		return
-	}
-
-	end := (t.BystanderCap() + start - 1) % t.BystanderCap()
-	i := start
-	for ; i != end; i = (i + 1) % t.BystanderCap() {
-		if t.Bystanders[i] != nil && !f(t.Bystanders[i]) {
+func (t *Table) EachBystander(f func(p *Player) bool) {
+	for _, v := range t.Bystanders {
+		if v != nil && !f(v) {
 			return
 		}
-	}
-
-	// end
-	if t.Bystanders[i] != nil {
-		f(t.Bystanders[i])
 	}
 }
 
@@ -348,8 +337,8 @@ func (t *Table) start() {
 		RoomId:  t.RoomId,
 		TableId: t.Id,
 		Max:     t.Max,
-		Sb : t.SmallBlind,
-		Bb:t.BigBlind,
+		Sb:      t.SmallBlind,
+		Bb:      t.BigBlind,
 		Start:   time.Now().Unix(),
 		Players: make([]*models.Player, t.Max, MaxN),
 	}
@@ -374,7 +363,7 @@ func (t *Table) start() {
 			Avatar:         p.Avatar,
 			Pos:            p.Pos,
 			Action:         ActReady,
-			Actions: make([]*models.ActionData, 4),
+			Actions:        make([]*models.ActionData, 4),
 			FormerChips:    p.Chips,
 			HandLevel:      -1,
 			HandFinalValue: -1,
@@ -382,7 +371,7 @@ func (t *Table) start() {
 		return true
 	})
 
-	t.EachBystander(0, func(p *Player) bool {
+	t.EachBystander(func(p *Player) bool {
 		if p.Flag&define.PLAYER_DISCONNECT != 0 { // 掉线
 			p.Leave()
 			registry.Unregister(p.Id, p)
@@ -889,7 +878,7 @@ func (t *Table) betting(pos, n int) (raised bool) {
 		if t.gambling.Players[pos-1].Actions[t.dealIdx] == nil {
 			t.gambling.Players[pos-1].Actions[t.dealIdx] = &models.ActionData{
 				Action: p.Action,
-				Bet: p.Bet,
+				Bet:    p.Bet,
 			}
 		} else {
 			t.gambling.Players[pos-1].Actions[t.dealIdx].Action = p.Action
