@@ -100,6 +100,10 @@ type GetUserInfoDetailResult struct {
 	BestWinner   int           `json:"best_winner" description:"最大赢取筹码"`
 	ShowdownRate float64       `json:"showdown_rate" description:"摊牌率"`
 	InboundRate  float64       `json:"inbound_rate" description:"入局率"`
+	Experience int       `json:"experience" description:"经验"`
+	Grade    int         `json:"grade" description:"等级"`
+	GradeDescribe string `json:"grade_describe" description:"等级描述"`
+    	NextExperience int   `bson:"next_experience" json:"next_experience" description:"下一级所要求经验"`
 }
 
 //type UserBestCards struct {
@@ -146,6 +150,10 @@ func GetUserInfoDetail(c *gin.Context) {
 	InboundRate, _ := strconv.Atoi(fmt.Sprintf("%.2f", data.Inbound/data.TotalGame))
 	result.InboundRate = float64(InboundRate)
 	result.Cards = data.Cards
+	result.GradeDescribe=data.GradeDescribe
+	result.Grade=data.Grade
+	result.Experience=data.Experience
+    	result.NextExperience=data.NextExperience
 	result.Ret = 1
 	c.JSON(http.StatusOK, result)
 	return

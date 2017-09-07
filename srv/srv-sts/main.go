@@ -86,6 +86,7 @@ func main() {
 				log.Errorf("Get stsHandlerMgr fail")
 				os.Exit(-1)
 			}
+		        mgr.LoopGetALLGrade()
 			mgr.Loop()
 			mgr.SubLoop()
 

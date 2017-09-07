@@ -1686,6 +1686,20 @@
                         "$ref": "#/definitions/models.Card"
                     }
                 },
+                "experience": {
+                    "description": "经验",
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "grade": {
+                    "description": "等级",
+                    "type": "integer",
+                    "format": "int64"
+                },
+                "grade_describe": {
+                    "description": "等级描述",
+                    "type": "string"
+                },
                 "inbound_rate": {
                     "description": "入局率",
                     "type": "number",
@@ -1693,6 +1707,11 @@
                 },
                 "msg": {
                     "type": "string"
+                },
+                "next_experience": {
+                    "description": "下一级所要求经验",
+                    "type": "integer",
+                    "format": "int64"
                 },
                 "ret": {
                     "description": "1成功 0失败",

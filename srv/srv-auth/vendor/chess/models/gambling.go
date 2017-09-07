@@ -67,3 +67,27 @@ func (m *GamblingModel) GetByTableId(tableId string) (info GamblingModel,err err
     })
     return
 }
+
+//取出用户牌局记录
+func (m *GamblingModel) GetByUserId(userId,pageSize,pageNum int) (list []GamblingModel,err error) {
+    pageStar:=(pageNum-1)*pageSize
+    err = Mongo.Chess.M(MongoDBStr, MongoColGambling, func(c *mgo.Collection) error {
+	query := bson.M{
+	    "players.id":userId,
+	}
+	return c.Find(query).Sort("-end").Limit(pageSize).Skip(pageStar).All(&list)
+    })
+    return
+}
+
+
+func (m *GamblingModel) GetCountByUserId(userId int) (count int,err error) {
+    err = Mongo.Chess.M(MongoDBStr, MongoColGambling, func(c *mgo.Collection) error {
+	query := bson.M{
+	    "players.id":userId,
+	}
+	count,err =c.Find(query).Count()
+	return  err
+    })
+    return
+}

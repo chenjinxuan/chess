@@ -82,7 +82,7 @@ func (m *TaskChargeManager) SubLoop() {
     go func() {
 	for {
 	    res, err := task_redis.Redis.Task.Brpop(define.TaskChargeGoodsRedisKey,60)
-	    if err != nil {
+	    if err != nil || res == nil {
 		if err == redis.ErrNil {
 		    log.Debug("QueueTimeout...")
 

@@ -41,8 +41,8 @@ func (m *TaskHandlerManager) Init() (err error) {
 	log.Info("init TaskHandler ,manager ...")
 	m.TaskHandlerGameOverRedisKey = define.TaskLoopHandleGameOverRedisKey
 	m.TaskHandlerPlayerEventRedisKey = define.TaskLoopHandlePlayerEventRedisKey
-	m.GameOver = make(chan GameTableInfoArgs, 2)
-	m.PlayerEvent = make(chan PlayerActionArgs, 2)
+	m.GameOver = make(chan GameTableInfoArgs)
+	m.PlayerEvent = make(chan PlayerActionArgs)
 	err = m.initTaskRequired()
 	if err != nil {
 		log.Errorf("init taskrequired fail .(%s)", err)
@@ -99,8 +99,10 @@ func (m *TaskHandlerManager) SubLoop() {
 	}()
 	go func() {
 		for {
+		       log.Debug("task brpop start ..")
 			res, err := task_redis.Redis.Task.Brpop(m.TaskHandlerGameOverRedisKey, 30)
-			if err != nil {
+		    log.Debug("task brpop end ..")
+		    if err != nil || res == nil {
 				if err == redis.ErrNil {
 					log.Debug("QueueTimeout...")
 
@@ -117,13 +119,15 @@ func (m *TaskHandlerManager) SubLoop() {
 				log.Errorf("game info  could not be marshaled")
 				continue
 			}
+		    log.Debug("task channel input start..")
 			m.GameOver <- gameInfo
+		    log.Debug("task channel input end ..")
 		}
 	}()
 	go func() {
 		for {
 			res, err := task_redis.Redis.Task.Brpop(m.TaskHandlerPlayerEventRedisKey, 30)
-			if err != nil {
+		    if err != nil || res == nil {
 				if err == redis.ErrNil {
 					log.Debug("QueueTimeout...")
 				} else {
@@ -148,8 +152,10 @@ func (m *TaskHandlerManager) SubLoop() {
 func (m *TaskHandlerManager) Loop() {//可能会出现,,两个动作同时发生的情况
 	go func() {
 		for {
+		    log.Debug("task loop start ..")
 			select {
 			case _gameInfo := <-m.GameOver:
+			    log.Debug("task channel out start ..")
 				func(gameInfo GameTableInfoArgs) {
 					//判断现有的任务要求 类型,中奖类型
 					overTime := time.Unix(int64(gameInfo.End), 0)
@@ -332,11 +338,13 @@ func (m *TaskHandlerManager) Loop() {//可能会出现,,两个动作同时发生
 						if err != nil {
 							log.Errorf("update user(%v) taskid(%v) fail  (%s)", taskList.UserId, taskInfo.TaskId, err)
 						}
+					    log.Debug("task channel out end ..")
 					}
 
 				}(_playAction)
 
 			}
+		    log.Debug("task loop end ..")
 		}
 	}()
 }

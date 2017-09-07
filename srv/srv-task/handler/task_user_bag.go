@@ -51,9 +51,9 @@ func (m *TaskUserBagManager) SubLoop() {
     go func() {
 	for {
 	    res, err := task_redis.Redis.Task.Brpop(define.TaskUserBagRedisKey,60)
-	    if err != nil {
+	    if err != nil || res == nil {
 		if err == redis.ErrNil {
-		    log.Debug("QueueTimeout...")
+		    log.Debug("userBag QueueTimeout...")
 
 		} else {
 		    log.Errorf("Get userbag channel info fail (%s)", err)

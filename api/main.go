@@ -13,16 +13,13 @@ import (
 	"net/http"
 	"os"
 
-)
-
-const (
-	SERVICE_NAME = "api"
+    "chess/common/define"
 )
 
 var (
 	port    = flag.Int("port", 13333, "listen port")
         check_port   = flag.Int("check-port", 13343, "listen port")
-    	http_port   = flag.Int("http-port", 13333, "listen port")
+    	http_port   = flag.Int("http-port", 8899, "listen port")
 
     	address = flag.String("address", "192.168.60.164", "external address")
 	service_id = flag.String("service-id", "api-1", "external address")
@@ -54,7 +51,7 @@ func main() {
 	models.Init()
 
 	// consul 服务注册
-	err = services.Register(*service_id, SERVICE_NAME, *address, *port, *check_port, []string{"master"})
+	err = services.Register(*service_id, define.SRV_NAME_API, *address, *port, *check_port, []string{"master"})
 	if err != nil {
 		log.Error(err)
 		os.Exit(-1)

@@ -17,6 +17,8 @@ type UserGameStsModel struct {
     BestWinner   int             `bson:"bast_winner" json:"best_winner" description:"最大赢取筹码"`
     Showdown int         `bson:"showdown" json:"showdown" description:"摊牌数"`
     Inbound  int         `bson:"inbound" json:"inbound" description:"入局数"`
+    Experience int       `bson:"experience" json:"experience" description:"经验"`
+    Grade    int         `bson:"grade" json:"grade" description:"等级"`
 
 }
 

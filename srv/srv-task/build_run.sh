@@ -13,7 +13,7 @@ govendor update chess/models
 
 docker rm -f task-1
 docker build --no-cache --rm=true -t task .
-docker run --rm=true -it -p 15001:15001 -p 15101:15101 \
+docker run --rm=true -it -p 15001:15001 -p 15101:15101  -v /etc/localtime:/etc/localtime:ro \
 	--env-file ./.env \
 	--name task-1 \
 	task --address 192.168.60.164 --port 15001 --check-port 15101 --service-id task-1
