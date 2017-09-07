@@ -84,7 +84,23 @@
         --services auth
     ```
     
-2. auth - 鉴权服务
+2. api - HTTP服务
+
+	```bash
+	$ docker run -d \
+		--restart=always \
+		--env-file /path/to/.env \ 
+		-p 10086:10086 -p 10096:10096 -p 8899:8899 \
+		--name api-1 \
+		docker.airdroid.com/lanziliang/api:tag \
+		--address 192.168.60.164 \
+		--port 10086 \
+		--check-port 10096  \
+		--http-port 8899 \
+		--service-id api-1
+	```
+    
+3. auth - 鉴权服务
 
     ```bash
     $ docker run -d \
@@ -99,7 +115,7 @@
         --service-id auth-1
     ```
     
-3. centre - 游戏中心服， 管理房间在线人数
+4. centre - 游戏中心服， 管理房间在线人数
 
     ```bash
     $ docker run -d \
@@ -114,7 +130,7 @@
         --service-id centre-1
     ```    
     
-4. chat - 聊天服
+5. chat - 聊天服
 
     ```bash
     $ docker run -d \
@@ -132,7 +148,7 @@
         --service-id chat-1
     ```    
 
-5. room - 游戏服
+6. room - 游戏服
 
     ```bash
     $ docker run -d \
@@ -150,7 +166,7 @@
         --services chat
     ```    
     
-6. task - 任务系统服务
+7. task - 任务系统服务
 
     ```bash
     $ docker run -d \
