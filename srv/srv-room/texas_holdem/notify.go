@@ -1,10 +1,10 @@
 package texas_holdem
 
 import (
-	"chess/models"
-	"chess/common/services"
-	"chess/common/log"
 	. "chess/common/define"
+	"chess/common/log"
+	"chess/common/services"
+	"chess/models"
 	pb "chess/srv/srv-room/proto"
 	"golang.org/x/net/context"
 )
@@ -67,7 +67,7 @@ func Convert2GameTableInfoArgs(g *models.GamblingModel) *pb.GameTableInfoArgs {
 						Bet:    int32(v2.Bet),
 					})
 				} else {
-					player.Actions = append(player.Actions,  &pb.PlayerAction{})
+					player.Actions = append(player.Actions, &pb.PlayerAction{})
 				}
 			}
 			args.Players = append(args.Players, player)
@@ -92,7 +92,6 @@ func NotifyGameOver(g *models.GamblingModel) {
 			log.Error("taskCli.GameOver: ", err)
 		}
 	}
-
 
 	stsConn, stsServiceId := services.GetService2(SRV_NAME_STS)
 	if stsConn == nil {

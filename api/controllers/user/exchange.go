@@ -11,8 +11,8 @@ import (
 	//grpcServer "chess/api/grpc"
 	pb "chess/api/proto"
 	//"golang.org/x/net/context"
-	"encoding/json"
 	"chess/api/redis"
+	"encoding/json"
 )
 
 type ExchangeParams struct {
@@ -88,8 +88,8 @@ func Exchange(c *gin.Context) {
 		c.JSON(http.StatusOK, result)
 		return
 	}
-        //通知任务系统
-    //通知是否要更新任务bag
+	//通知任务系统
+	//通知是否要更新任务bag
 	//TaskClient,ret := grpcServer.GetTaskGrpc()
 	//if ret == 0{
 	//
@@ -97,10 +97,10 @@ func Exchange(c *gin.Context) {
 	//    c.JSON(http.StatusOK, result)
 	//    return
 	//}
-    //go TaskClient.IncrUserBag(context.Background(), &pb.UpdateBagArgs{UserId:int32(user_id),GoodsId:int32(params.GoodsId)})
-    //因为加入背包事件比较重要 还是直接存redis吧
-   strByte,err:= json.Marshal(pb.UpdateBagArgs{UserId:int32(user_id),GoodsId:int32(params.GoodsId)})
-    go api_redis.Redis.Task.Lpush(define.TaskUserBagRedisKey,string(strByte))
+	//go TaskClient.IncrUserBag(context.Background(), &pb.UpdateBagArgs{UserId:int32(user_id),GoodsId:int32(params.GoodsId)})
+	//因为加入背包事件比较重要 还是直接存redis吧
+	strByte, err := json.Marshal(pb.UpdateBagArgs{UserId: int32(user_id), GoodsId: int32(params.GoodsId)})
+	go api_redis.Redis.Task.Lpush(define.TaskUserBagRedisKey, string(strByte))
 	result.Ret = 1
 	c.JSON(http.StatusOK, result)
 	return

@@ -136,11 +136,11 @@ func Login(c *gin.Context) {
 			c.JSON(http.StatusOK, result)
 			return
 		}
-		AuthClient,ret := grpcServer.GetAuthGrpc()
-		if ret == 0{
-		    result.Msg = "rpc fail"
-		    c.JSON(http.StatusOK, result)
-		    return
+		AuthClient, ret := grpcServer.GetAuthGrpc()
+		if ret == 0 {
+			result.Msg = "rpc fail"
+			c.JSON(http.StatusOK, result)
+			return
 		}
 		authResult, err := AuthClient.RefreshToken(context.Background(), &pb.RefreshTokenArgs{UserId: int32(user.Id), AppFrom: form.From, UniqueId: form.UniqueId})
 		if err != nil {

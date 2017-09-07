@@ -32,7 +32,7 @@ func (r *RedisStore) SetRandom(id string) {
 }
 
 func (r *RedisStore) Set(id string, digits []byte) {
-    api_redis.Redis.Captcha.Setex(id, string(digits), config.C.Captcha.ExpireTime)
+	api_redis.Redis.Captcha.Setex(id, string(digits), config.C.Captcha.ExpireTime)
 }
 
 func (r *RedisStore) Get(id string, clear bool) (digits []byte) {

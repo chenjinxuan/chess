@@ -6,13 +6,13 @@ const (
 	SRV_NAME_CENTRE = "centre"
 	SRV_NAME_CHAT   = "chat"
 	SRV_NAME_TASK   = "task"
-        SRV_NAME_STS    = "sts"
-        SRV_NAME_API    = "api"
+	SRV_NAME_STS    = "sts"
+	SRV_NAME_API    = "api"
 
 	DEFAULT_SRV_ID_ROOM   = "room-1"
 	DEFAULT_SRV_ID_AUTH   = "auth-1"
 	DEFAULT_SRV_ID_CENTRE = "centre-1"
 	DEFAULT_SRV_ID_CHAT   = "chat-1"
 	DEFAULT_SRV_ID_TASK   = "task-1"
-        DEFAULT_SRV_ID_STS    = "sts-1"
+	DEFAULT_SRV_ID_STS    = "sts-1"
 )

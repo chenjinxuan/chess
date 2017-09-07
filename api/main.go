@@ -13,23 +13,23 @@ import (
 	"net/http"
 	"os"
 
-    "chess/common/define"
+	"chess/common/define"
 )
 
 var (
-	port    = flag.Int("port", 13333, "listen port")
-        check_port   = flag.Int("check-port", 13343, "listen port")
-    	http_port   = flag.Int("http-port", 8899, "listen port")
+	port       = flag.Int("port", 13333, "listen port")
+	check_port = flag.Int("check-port", 13343, "listen port")
+	http_port  = flag.Int("http-port", 8899, "listen port")
 
-    	address = flag.String("address", "192.168.60.164", "external address")
+	address    = flag.String("address", "192.168.60.164", "external address")
 	service_id = flag.String("service-id", "api-1", "external address")
-	logPath = flag.String("log_path", "./log_data", "service id")
-	debug   = flag.Bool("debug", false, "debug")
+	logPath    = flag.String("log_path", "./log_data", "service id")
+	debug      = flag.Bool("debug", false, "debug")
 )
 
 func main() {
-        flag.Parse()
-    err := consul.InitConsulClientViaEnv()
+	flag.Parse()
+	err := consul.InitConsulClientViaEnv()
 	if err != nil {
 		panic(err)
 	}

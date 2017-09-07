@@ -99,10 +99,10 @@ func (m *TaskHandlerManager) SubLoop() {
 	}()
 	go func() {
 		for {
-		       log.Debug("task brpop start ..")
+			log.Debug("task brpop start ..")
 			res, err := task_redis.Redis.Task.Brpop(m.TaskHandlerGameOverRedisKey, 30)
-		    log.Debug("task brpop end ..")
-		    if err != nil || res == nil {
+			log.Debug("task brpop end ..")
+			if err != nil || res == nil {
 				if err == redis.ErrNil {
 					log.Debug("QueueTimeout...")
 
@@ -119,15 +119,15 @@ func (m *TaskHandlerManager) SubLoop() {
 				log.Errorf("game info  could not be marshaled")
 				continue
 			}
-		    log.Debug("task channel input start..")
+			log.Debug("task channel input start..")
 			m.GameOver <- gameInfo
-		    log.Debug("task channel input end ..")
+			log.Debug("task channel input end ..")
 		}
 	}()
 	go func() {
 		for {
 			res, err := task_redis.Redis.Task.Brpop(m.TaskHandlerPlayerEventRedisKey, 30)
-		    if err != nil || res == nil {
+			if err != nil || res == nil {
 				if err == redis.ErrNil {
 					log.Debug("QueueTimeout...")
 				} else {
@@ -149,47 +149,47 @@ func (m *TaskHandlerManager) SubLoop() {
 	}()
 }
 
-func (m *TaskHandlerManager) Loop() {//可能会出现,,两个动作同时发生的情况
+func (m *TaskHandlerManager) Loop() { //可能会出现,,两个动作同时发生的情况
 	go func() {
 		for {
-		    log.Debug("task loop start ..")
+			log.Debug("task loop start ..")
 			select {
 			case _gameInfo := <-m.GameOver:
-			    log.Debug("task channel out start ..")
+				log.Debug("task channel out start ..")
 				func(gameInfo GameTableInfoArgs) {
 					//判断现有的任务要求 类型,中奖类型
 					overTime := time.Unix(int64(gameInfo.End), 0)
-				        //判断胜利者
-				    //比牌型
-				    var handLevel int32
-				    var  handVaule int32
-				    var winner []int32
-				    for _,v:=range gameInfo.Players {
-					if v.Id==0 {
-					    continue
-					}
-					if handLevel==0 {
-					    handLevel=v.HandLevel
-					    handVaule=v.HandFinalValue
-					    winner=append(winner,v.Id)
-					}else {
-					    if (handLevel==v.HandLevel && handVaule<= v.HandFinalValue) ||(handLevel<v.HandLevel){
-						handLevel=v.HandLevel
-						handVaule=v.HandFinalValue
-						if  handLevel==v.HandLevel && handVaule == v.HandFinalValue{
-						    winner=append(winner,v.Id)
-						}else {
-						    winner = nil
-						    winner=append(winner,v.Id)
+					//判断胜利者
+					//比牌型
+					var handLevel int32
+					var handVaule int32
+					var winner []int32
+					for _, v := range gameInfo.Players {
+						if v.Id == 0 {
+							continue
 						}
-					    }
+						if handLevel == 0 {
+							handLevel = v.HandLevel
+							handVaule = v.HandFinalValue
+							winner = append(winner, v.Id)
+						} else {
+							if (handLevel == v.HandLevel && handVaule <= v.HandFinalValue) || (handLevel < v.HandLevel) {
+								handLevel = v.HandLevel
+								handVaule = v.HandFinalValue
+								if handLevel == v.HandLevel && handVaule == v.HandFinalValue {
+									winner = append(winner, v.Id)
+								} else {
+									winner = nil
+									winner = append(winner, v.Id)
+								}
+							}
+						}
 					}
-				    }
 					//循环查出所有该局用户的任务信息并更新信息
-					for _, v := range gameInfo.Players{
-					    if v.Id==0 {
-						continue
-					    }
+					for _, v := range gameInfo.Players {
+						if v.Id == 0 {
+							continue
+						}
 						taskList, err := models.UserTask.Get(int(v.Id))
 						if err != nil {
 							log.Errorf("get user(%v) tasklist fail (%s)", v.Id, err)
@@ -214,13 +214,13 @@ func (m *TaskHandlerManager) Loop() {//可能会出现,,两个动作同时发生
 							//}
 
 							if taskInfo.IsWin != define.RequiredCommon { //是否需要胜利
-							    w:=0
-							    for _,winnerId:=range winner {
-								if v.Id==winnerId {
-								    w=1
+								w := 0
+								for _, winnerId := range winner {
+									if v.Id == winnerId {
+										w = 1
+									}
 								}
-							    }
-								if w==1 && taskInfo.IsWin == define.RequiredWin {
+								if w == 1 && taskInfo.IsWin == define.RequiredWin {
 									newTaskList.List = append(newTaskList.List, taskInfo)
 									continue
 								}
@@ -338,13 +338,13 @@ func (m *TaskHandlerManager) Loop() {//可能会出现,,两个动作同时发生
 						if err != nil {
 							log.Errorf("update user(%v) taskid(%v) fail  (%s)", taskList.UserId, taskInfo.TaskId, err)
 						}
-					    log.Debug("task channel out end ..")
+						log.Debug("task channel out end ..")
 					}
 
 				}(_playAction)
 
 			}
-		    log.Debug("task loop end ..")
+			log.Debug("task loop end ..")
 		}
 	}()
 }

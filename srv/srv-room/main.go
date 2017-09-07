@@ -26,7 +26,7 @@ type Config struct {
 	ServiceId string
 	Address   string
 	Port      int
-	CheckPort      int
+	CheckPort int
 }
 
 func main() {

@@ -16,17 +16,17 @@ func (m *TaskPriceReceiveModel) Insert() error {
 	return err
 }
 
-func (m *TaskPriceReceiveModel) GetAllByUserId(userId int) (list []int,err error){
-        sqlStr := `SELECT task_id FROM task_prize_receive WHERE user_id  =  ?`
-       rows,err:=Mysql.Chess.Query(sqlStr,userId)
+func (m *TaskPriceReceiveModel) GetAllByUserId(userId int) (list []int, err error) {
+	sqlStr := `SELECT task_id FROM task_prize_receive WHERE user_id  =  ?`
+	rows, err := Mysql.Chess.Query(sqlStr, userId)
 	if err != nil {
-	    return
+		return
 	}
 	defer rows.Close()
-    for rows.Next() {
-	var i int
-	err=rows.Scan(&i)
-	list = append(list,i)
-    }
-    return
+	for rows.Next() {
+		var i int
+		err = rows.Scan(&i)
+		list = append(list, i)
+	}
+	return
 }

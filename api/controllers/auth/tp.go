@@ -177,11 +177,11 @@ func TpLogin(c *gin.Context) {
 	} else {
 		go models.Users.UpdateLastLoginIp(userId, clientIp)
 	}
-	AuthClient,ret := grpcServer.GetAuthGrpc()
-	if ret == 0{
-	    result.Msg = "rpc fail"
-	    c.JSON(http.StatusOK, result)
-	    return
+	AuthClient, ret := grpcServer.GetAuthGrpc()
+	if ret == 0 {
+		result.Msg = "rpc fail"
+		c.JSON(http.StatusOK, result)
+		return
 	}
 	authResult, err := AuthClient.RefreshToken(context.Background(), &pb.RefreshTokenArgs{UserId: int32(userId), AppFrom: form.From, UniqueId: form.UniqueId})
 	if err != nil {
