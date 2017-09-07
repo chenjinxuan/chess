@@ -17,7 +17,7 @@ type GamblingModel struct {
         Bb      int       `bson:"bb" json:"bb" description:"大盲注"`
 	SbPos   int       `bson:"sb_pos" json:"sb_pos" description:"小盲注位置"`
 	BbPos   int       `bson:"bb_pos" json:"bb_pos" description:"大盲注位置"`
-	Pot     []int32   `bson:"pot" json:"pot" description:"奖池"`
+	Pot     []int32   `bson:"pot" json:"pot" description:"奖池 数组"`
 	Players []*Player `bson:"players" json:"players" description:"玩家"`
 }
 type Card struct {

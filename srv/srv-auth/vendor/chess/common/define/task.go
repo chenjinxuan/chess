@@ -6,6 +6,7 @@ const (
         TaskUpsetRedisKey                 = "task_upset_redis_key"
         TaskAllListRedisKey               = "task_All_list_redis_key"
         TaskChargeGoodsRedisKey           = "task_charge_goods_redis_key"
+    	TaskUserBagRedisKey               = "task_user_bag_redis_key"
 	TodayTask                         = 1
 	WeekTask                          = 2
 	PermanentTask                     = 3
