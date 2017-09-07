@@ -11,7 +11,7 @@ govendor update chess/common/services
 govendor update chess/common/storage
 govendor update chess/models
 
-docker rm -f -1
+docker rm -f api-1
 docker build --no-cache --rm=true -t api .
 docker run --rm=true -it -p 10086:10086 -p 10096:10096 -p 8899:8899 \
 	--env-file ./.env \
