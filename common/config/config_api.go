@@ -40,7 +40,7 @@ type ApiConfig struct {
 	Pay        []map[string]interface{} `json:"pay"`
 	Feedback   *Feedback                `json:"feedback"`
 	Steer      *Steer                   `json:"steer"`
-	GrpcServer []string
+	GrpcServer []string                 `json:"grpc_server"`
 }
 
 var (
@@ -230,11 +230,6 @@ func (c *ApiConfig) Import() error {
 	}
 	ConsulClient.KeyBoolWatch("api/debug", &c.Debug)
 
-	c.Port, err = ConsulClient.Key("api/port", ":8888")
-	if err != nil {
-		return err
-	}
-	ConsulClient.KeyWatch("api/port", &c.Port)
 
 	c.PostDesKey, err = ConsulClient.Key("api/post_des_key", "XQ1R1%8f")
 	if err != nil {
