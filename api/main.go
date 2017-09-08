@@ -33,7 +33,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-
+log.Debug(11111111111)
 	// TODO 换皮配置分发，CONSUL
 	err = config.Api.Import()
 	if err != nil {
