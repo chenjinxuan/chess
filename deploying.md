@@ -74,7 +74,7 @@
     ```bash
     $ docker run -d \
         --restart=always \
-        --env-file /path/to/.env \ 
+        --env-file /path/to/.env \
         -p 8898:8898 -p 8899:8899 \
         --name agent-1 \
         docker.airdroid.com/lanziliang/agent:tag \
@@ -89,14 +89,14 @@
 	```bash
 	$ docker run -d \
 		--restart=always \
-		--env-file /path/to/.env \ 
-		-p 10086:10086 -p 10096:10096 -p 8899:8899 \
+		--env-file /path/to/.env \
+		-p 10086:10086 -p 10096:10096 -p 10076:10076 \
 		--name api-1 \
 		docker.airdroid.com/lanziliang/api:tag \
-		--address 192.168.60.164 \
+		--address 127.0.0.1 \
 		--port 10086 \
 		--check-port 10096  \
-		--http-port 8899 \
+		--http-port 10076 \
 		--service-id api-1
 	```
     
@@ -105,7 +105,7 @@
     ```bash
     $ docker run -d \
         --restart=always \
-        --env-file /path/to/.env \ 
+        --env-file /path/to/.env \
         -p 11001:11001 -p 11101:11101 \
         --name auth-1 \
         docker.airdroid.com/lanziliang/auth:tag \
