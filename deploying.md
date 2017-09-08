@@ -74,7 +74,7 @@
     ```bash
     $ docker run -d \
         --restart=always \
-        --env-file /path/to/.env \ 
+        --env-file /path/to/.env \
         -p 8898:8898 -p 8899:8899 \
         --name agent-1 \
         docker.airdroid.com/lanziliang/agent:tag \
@@ -89,7 +89,7 @@
 	```bash
 	$ docker run -d \
 		--restart=always \
-		--env-file /path/to/.env \ 
+		--env-file /path/to/.env \
 		-p 10086:10086 -p 10096:10096 -p 10076:10076 \
 		--name api-1 \
 		docker.airdroid.com/lanziliang/api:tag \
@@ -105,7 +105,7 @@
     ```bash
     $ docker run -d \
         --restart=always \
-        --env-file /path/to/.env \ 
+        --env-file /path/to/.env \
         -p 11001:11001 -p 11101:11101 \
         --name auth-1 \
         docker.airdroid.com/lanziliang/auth:tag \
