@@ -10,8 +10,8 @@ const (
 	TodayTask                         = 1
 	WeekTask                          = 2
 	PermanentTask                     = 3
-        RequiredCommon                    = 0 //只需要参加
-        RequiredWin                       = 1 //要求赢
-        RequiredTotalBalance              = 2  //要求金币余额
+	RequiredCommon                    = 0 //只需要参加
+	RequiredWin                       = 1 //要求赢
+	RequiredTotalBalance              = 2 //要求金币余额
 
 )

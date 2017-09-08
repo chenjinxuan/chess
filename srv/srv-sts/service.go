@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"golang.org/x/net/context"
 )
+
 type server struct {
 }
 

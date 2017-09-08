@@ -14,7 +14,7 @@ type RedisDB struct {
 	Login   *db.Redis
 	Captcha *db.Redis
 	Sms     *db.Redis
-        Task    *db.Redis
+	Task    *db.Redis
 }
 
 func InitApiRedis() {
@@ -37,7 +37,7 @@ func InitApiRedis() {
 	}
 	Redis.Sms, err = db.R("task")
 	if err != nil {
-	    log.Warnf("db.R(\"task\") Error(%s)", err)
+		log.Warnf("db.R(\"task\") Error(%s)", err)
 	}
 
 }

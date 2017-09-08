@@ -19,7 +19,6 @@ import (
 	"net/http"
 )
 
-
 func main() {
 	app := &cli.App{
 		Name:    "auth",

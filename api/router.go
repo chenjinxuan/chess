@@ -11,6 +11,7 @@ import (
 	"chess/api/controllers/auth"
 	"chess/api/controllers/charge"
 	"chess/api/controllers/debug"
+	"chess/api/controllers/game"
 	"chess/api/controllers/goods"
 	"chess/api/controllers/room"
 	"chess/api/controllers/task"
@@ -18,9 +19,8 @@ import (
 	"chess/common/config"
 	"github.com/gin-gonic/gin"
 	"github.com/itsjamie/gin-cors"
+	"strconv"
 	"time"
-    "chess/api/controllers/game"
-    "strconv"
 )
 
 func InitRouter() {
@@ -91,7 +91,7 @@ func InitRouter() {
 		userRouter.GET("/info", auth.Login(config.C.TokenSecret), c_user.GetUserInfo)
 		userRouter.GET("/detail", auth.Login(config.C.TokenSecret), c_user.GetUserInfoDetail)
 		userRouter.GET("/checkin", auth.Login(config.C.TokenSecret), c_user.Checkin)
-	    	userRouter.GET("/checkin/list", auth.Login(config.C.TokenSecret), c_user.CheckinList)
+		userRouter.GET("/checkin/list", auth.Login(config.C.TokenSecret), c_user.CheckinList)
 
 		userRouter.POST("/password/reset", auth.Login(config.C.TokenSecret), c_user.PasswordReset)
 		userRouter.GET("/exchange", auth.Login(config.C.TokenSecret), c_user.Exchange)
@@ -99,11 +99,8 @@ func InitRouter() {
 		userRouter.POST("/profile/mobile", auth.Login(config.C.TokenSecret), c_user.ProfileMobile)
 		userRouter.POST("/profile/avatar", auth.Login(config.C.TokenSecret), c_user.ProfileAvatar)
 		userRouter.POST("/profile/gender", auth.Login(config.C.TokenSecret), c_user.ProfileGender)
-	    	userRouter.GET("/bag/list", auth.Login(config.C.TokenSecret), c_user.BagList)
-	    	userRouter.GET("/bag/use", auth.Login(config.C.TokenSecret), c_user.BagUse)
-
-
-
+		userRouter.GET("/bag/list", auth.Login(config.C.TokenSecret), c_user.BagList)
+		userRouter.GET("/bag/use", auth.Login(config.C.TokenSecret), c_user.BagUse)
 
 	}
 	// @SubApi /verify - 验证码相关 [/verify/]
@@ -134,12 +131,12 @@ func InitRouter() {
 		taskRouter.GET("/receive", auth.Login(config.C.TokenSecret), c_task.ReceiveTaskReward)
 		taskRouter.GET("/list", auth.Login(config.C.TokenSecret), c_task.List)
 	}
-    // @SubApi /game/:user_id - 游戏相关 [/game/{user_id}/]
-        gameRouter := router.Group("/game/:user_id")
-    {
-	gameRouter.GET("/last_game",auth.Login(config.C.TokenSecret),c_game.LastGame)
-	gameRouter.GET("/game_list",auth.Login(config.C.TokenSecret),c_game.GameList)
-    }
+	// @SubApi /game/:user_id - 游戏相关 [/game/{user_id}/]
+	gameRouter := router.Group("/game/:user_id")
+	{
+		gameRouter.GET("/last_game", auth.Login(config.C.TokenSecret), c_game.LastGame)
+		gameRouter.GET("/game_list", auth.Login(config.C.TokenSecret), c_game.GameList)
+	}
 	//router.GET("/testquery",controllers.Get)
-	router.Run(":"+strconv.Itoa(*http_port))
+	router.Run(":" + strconv.Itoa(*http_port))
 }

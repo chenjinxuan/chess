@@ -30,8 +30,8 @@ type UserTaskModel struct {
 	TaskRequiredHandLevel    int       `bson:"task_required_hand_level" json:"task_required_hand_level" description:"手牌等级 0 不需要,1开始需要手牌等级"`
 	TaskRequiredPlayerAction int       `bson:"task_required_player_action" json:"task_required_player_action" description:"玩家动作要求,0无要求,1打赏荷官"`
 	ExpireTime               time.Time `bson:"expire_time" json:"expire_time" description:"过期时间"`
-        EffectTime               time.Time `bson:"effect_time" json:"effect_time" description:"生效时间"`
-        Version                  int       `bson:"version" json:"version" description:"版本号"`
+	EffectTime               time.Time `bson:"effect_time" json:"effect_time" description:"生效时间"`
+	Version                  int       `bson:"version" json:"version" description:"版本号"`
 }
 
 var UserTask = new(UserTaskModel)
@@ -59,26 +59,26 @@ func (m *UserTaskModel) GetInit() (list []UserTaskModel, err error) {
 	return
 }
 func (m *UserTaskModel) GetAll() (list []UserTaskModel, err error) {
-    sqlStr := `SELECT a.id,a.parent_id,b.id,b.name,b.expire_type,a.name,a.image,a.image_describe,a.task_reward_type_id,a.reward_num,c.id,c.room_type,c.match_type,c.hand_level,c.player_action,a.required_describe,a.required_num,a.is_win,a.expire_time,a.effect_time,a.version
+	sqlStr := `SELECT a.id,a.parent_id,b.id,b.name,b.expire_type,a.name,a.image,a.image_describe,a.task_reward_type_id,a.reward_num,c.id,c.room_type,c.match_type,c.hand_level,c.player_action,a.required_describe,a.required_num,a.is_win,a.expire_time,a.effect_time,a.version
     FROM task AS a
     LEFT JOIN task_type AS b ON a.task_type_id = b.id
     LEFT JOIN task_required AS c ON a.task_required_id = c.id
     WHERE a.status = 1 AND a.expire_time > now()`
-    rows, err := Mysql.Chess.Query(sqlStr)
-    if err != nil {
-	return
-    }
-    defer rows.Close()
-    for rows.Next() {
-	var t UserTaskModel
-	err = rows.Scan(&t.TaskId, &t.ParentId, &t.TaskTypeId, &t.TaskTypeName, &t.TaskTypeExpireType, &t.Name, &t.Image, &t.ImageDescribe, &t.TaskRewardTypeId, &t.RewardNum, &t.TaskRequiredId, &t.TaskRequiredRoomType, &t.TaskRequiredMatchType, &t.TaskRequiredHandLevel, &t.TaskRequiredPlayerAction, &t.RequiredDescribe, &t.RequiredNum, &t.IsWin, &t.ExpireTime, &t.EffectTime, &t.Version)
+	rows, err := Mysql.Chess.Query(sqlStr)
 	if err != nil {
-	    continue
+		return
 	}
-	t.LastUpdate = time.Now().Unix()
-	list = append(list, t)
-    }
-    return
+	defer rows.Close()
+	for rows.Next() {
+		var t UserTaskModel
+		err = rows.Scan(&t.TaskId, &t.ParentId, &t.TaskTypeId, &t.TaskTypeName, &t.TaskTypeExpireType, &t.Name, &t.Image, &t.ImageDescribe, &t.TaskRewardTypeId, &t.RewardNum, &t.TaskRequiredId, &t.TaskRequiredRoomType, &t.TaskRequiredMatchType, &t.TaskRequiredHandLevel, &t.TaskRequiredPlayerAction, &t.RequiredDescribe, &t.RequiredNum, &t.IsWin, &t.ExpireTime, &t.EffectTime, &t.Version)
+		if err != nil {
+			continue
+		}
+		t.LastUpdate = time.Now().Unix()
+		list = append(list, t)
+	}
+	return
 }
 
 func (m *UserTaskModel) GetByParentId(taskId int) (t UserTaskModel, err error) {
@@ -175,8 +175,8 @@ func (m *UserTaskModel) UpdateOneTask(userId, taskId int, task UserTaskModel) er
 			"list.$.task_required_hand_level":    task.TaskRequiredHandLevel,
 			"list.$.task_required_player_action": task.TaskRequiredPlayerAction,
 			"list.$.expire_time":                 task.ExpireTime,
-		        "list.$.effect_time":                 task.EffectTime,
-		        "list.$.version":                     task.EffectTime,
+			"list.$.effect_time":                 task.EffectTime,
+			"list.$.version":                     task.EffectTime,
 		}
 		err := c.Update(query, bson.M{"$set": update})
 

@@ -18,7 +18,7 @@ var (
 	//serviceId = "room-1"
 	target    = "192.168.40.157:14002"
 	serviceId = "room-2"
-	userId = flag.Int("uid", 0, "user id")
+	userId    = flag.Int("uid", 0, "user id")
 )
 
 func main() {

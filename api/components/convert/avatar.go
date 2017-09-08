@@ -1,8 +1,8 @@
 package convert
 
 import (
-	"fmt"
 	"chess/common/helper"
+	"fmt"
 )
 
 func ToFullAvatarUrl(avatar string, domain, defaultAvatar string) string {
