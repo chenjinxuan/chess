@@ -113,11 +113,12 @@ func NewTable(rid, max, sb, bb, minC, maxC int) *Table {
 	conn, sid := services.GetService2(define.SRV_NAME_CHAT)
 	if conn == nil {
 		log.Error("cannot get chat service:", sid)
-	}
-	cli := pb.NewChatServiceClient(conn)
-	_, err := cli.Reg(context.Background(), &pb.Chat_Id{Id: table.Id})
-	if err != nil {
-		log.Errorf("Chat service cli.Reg: %v", err)
+	} else {
+		cli := pb.NewChatServiceClient(conn)
+		_, err := cli.Reg(context.Background(), &pb.Chat_Id{Id: table.Id})
+		if err != nil {
+			log.Errorf("Chat service cli.Reg: %v", err)
+		}
 	}
 
 	return table

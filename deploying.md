@@ -170,6 +170,7 @@
         --service-id room01 \
         --services centre \
         --services task \
+        --services sts \
         --services chat
     ```    
     
@@ -187,4 +188,21 @@
         --port 15001 \
         --check-port 15101 \
         --service-id task01
+    ```       
+    
+    
+8. sts - 统计服务
+
+    ```bash
+    $ docker run -d \
+        --net=host \
+        --restart=always \
+        --env-file /path/to/.env \
+        -p 16001:16001 -p 16101:16101 \
+        --name sts01 \
+        docker.airdroid.com/lanziliang/sts:$TAG \
+        --address 59.57.13.156 \
+        --port 16001 \
+        --check-port 16101 \
+        --service-id sts01
     ```       

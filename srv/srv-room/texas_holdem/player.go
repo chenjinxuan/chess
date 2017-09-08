@@ -188,7 +188,7 @@ func (p *Player) SubscribeChat() {
 
 	conn, sid := services.GetService2(define.SRV_NAME_CHAT)
 	if conn == nil {
-		log.Error("cannot get centre service:", sid)
+		log.Error("cannot get chat service:", sid)
 		return
 	}
 	cli := pb.NewChatServiceClient(conn)
