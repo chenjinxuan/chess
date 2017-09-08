@@ -13,4 +13,12 @@ docker build --no-cache --rm=true -t room .
 docker run --rm=true -it -p 14001:14001 -p 14101:14101 \
 	--env-file ./.env \
 	--name room-1 \
-	room --address 192.168.40.157 --port 14001 --check-port 14101 --service-id room-1
+	room \
+	--address 192.168.40.157 \
+	--port 14001 \
+	--check-port 14101 \
+	--service-id room-1 \
+	--services centre \
+	--services task \
+	--services sts \
+	--services chat
