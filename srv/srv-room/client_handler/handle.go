@@ -212,7 +212,7 @@ func P_room_player_award_req(p *Player, data []byte) []byte {
 
 	ack := &pb.RoomPlayerAwardAck{
 		BaseAck:  &pb.BaseAck{Ret: 1, Msg: "ok"},
-		PlayerId: p.Id,
+		PlayerId: int32(p.Id),
 	}
 
 	if p.CurrChips < table.Award {
