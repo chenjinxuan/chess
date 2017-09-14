@@ -236,5 +236,6 @@ func P_room_player_award_req(p *Player, data []byte) []byte {
 		return packet.Pack(Code["room_player_award_ack"], ack)
 	}
 	p.CurrChips -= table.Award
+	ack.Chips = int32(table.Award)
 	return packet.Pack(Code["room_player_award_ack"], ack)
 }
