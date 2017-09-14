@@ -45,6 +45,12 @@ func InitRouter() {
 	//router.Use(colletion.Filter(config.C.Filter))
 	router.Use(middleware.SetContext())
 	router.Use(config.SetContextConfig())
+
+	// consul 健康检查
+	router.GET("/check", func(c *gin.Context){
+		c.String(200, "consulCheck")
+	})
+
 	if config.Api.Debug {
 		debugRouter := router.Group("/debug")
 		{

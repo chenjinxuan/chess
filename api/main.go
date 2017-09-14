@@ -51,14 +51,14 @@ log.Debug(11111111111)
 	models.Init()
 
 	// consul 服务注册
-	err = services.Register(*service_id, define.SRV_NAME_API, *address, *port, *check_port, []string{"master"})
+	err = services.Register(*service_id, define.SRV_NAME_API, *address, *http_port, *http_port, []string{"master"})
 	if err != nil {
 		log.Error(err)
 		os.Exit(-1)
 	}
 	// consul 健康检查
-	http.HandleFunc("/check", consulCheck)
-	go http.ListenAndServe(fmt.Sprintf(":%d", *port+10), nil)
+	//http.HandleFunc("/check", consulCheck)
+	//go http.ListenAndServe(fmt.Sprintf(":%d", *port+10), nil)
 	services.Discover(config.C.GrpcServer)
 	InitRouter()
 }

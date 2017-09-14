@@ -44,6 +44,8 @@ var Code = map[string]int16{
 	"room_table_chat_req":          2121, // 发送聊天消息
 	"room_player_autositdown_ack":  2122, // 自动坐下等待玩家数通报
 	"room_player_autositdown_req":  2123, // 玩家加入自动坐下队列
+	"room_player_award_req":        2124, // 玩家打赏荷官
+	"room_player_award_ack":        2125, // 玩家打赏荷官回复
 }
 
 var RCode = map[int16]string{
@@ -89,6 +91,8 @@ var RCode = map[int16]string{
 	2121: "room_table_chat_req",          // 发送聊天消息
 	2122: "room_player_autositdown_ack",  // 自动坐下等待玩家数通报
 	2123: "room_player_autositdown_req",  // 玩家加入自动坐下队列
+	2124: "room_player_award_req",        // 玩家打赏荷官
+	2125: "room_player_award_ack",        // 玩家打赏荷官回复
 }
 
 const (
