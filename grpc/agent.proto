@@ -259,9 +259,22 @@ message RoomPlayerAutoSitdownAck{
     int32 num = 1;
     repeated int32 queue = 2;
 }
+
 // 2123, 玩家加入自动坐下队列
 message RoomPlayerAutoSitdownReq{
     BaseReq base_req = 1;
+}
+
+// 2124, 玩家打赏荷官
+message RoomPlayerAwardReq{
+    BaseReq base_req = 1;
+}
+
+// 2125, 玩家打赏荷官回复
+message RoomPlayerAwardAck{
+    BaseAck base_ack = 1;
+    int32 player_id = 2;
+    int32 chips = 3;
 }
 
 message PotInfo{

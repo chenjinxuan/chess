@@ -46,6 +46,7 @@ type Table struct {
 	Bet         int     // 当前回合 上一玩家下注额
 	N           int     // 当前牌桌玩家数
 	Max         int     // 牌桌最大玩家数
+	Award       int     // 打赏筹码
 	Status      int     // 0已结束  1进行中
 
 	MaxChips int
@@ -65,7 +66,7 @@ func genTableId(rid int) string {
 	return fmt.Sprintf("%d-%s", rid, u.String())
 }
 
-func NewTable(rid, max, sb, bb, minC, maxC int) *Table {
+func NewTable(rid, max, award, sb, bb, minC, maxC int) *Table {
 	if max <= 0 || max > MaxN {
 		max = 9 // default 9 players
 	}
@@ -82,6 +83,7 @@ func NewTable(rid, max, sb, bb, minC, maxC int) *Table {
 		Pot:        make([]int32, 1),
 		Timeout:    actionWait,
 		Max:        max,
+		Award:      award,
 		lock:       sync.Mutex{},
 		dm:         NewDealMachine(),
 		EndChan:    make(chan int),

@@ -30,11 +30,12 @@ type Room struct {
 	MinCarry   int
 	MaxCarry   int
 	Max        int
+	Award      int
 
 	tables Tables
 }
 
-func NewRoom(rid, bb, sb, minC, maxC, max int) *Room {
+func NewRoom(rid, bb, sb, minC, maxC, max, award int) *Room {
 	if RoomList[rid] == nil {
 		RoomList[rid] = &Room{
 			Id:         rid,
@@ -43,6 +44,7 @@ func NewRoom(rid, bb, sb, minC, maxC, max int) *Room {
 			MinCarry:   minC,
 			MaxCarry:   maxC,
 			Max:        max,
+			Award:      award,
 
 			tables: Tables{
 				M:        make(map[string]*Table),
@@ -99,7 +101,7 @@ func (r *Room) GetTable(tid string) *Table {
 				return v
 			}
 		}
-		table = NewTable(r.Id, r.Max, r.SmallBlind, r.BigBlind, r.MinCarry, r.MaxCarry)
+		table = NewTable(r.Id, r.Max, r.Award, r.SmallBlind, r.BigBlind, r.MinCarry, r.MaxCarry)
 		r.setTable(table)
 	}
 
@@ -115,7 +117,7 @@ func (r *Room) GetAnotherTable(tid string) *Table {
 			return v
 		}
 	}
-	table := NewTable(r.Id, r.Max, r.SmallBlind, r.BigBlind, r.MinCarry, r.MaxCarry)
+	table := NewTable(r.Id, r.Max, r.Award, r.SmallBlind, r.BigBlind, r.MinCarry, r.MaxCarry)
 	r.setTable(table)
 
 	return table
@@ -145,7 +147,7 @@ func InitRoomList(sid string) {
 
 	for _, v := range list {
 		log.Debugf("初始化游戏房间-%d", v.Id)
-		NewRoom(v.Id, v.BigBlind, v.SmallBlind, v.MinCarry, v.MaxCarry, v.Max)
+		NewRoom(v.Id, v.BigBlind, v.SmallBlind, v.MinCarry, v.MaxCarry, v.Max, v.Award)
 	}
 }
 
