@@ -93,13 +93,11 @@
 	    --net=host \
 		--restart=always \
 		--env-file /path/to/.env \
-		-p 10086:10086 -p 10096:10096 -p 10076:10076 \
+		-p 11008:11008 \
 		--name api01 \
 		docker.airdroid.com/lanziliang/api:$TAG \
 		--address 59.57.13.156 \
-		--port 10086 \
-		--check-port 10096  \
-		--http-port 10076 \
+		--http-port 11008 \
 		--service-id api01
 	```
     
@@ -146,7 +144,7 @@
         -p 13001:13001 -p 13101:13101 \
         --name chat01 \
         docker.airdroid.com/lanziliang/chat:$TAG \
-        --kafka-brokers 192.168.40.157:9092 \
+        --kafka-brokers 59.57.13.156:9092 \
         --boltdb /data/CHAT.DAT \
         --address 59.57.13.156 \
         --port 13001 \
