@@ -19,6 +19,8 @@ type UserGameStsModel struct {
 	Inbound        int    `bson:"inbound" json:"inbound" description:"入局数"`
 	Experience     int    `bson:"experience" json:"experience" description:"经验"`
 	Grade          int    `bson:"grade" json:"grade" description:"等级"`
+	GradeDescribe  string `bson:"grade_describe" json:"grade_describe" description:"等级描述"`
+	NextExperience int    `bson:"next_experience" json:"next_experience" description:"下一级所要求经验"`
 }
 
 var UserGameSts = new(UserGameStsModel)

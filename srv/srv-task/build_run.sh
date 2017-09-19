@@ -11,9 +11,9 @@ govendor update chess/common/services
 govendor update chess/common/storage
 govendor update chess/models
 
-docker rm -f task-1
+docker rm -f task-2
 docker build --no-cache --rm=true -t task .
-docker run --rm=true -it -p 15001:15001 -p 15101:15101  -v /etc/localtime:/etc/localtime:ro \
+docker run --rm=true -it -p 15002:15002 -p 15102:15102 \
 	--env-file ./.env \
-	--name task-1 \
-	task --address 192.168.60.164 --port 15001 --check-port 15101 --service-id task-1
+	--name task-2 \
+	task --address 192.168.60.164 --port 15002 --check-port 15102 --service-id task-2
