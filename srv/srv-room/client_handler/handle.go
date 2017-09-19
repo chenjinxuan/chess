@@ -3,6 +3,7 @@ package client_handler
 import (
 	. "chess/common/define"
 	"chess/common/log"
+	"chess/models"
 	"chess/srv/srv-room/misc/packet"
 	pb "chess/srv/srv-room/proto"
 	"chess/srv/srv-room/registry"
@@ -26,6 +27,7 @@ func init() {
 		2118: P_room_player_logout_req,
 		2121: P_room_table_chat_req,
 		2123: P_room_player_autositdown_req,
+		2124: P_room_player_award_req,
 	}
 }
 
@@ -190,4 +192,50 @@ func P_room_player_autositdown_req(p *Player, data []byte) []byte {
 
 	p.AutoSitdown()
 	return nil
+}
+
+// 玩家打赏荷官
+func P_room_player_award_req(p *Player, data []byte) []byte {
+	req := &pb.RoomPlayerAwardReq{}
+	err := proto.Unmarshal(data, req)
+	if err != nil {
+		log.Errorf("proto.Unmarshal Error: %s", err)
+		return nil
+	}
+	log.Debug("P_room_player_award_req", req)
+
+	table := p.Table
+	if table == nil {
+		log.Debugf("玩家%d打赏失败: 不在牌桌上", p.Id)
+		return nil
+	}
+
+	ack := &pb.RoomPlayerAwardAck{
+		BaseAck:  &pb.BaseAck{Ret: 1, Msg: "ok"},
+		PlayerId: int32(p.Id),
+	}
+
+	if p.CurrChips < table.Award {
+		log.Debugf("玩家%d打赏失败: 筹码不足", p.Id)
+		ack.BaseAck.Ret = -1
+		ack.BaseAck.Msg = "您的金币余额不足，无法打赏"
+		return packet.Pack(Code["room_player_award_ack"], ack)
+	}
+	// todo 记录日志
+	userAward := &models.UsersAwardModel{
+		UserId:  p.Id,
+		TableId: table.Id,
+		RoomId:  table.RoomId,
+		Num:     table.Award,
+	}
+	err = userAward.Insert()
+	if err != nil {
+		log.Errorf("userAward.Insert Error: %s", err)
+		ack.BaseAck.Ret = 0
+		ack.BaseAck.Msg = "System error"
+		return packet.Pack(Code["room_player_award_ack"], ack)
+	}
+	p.CurrChips -= table.Award
+	ack.Chips = int32(table.Award)
+	return packet.Pack(Code["room_player_award_ack"], ack)
 }

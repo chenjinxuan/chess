@@ -40,7 +40,7 @@ type ApiConfig struct {
 	Pay        []map[string]interface{} `json:"pay"`
 	Feedback   *Feedback                `json:"feedback"`
 	Steer      *Steer                   `json:"steer"`
-	GrpcServer []string
+	GrpcServer []string                 `json:"grpc_server"`
 }
 
 var (
@@ -292,15 +292,8 @@ func Get(key string) *ApiConfig {
 }
 func InitConfig() {
 
-	defaultStr, err := ConsulClient.Key("api/default", "")
-	//if err != nil {
-	//return err
-	//}
-	err = json.Unmarshal([]byte(defaultStr), &C)
-
-	//if err != nil {
-	//return err
-	//}
+	defaultStr,_ := ConsulClient.Key("api/default", "")
+	_ = json.Unmarshal([]byte(defaultStr), &C)
 
 	diffStr, err := ConsulClient.KeyList("api/diff")
 	Cs = make(map[string]*ApiConfig)
@@ -311,6 +304,9 @@ func InitConfig() {
 	}
 
 	for k, v := range diffStr {
+	    if v==nil {
+		continue
+	    }
 
 		conf := new(ApiConfig)
 		err = json.Unmarshal(defaultBytes, conf)

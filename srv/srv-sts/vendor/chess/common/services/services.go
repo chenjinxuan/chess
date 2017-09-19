@@ -183,7 +183,7 @@ func (p *service_pool) add_service(id, name, address string, port int) {
 	}
 
 	target := fmt.Sprintf("%s:%d", address, port)
-	if conn, err := grpc.Dial(target, grpc.WithBlock(), grpc.WithInsecure()); err == nil {
+	if conn, err := grpc.Dial(target, grpc.WithBlock(), grpc.WithInsecure(), grpc.WithTimeout(5*time.Second)); err == nil {
 		service.clients[id] = &client{id, address, port, conn}
 		service.ids = append(service.ids, id)
 		log.Info("service added:", id, "-->", target)

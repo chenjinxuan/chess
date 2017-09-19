@@ -3,52 +3,52 @@
 	"ignore": "",
 	"package": [
 		{
-			"checksumSHA1": "b7SMIyyAyLMkVvD4mjWkdlvevpQ=",
+			"checksumSHA1": "KSuAh+c+Y2BJ3tUv4wPOeYUiNWs=",
 			"path": "chess/common/config",
-			"revision": "0d91ed29d3036970d85f4e57d671823caa2c1071",
-			"revisionTime": "2017-09-07T07:46:12Z"
+			"revision": "3471f0a5b2fa6f2fba6d2fbd23e320c141dbdeca",
+			"revisionTime": "2017-09-14T07:19:48Z"
 		},
 		{
 			"checksumSHA1": "MFFw/6Q/HSwsThxyKLvINybvQu0=",
 			"path": "chess/common/consul",
-			"revision": "0d91ed29d3036970d85f4e57d671823caa2c1071",
-			"revisionTime": "2017-09-07T07:46:12Z"
+			"revision": "3471f0a5b2fa6f2fba6d2fbd23e320c141dbdeca",
+			"revisionTime": "2017-09-14T07:19:48Z"
 		},
 		{
-			"checksumSHA1": "7u5Va7EaOvxr5qK6KVEVsGWTitM=",
+			"checksumSHA1": "x4jc7jswR2HetGCgxfvMaudw7vI=",
 			"path": "chess/common/db",
-			"revision": "0d91ed29d3036970d85f4e57d671823caa2c1071",
-			"revisionTime": "2017-09-07T07:46:12Z"
+			"revision": "3471f0a5b2fa6f2fba6d2fbd23e320c141dbdeca",
+			"revisionTime": "2017-09-14T07:19:48Z"
 		},
 		{
-			"checksumSHA1": "oYPSZ9mevKN/RuI+s0pUBkiBQ3o=",
+			"checksumSHA1": "yIWLkYuKAMAQAQhQ39fi30492WE=",
 			"path": "chess/common/define",
-			"revision": "0d91ed29d3036970d85f4e57d671823caa2c1071",
-			"revisionTime": "2017-09-07T07:46:12Z"
+			"revision": "3471f0a5b2fa6f2fba6d2fbd23e320c141dbdeca",
+			"revisionTime": "2017-09-14T07:19:48Z"
 		},
 		{
 			"checksumSHA1": "3PLcIK7yhm+9L60LrpgRzczEc/Q=",
 			"path": "chess/common/helper",
-			"revision": "0d91ed29d3036970d85f4e57d671823caa2c1071",
-			"revisionTime": "2017-09-07T07:46:12Z"
+			"revision": "3471f0a5b2fa6f2fba6d2fbd23e320c141dbdeca",
+			"revisionTime": "2017-09-14T07:19:48Z"
 		},
 		{
 			"checksumSHA1": "Y+us1CJfgnPsZixZzxqHKD89k0o=",
 			"path": "chess/common/log",
-			"revision": "0d91ed29d3036970d85f4e57d671823caa2c1071",
-			"revisionTime": "2017-09-07T07:46:12Z"
+			"revision": "3471f0a5b2fa6f2fba6d2fbd23e320c141dbdeca",
+			"revisionTime": "2017-09-14T07:19:48Z"
 		},
 		{
-			"checksumSHA1": "92l9uBBdZK6rFcUuJnBu+DWZFM0=",
+			"checksumSHA1": "PhFVtN33AxX2356dSsog+To65WA=",
 			"path": "chess/common/services",
-			"revision": "0d91ed29d3036970d85f4e57d671823caa2c1071",
-			"revisionTime": "2017-09-07T07:46:12Z"
+			"revision": "3471f0a5b2fa6f2fba6d2fbd23e320c141dbdeca",
+			"revisionTime": "2017-09-14T07:19:48Z"
 		},
 		{
-			"checksumSHA1": "EdwlWhPZK9yFK6I5F7xlHKidsHI=",
+			"checksumSHA1": "B4h07cJg8JP7p2wFekZQ86+/9oU=",
 			"path": "chess/models",
-			"revision": "0d91ed29d3036970d85f4e57d671823caa2c1071",
-			"revisionTime": "2017-09-07T07:46:12Z"
+			"revision": "3471f0a5b2fa6f2fba6d2fbd23e320c141dbdeca",
+			"revisionTime": "2017-09-14T07:19:48Z"
 		},
 		{
 			"checksumSHA1": "tI2uUPh7qwQxNihd1LvtNTdjVks=",

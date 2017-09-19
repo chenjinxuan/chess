@@ -7,6 +7,7 @@ const (
 	SRV_NAME_CHAT   = "chat"
 	SRV_NAME_TASK   = "task"
 	SRV_NAME_STS    = "sts"
+	SRV_NAME_API    = "api"
 
 	DEFAULT_SRV_ID_ROOM   = "room-1"
 	DEFAULT_SRV_ID_AUTH   = "auth-1"
