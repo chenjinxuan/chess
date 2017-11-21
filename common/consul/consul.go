@@ -311,7 +311,7 @@ func (c *ConsulCliWrap) WatchFuncFactory(key string, handler func(raw interface{
 	}
 }
 
-func (c *ConsulCliWrap) WatchKeyPlanFactory(key string) *watch.Plan {
+func (c *ConsulCliWrap) WatchKeyPlanFactory(key string) *watch.WatchPlan {
 	plan, _ := watch.Parse(map[string]interface{}{
 		"datacenter": c.datacenter,
 		"type":       "key",

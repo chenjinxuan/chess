@@ -2,9 +2,9 @@ package config
 
 import (
 	. "chess/common/consul"
+	"chess/common/log"
 	"encoding/json"
 	"time"
-    "chess/common/log"
 )
 
 var Db = new(DbConfig)
@@ -67,15 +67,15 @@ type RedisServer struct {
 
 func (c *DbConfig) Import(srvName string) error {
 	key := srvName + "/db"
-    log.Debug(999999)
+	log.Debug(999999)
 	val, err := ConsulClient.Key(key, "")
 
-    log.Debug(err)
+	log.Debug(err)
 	if err != nil {
 		return err
 	}
 	//ConsulClient.KeyWatch(key, &val)
 	Db = c
-log.Debug(val)
+	log.Debug(val)
 	return json.Unmarshal([]byte(val), c)
 }

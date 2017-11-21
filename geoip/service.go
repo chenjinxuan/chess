@@ -1,8 +1,8 @@
 package main
 
 import (
+	pb "chess/geoip/proto"
 	"errors"
-	pb "geoip/proto"
 	"net"
 	"os"
 	"strings"

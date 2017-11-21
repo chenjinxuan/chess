@@ -5,11 +5,11 @@ import "time"
 var UsersAward = new(UsersAwardModel)
 
 type UsersAwardModel struct {
-	Id int
-	UserId int
+	Id      int
+	UserId  int
 	TableId string
-	RoomId int
-	Num int
+	RoomId  int
+	Num     int
 	Created time.Time
 }
 

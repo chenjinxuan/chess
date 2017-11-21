@@ -21,7 +21,6 @@ import (
 	"github.com/itsjamie/gin-cors"
 	"strconv"
 	"time"
-    "fmt"
 )
 
 func InitRouter() {
@@ -48,7 +47,7 @@ func InitRouter() {
 	router.Use(config.SetContextConfig())
 
 	// consul 健康检查
-	router.GET("/check", func(c *gin.Context){
+	router.GET("/check", func(c *gin.Context) {
 		c.String(200, "consulCheck")
 	})
 

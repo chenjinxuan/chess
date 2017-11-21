@@ -292,7 +292,7 @@ func Get(key string) *ApiConfig {
 }
 func InitConfig() {
 
-	defaultStr,_ := ConsulClient.Key("api/default", "")
+	defaultStr, _ := ConsulClient.Key("api/default", "")
 	_ = json.Unmarshal([]byte(defaultStr), &C)
 
 	diffStr, err := ConsulClient.KeyList("api/diff")
@@ -304,9 +304,9 @@ func InitConfig() {
 	}
 
 	for k, v := range diffStr {
-	    if v==nil {
-		continue
-	    }
+		if v == nil {
+			continue
+		}
 
 		conf := new(ApiConfig)
 		err = json.Unmarshal(defaultBytes, conf)

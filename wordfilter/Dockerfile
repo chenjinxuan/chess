@@ -1,5 +1,5 @@
 FROM golang:latest
-MAINTAINER xtaci <daniel820313@gmail.com>
+MAINTAINER chenjinxuan <jinxuanchen666@163.com>
 COPY . /go/src/wordfilter
 RUN go install wordfilter
 ENTRYPOINT ["/go/bin/wordfilter"]

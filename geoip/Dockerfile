@@ -1,6 +1,6 @@
-FROM golang:latest
-MAINTAINER xtaci <daniel820313@gmail.com>
-COPY . /go/src/geoip
-RUN go install geoip
+FROM golang:1.7.6
+MAINTAINER chenjinxuan <jinxuanchen666@163.com>
+COPY . /go/src/chess/geoip
+RUN go install chess/geoip
 ENTRYPOINT ["/go/bin/geoip"]
 EXPOSE 50000
