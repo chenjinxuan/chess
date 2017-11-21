@@ -1,0 +1,624 @@
+{ 
+    "_id" : ObjectId("59ae5f919845f975461d4054"), 
+    "user_id" : NumberInt(10000017), 
+    "win" : NumberInt(224), 
+    "totalgame" : NumberInt(234), 
+    "cards" : [
+        {
+            "suit" : NumberInt(3), 
+            "value" : NumberInt(5)
+        }, 
+        {
+            "suit" : NumberInt(2), 
+            "value" : NumberInt(11)
+        }, 
+        {
+            "suit" : NumberInt(1), 
+            "value" : NumberInt(6)
+        }, 
+        {
+            "suit" : NumberInt(2), 
+            "value" : NumberInt(2)
+        }, 
+        {
+            "suit" : NumberInt(0), 
+            "value" : NumberInt(11)
+        }, 
+        {
+            "suit" : NumberInt(1), 
+            "value" : NumberInt(11)
+        }, 
+        {
+            "suit" : NumberInt(3), 
+            "value" : NumberInt(2)
+        }
+    ], 
+    "hand_level" : NumberInt(7), 
+    "hand_final_value" : NumberInt(7), 
+    "bast_winner" : NumberInt(3980), 
+    "showdown" : NumberInt(8), 
+    "inbound" : NumberInt(25), 
+    "experience" : NumberInt(1886), 
+    "grade" : NumberInt(0)
+}
+{ 
+    "_id" : ObjectId("59ae5f919845f975461d4056"), 
+    "user_id" : NumberInt(10000003), 
+    "win" : NumberInt(194), 
+    "totalgame" : NumberInt(208), 
+    "cards" : [
+        {
+            "suit" : NumberInt(1), 
+            "value" : NumberInt(0)
+        }, 
+        {
+            "suit" : NumberInt(3), 
+            "value" : NumberInt(0)
+        }, 
+        {
+            "suit" : NumberInt(0), 
+            "value" : NumberInt(3)
+        }, 
+        {
+            "suit" : NumberInt(0), 
+            "value" : NumberInt(11)
+        }, 
+        {
+            "suit" : NumberInt(2), 
+            "value" : NumberInt(11)
+        }, 
+        {
+            "suit" : NumberInt(1), 
+            "value" : NumberInt(4)
+        }, 
+        {
+            "suit" : NumberInt(0), 
+            "value" : NumberInt(0)
+        }
+    ], 
+    "hand_level" : NumberInt(7), 
+    "hand_final_value" : NumberInt(7), 
+    "bast_winner" : NumberInt(4020), 
+    "showdown" : NumberInt(18), 
+    "inbound" : NumberInt(25), 
+    "experience" : NumberInt(2052), 
+    "grade" : NumberInt(0)
+}
+{ 
+    "_id" : ObjectId("59afc2309845f9754625e975"), 
+    "user_id" : NumberInt(10000051), 
+    "win" : NumberInt(75), 
+    "totalgame" : NumberInt(76), 
+    "cards" : [
+        {
+            "suit" : NumberInt(0), 
+            "value" : NumberInt(11)
+        }, 
+        {
+            "suit" : NumberInt(2), 
+            "value" : NumberInt(11)
+        }, 
+        {
+            "suit" : NumberInt(3), 
+            "value" : NumberInt(6)
+        }, 
+        {
+            "suit" : NumberInt(3), 
+            "value" : NumberInt(11)
+        }, 
+        {
+            "suit" : NumberInt(2), 
+            "value" : NumberInt(9)
+        }
+    ], 
+    "hand_level" : NumberInt(4), 
+    "hand_final_value" : NumberInt(4), 
+    "bast_winner" : NumberInt(125), 
+    "showdown" : NumberInt(2), 
+    "inbound" : NumberInt(0), 
+    "experience" : NumberInt(1507), 
+    "grade" : NumberInt(0)
+}
+{ 
+    "_id" : ObjectId("59afc4519845f9754625f5f1"), 
+    "user_id" : NumberInt(10000065), 
+    "win" : NumberInt(0), 
+    "totalgame" : NumberInt(31), 
+    "cards" : [
+        {
+            "suit" : NumberInt(2), 
+            "value" : NumberInt(10)
+        }, 
+        {
+            "suit" : NumberInt(1), 
+            "value" : NumberInt(10)
+        }
+    ], 
+    "hand_level" : NumberInt(1), 
+    "hand_final_value" : NumberInt(1), 
+    "bast_winner" : NumberInt(30), 
+    "showdown" : NumberInt(0), 
+    "inbound" : NumberInt(0), 
+    "experience" : NumberInt(0), 
+    "grade" : NumberInt(0)
+}
+{ 
+    "_id" : ObjectId("59afc6c09845f975462603fc"), 
+    "user_id" : NumberInt(10000056), 
+    "win" : NumberInt(16), 
+    "totalgame" : NumberInt(17), 
+    "cards" : [
+        {
+            "suit" : NumberInt(2), 
+            "value" : NumberInt(12)
+        }, 
+        {
+            "suit" : NumberInt(0), 
+            "value" : NumberInt(5)
+        }, 
+        {
+            "suit" : NumberInt(2), 
+            "value" : NumberInt(4)
+        }, 
+        {
+            "suit" : NumberInt(3), 
+            "value" : NumberInt(8)
+        }, 
+        {
+            "suit" : NumberInt(1), 
+            "value" : NumberInt(8)
+        }, 
+        {
+            "suit" : NumberInt(2), 
+            "value" : NumberInt(5)
+        }, 
+        {
+            "suit" : NumberInt(2), 
+            "value" : NumberInt(10)
+        }
+    ], 
+    "hand_level" : NumberInt(3), 
+    "hand_final_value" : NumberInt(3), 
+    "bast_winner" : NumberInt(1030), 
+    "showdown" : NumberInt(0), 
+    "inbound" : NumberInt(8), 
+    "experience" : NumberInt(29), 
+    "grade" : NumberInt(0)
+}
+{ 
+    "_id" : ObjectId("59b0a3389845f975462ab612"), 
+    "user_id" : NumberInt(10000008), 
+    "win" : NumberInt(17), 
+    "totalgame" : NumberInt(17), 
+    "cards" : [
+        {
+            "suit" : NumberInt(1), 
+            "value" : NumberInt(11)
+        }, 
+        {
+            "suit" : NumberInt(3), 
+            "value" : NumberInt(9)
+        }, 
+        {
+            "suit" : NumberInt(0), 
+            "value" : NumberInt(5)
+        }, 
+        {
+            "suit" : NumberInt(0), 
+            "value" : NumberInt(1)
+        }, 
+        {
+            "suit" : NumberInt(3), 
+            "value" : NumberInt(1)
+        }, 
+        {
+            "suit" : NumberInt(2), 
+            "value" : NumberInt(1)
+        }, 
+        {
+            "suit" : NumberInt(3), 
+            "value" : NumberInt(7)
+        }
+    ], 
+    "hand_level" : NumberInt(4), 
+    "hand_final_value" : NumberInt(4), 
+    "bast_winner" : NumberInt(2010), 
+    "showdown" : NumberInt(0), 
+    "inbound" : NumberInt(4), 
+    "experience" : NumberInt(612), 
+    "grade" : NumberInt(0)
+}
+{ 
+    "_id" : ObjectId("59b0a3a49845f975462ab86b"), 
+    "user_id" : NumberInt(10000009), 
+    "win" : NumberInt(6), 
+    "totalgame" : NumberInt(7), 
+    "cards" : [
+        {
+            "suit" : NumberInt(1), 
+            "value" : NumberInt(11)
+        }, 
+        {
+            "suit" : NumberInt(3), 
+            "value" : NumberInt(9)
+        }, 
+        {
+            "suit" : NumberInt(0), 
+            "value" : NumberInt(5)
+        }, 
+        {
+            "suit" : NumberInt(0), 
+            "value" : NumberInt(1)
+        }, 
+        {
+            "suit" : NumberInt(3), 
+            "value" : NumberInt(1)
+        }, 
+        {
+            "suit" : NumberInt(0), 
+            "value" : NumberInt(12)
+        }, 
+        {
+            "suit" : NumberInt(3), 
+            "value" : NumberInt(0)
+        }
+    ], 
+    "hand_level" : NumberInt(2), 
+    "hand_final_value" : NumberInt(2), 
+    "bast_winner" : NumberInt(30), 
+    "showdown" : NumberInt(0), 
+    "inbound" : NumberInt(1), 
+    "experience" : NumberInt(299), 
+    "grade" : NumberInt(0)
+}
+{ 
+    "_id" : ObjectId("59b0aad59845f975462adf03"), 
+    "user_id" : NumberInt(10000070), 
+    "win" : NumberInt(3), 
+    "totalgame" : NumberInt(6), 
+    "cards" : [
+        {
+            "suit" : NumberInt(1), 
+            "value" : NumberInt(2)
+        }, 
+        {
+            "suit" : NumberInt(0), 
+            "value" : NumberInt(8)
+        }, 
+        {
+            "suit" : NumberInt(1), 
+            "value" : NumberInt(1)
+        }, 
+        {
+            "suit" : NumberInt(2), 
+            "value" : NumberInt(11)
+        }, 
+        {
+            "suit" : NumberInt(2), 
+            "value" : NumberInt(3)
+        }, 
+        {
+            "suit" : NumberInt(2), 
+            "value" : NumberInt(2)
+        }, 
+        {
+            "suit" : NumberInt(3), 
+            "value" : NumberInt(2)
+        }
+    ], 
+    "hand_level" : NumberInt(4), 
+    "hand_final_value" : NumberInt(4), 
+    "bast_winner" : NumberInt(2035), 
+    "showdown" : NumberInt(2), 
+    "inbound" : NumberInt(2), 
+    "experience" : NumberInt(391), 
+    "grade" : NumberInt(0)
+}
+{ 
+    "_id" : ObjectId("59b0afe59845f975462afa92"), 
+    "user_id" : NumberInt(10000002), 
+    "win" : NumberInt(7), 
+    "totalgame" : NumberInt(7), 
+    "cards" : [
+        {
+            "suit" : NumberInt(2), 
+            "value" : NumberInt(2)
+        }, 
+        {
+            "suit" : NumberInt(1), 
+            "value" : NumberInt(9)
+        }, 
+        {
+            "suit" : NumberInt(2), 
+            "value" : NumberInt(9)
+        }, 
+        {
+            "suit" : NumberInt(2), 
+            "value" : NumberInt(0)
+        }, 
+        {
+            "suit" : NumberInt(0), 
+            "value" : NumberInt(0)
+        }, 
+        {
+            "suit" : NumberInt(2), 
+            "value" : NumberInt(6)
+        }, 
+        {
+            "suit" : NumberInt(2), 
+            "value" : NumberInt(3)
+        }
+    ], 
+    "hand_level" : NumberInt(6), 
+    "hand_final_value" : NumberInt(6), 
+    "bast_winner" : NumberInt(60), 
+    "showdown" : NumberInt(7), 
+    "inbound" : NumberInt(3), 
+    "experience" : NumberInt(440), 
+    "grade" : NumberInt(0)
+}
+{ 
+    "_id" : ObjectId("59b0b00f9845f975462afb8a"), 
+    "user_id" : NumberInt(10000001), 
+    "win" : NumberInt(6), 
+    "totalgame" : NumberInt(6), 
+    "cards" : [
+        {
+            "suit" : NumberInt(3), 
+            "value" : NumberInt(7)
+        }, 
+        {
+            "suit" : NumberInt(3), 
+            "value" : NumberInt(0)
+        }, 
+        {
+            "suit" : NumberInt(2), 
+            "value" : NumberInt(8)
+        }, 
+        {
+            "suit" : NumberInt(3), 
+            "value" : NumberInt(12)
+        }, 
+        {
+            "suit" : NumberInt(0), 
+            "value" : NumberInt(9)
+        }, 
+        {
+            "suit" : NumberInt(2), 
+            "value" : NumberInt(12)
+        }, 
+        {
+            "suit" : NumberInt(0), 
+            "value" : NumberInt(12)
+        }
+    ], 
+    "hand_level" : NumberInt(4), 
+    "hand_final_value" : NumberInt(4), 
+    "bast_winner" : NumberInt(1100), 
+    "showdown" : NumberInt(6), 
+    "inbound" : NumberInt(3), 
+    "experience" : NumberInt(456), 
+    "grade" : NumberInt(0)
+}
+{ 
+    "_id" : ObjectId("59b0b0a29845f975462afeb6"), 
+    "user_id" : NumberInt(10000004), 
+    "win" : NumberInt(1), 
+    "totalgame" : NumberInt(4), 
+    "cards" : [
+        {
+            "suit" : NumberInt(3), 
+            "value" : NumberInt(10)
+        }, 
+        {
+            "suit" : NumberInt(2), 
+            "value" : NumberInt(12)
+        }, 
+        {
+            "suit" : NumberInt(0), 
+            "value" : NumberInt(7)
+        }, 
+        {
+            "suit" : NumberInt(1), 
+            "value" : NumberInt(1)
+        }, 
+        {
+            "suit" : NumberInt(1), 
+            "value" : NumberInt(12)
+        }, 
+        {
+            "suit" : NumberInt(1), 
+            "value" : NumberInt(7)
+        }, 
+        {
+            "suit" : NumberInt(1), 
+            "value" : NumberInt(9)
+        }
+    ], 
+    "hand_level" : NumberInt(3), 
+    "hand_final_value" : NumberInt(3), 
+    "bast_winner" : NumberInt(80), 
+    "showdown" : NumberInt(4), 
+    "inbound" : NumberInt(2), 
+    "experience" : NumberInt(357), 
+    "grade" : NumberInt(0)
+}
+{ 
+    "_id" : ObjectId("59b0b7c69845f975462b2570"), 
+    "user_id" : NumberInt(10000010), 
+    "win" : NumberInt(31), 
+    "totalgame" : NumberInt(31), 
+    "cards" : [
+        {
+            "suit" : NumberInt(1), 
+            "value" : NumberInt(5)
+        }, 
+        {
+            "suit" : NumberInt(1), 
+            "value" : NumberInt(9)
+        }, 
+        {
+            "suit" : NumberInt(2), 
+            "value" : NumberInt(7)
+        }, 
+        {
+            "suit" : NumberInt(3), 
+            "value" : NumberInt(1)
+        }, 
+        {
+            "suit" : NumberInt(3), 
+            "value" : NumberInt(7)
+        }, 
+        {
+            "suit" : NumberInt(1), 
+            "value" : NumberInt(10)
+        }, 
+        {
+            "suit" : NumberInt(1), 
+            "value" : NumberInt(3)
+        }
+    ], 
+    "hand_level" : NumberInt(2), 
+    "hand_final_value" : NumberInt(2), 
+    "bast_winner" : NumberInt(2010), 
+    "showdown" : NumberInt(0), 
+    "inbound" : NumberInt(8), 
+    "experience" : NumberInt(551), 
+    "grade" : NumberInt(1), 
+    "grade_describe" : "青铜5", 
+    "next_experience" : NumberInt(3000)
+}
+{ 
+    "_id" : ObjectId("59b0e12f9845f975462c12f1"), 
+    "user_id" : NumberInt(10000020), 
+    "win" : NumberInt(3), 
+    "totalgame" : NumberInt(3), 
+    "cards" : [
+        {
+            "suit" : NumberInt(3), 
+            "value" : NumberInt(5)
+        }, 
+        {
+            "suit" : NumberInt(3), 
+            "value" : NumberInt(7)
+        }, 
+        {
+            "suit" : NumberInt(3), 
+            "value" : NumberInt(6)
+        }, 
+        {
+            "suit" : NumberInt(2), 
+            "value" : NumberInt(9)
+        }, 
+        {
+            "suit" : NumberInt(1), 
+            "value" : NumberInt(6)
+        }, 
+        {
+            "suit" : NumberInt(0), 
+            "value" : NumberInt(3)
+        }, 
+        {
+            "suit" : NumberInt(0), 
+            "value" : NumberInt(6)
+        }
+    ], 
+    "hand_level" : NumberInt(4), 
+    "hand_final_value" : NumberInt(4), 
+    "bast_winner" : NumberInt(30), 
+    "showdown" : NumberInt(0), 
+    "inbound" : NumberInt(1), 
+    "experience" : NumberInt(66), 
+    "grade" : NumberInt(2), 
+    "grade_describe" : "青铜4"
+}
+{ 
+    "_id" : ObjectId("59b0e5809845f975462c2c51"), 
+    "user_id" : NumberInt(10000021), 
+    "win" : NumberInt(28), 
+    "totalgame" : NumberInt(30), 
+    "cards" : [
+        {
+            "suit" : NumberInt(0), 
+            "value" : NumberInt(3)
+        }, 
+        {
+            "suit" : NumberInt(3), 
+            "value" : NumberInt(12)
+        }, 
+        {
+            "suit" : NumberInt(2), 
+            "value" : NumberInt(8)
+        }, 
+        {
+            "suit" : NumberInt(2), 
+            "value" : NumberInt(9)
+        }, 
+        {
+            "suit" : NumberInt(3), 
+            "value" : NumberInt(11)
+        }, 
+        {
+            "suit" : NumberInt(2), 
+            "value" : NumberInt(10)
+        }, 
+        {
+            "suit" : NumberInt(1), 
+            "value" : NumberInt(0)
+        }
+    ], 
+    "hand_level" : NumberInt(5), 
+    "hand_final_value" : NumberInt(5), 
+    "bast_winner" : NumberInt(3010), 
+    "showdown" : NumberInt(0), 
+    "inbound" : NumberInt(8), 
+    "experience" : NumberInt(8498), 
+    "grade" : NumberInt(3), 
+    "grade_describe" : "青铜3", 
+    "next_experience" : NumberInt(8498)
+}
+{ 
+    "_id" : ObjectId("59b24f659845f975463305d6"), 
+    "user_id" : NumberInt(10000022), 
+    "win" : NumberInt(7), 
+    "totalgame" : NumberInt(7), 
+    "cards" : [
+        {
+            "suit" : NumberInt(3), 
+            "value" : NumberInt(6)
+        }, 
+        {
+            "suit" : NumberInt(0), 
+            "value" : NumberInt(12)
+        }, 
+        {
+            "suit" : NumberInt(3), 
+            "value" : NumberInt(10)
+        }, 
+        {
+            "suit" : NumberInt(3), 
+            "value" : NumberInt(2)
+        }, 
+        {
+            "suit" : NumberInt(2), 
+            "value" : NumberInt(10)
+        }, 
+        {
+            "suit" : NumberInt(3), 
+            "value" : NumberInt(7)
+        }, 
+        {
+            "suit" : NumberInt(3), 
+            "value" : NumberInt(4)
+        }
+    ], 
+    "hand_level" : NumberInt(6), 
+    "hand_final_value" : NumberInt(6), 
+    "bast_winner" : NumberInt(2030), 
+    "showdown" : NumberInt(0), 
+    "inbound" : NumberInt(3), 
+    "experience" : NumberInt(128), 
+    "grade" : NumberInt(1), 
+    "grade_describe" : "青铜5", 
+    "next_experience" : NumberInt(3000)
+}

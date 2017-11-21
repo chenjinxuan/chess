@@ -1,0 +1,910 @@
+{ 
+    "_id" : ObjectId("5983e00a9845f975462dff02"), 
+    "user_id" : NumberInt(10000006), 
+    "from" : "", 
+    "unique_id" : "", 
+    "token" : {
+        "data" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDI0MTk1ODQsInVzZXJpZCI6IjEwMDAwMDA2In0.NyFmEnKh4ezo3ibU277Ab0cAjF6iXYa4r2p_QVXVB18", 
+        "expire" : NumberLong(1502419584)
+    }, 
+    "refresh_token" : "b646076b-fa7a-4f84-9a47-c305e823c501", 
+    "updated" : ISODate("2017-08-04T02:46:24.526+0000"), 
+    "created" : ISODate("2017-08-04T02:46:24.526+0000")
+}
+{ 
+    "_id" : ObjectId("59896e7a9845f975464b5e38"), 
+    "user_id" : NumberInt(10000014), 
+    "from" : "jjjj", 
+    "unique_id" : "", 
+    "token" : {
+        "data" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDQ2Njg3ODAsInVzZXJpZCI6IjEwMDAwMDE0In0.57BKSSMpMkDMDNcw6xXPzvcYQMsfHFWbMR9UL1w9UIo", 
+        "expire" : NumberLong(1504668780)
+    }, 
+    "refresh_token" : "6f140db3-f410-49fa-b53a-f7e2d9f3627f", 
+    "updated" : ISODate("2017-08-30T03:33:00.557+0000"), 
+    "created" : ISODate("2017-08-30T03:33:00.557+0000")
+}
+{ 
+    "_id" : ObjectId("598992cb9845f975464c1a2d"), 
+    "user_id" : NumberInt(10000015), 
+    "from" : "jjjj", 
+    "unique_id" : "UniqueId", 
+    "token" : {
+        "data" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDMyOTUxMzksInVzZXJpZCI6IjEwMDAwMDE1In0.0k5QyFieGZB_yy6SJb9d0S4SBaDEUEO7BNVmJ8OKXwk", 
+        "expire" : NumberLong(1503295139)
+    }, 
+    "refresh_token" : "07cad664-8d54-4464-98f0-cd0dc15af086", 
+    "updated" : ISODate("2017-08-14T05:58:59.843+0000"), 
+    "created" : ISODate("2017-08-14T05:58:59.843+0000")
+}
+{ 
+    "_id" : ObjectId("598a777c9845f9754650b4fd"), 
+    "user_id" : NumberInt(10000016), 
+    "from" : "jjjj", 
+    "unique_id" : "", 
+    "token" : {
+        "data" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDMyOTYxMTAsInVzZXJpZCI6IjEwMDAwMDE2In0.WCt437lbjV4krQ4V9SAaBd-MXPSEysV6Jx5XNlkl6E4", 
+        "expire" : NumberLong(1503296110)
+    }, 
+    "refresh_token" : "0212a7a7-07e5-45bb-9f05-3396fe254351", 
+    "updated" : ISODate("2017-08-14T06:15:10.764+0000"), 
+    "created" : ISODate("2017-08-14T06:15:10.764+0000")
+}
+{ 
+    "_id" : ObjectId("598a789d9845f9754650babe"), 
+    "user_id" : NumberInt(10000017), 
+    "from" : "jjjj", 
+    "unique_id" : "", 
+    "token" : {
+        "data" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDYwNTg5ODUsInVzZXJpZCI6IjEwMDAwMDE3In0.5o5yvolrF7-XX4e0JLyU4bn1yzUcdbaBe8v9gj-fw0U", 
+        "expire" : NumberLong(1506058985)
+    }, 
+    "refresh_token" : "8bcaf800-996e-45bc-9940-79f1eb79f99a", 
+    "updated" : ISODate("2017-09-15T05:43:05.972+0000"), 
+    "created" : ISODate("2017-09-15T05:43:05.972+0000")
+}
+{ 
+    "_id" : ObjectId("598aabe19845f9754651c7d2"), 
+    "user_id" : NumberInt(10000021), 
+    "from" : "ios-tbdb", 
+    "unique_id" : "serwe", 
+    "token" : {
+        "data" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDMzMDIyNzAsInVzZXJpZCI6IjEwMDAwMDIxIn0.3zX5fWoz08EltJUwLnXODz13TTXWfZvLZq0jLGqlgQs", 
+        "expire" : NumberLong(1503302270)
+    }, 
+    "refresh_token" : "75d5f512-9fc0-4453-aa4e-54c87db308c7", 
+    "updated" : ISODate("2017-08-14T07:57:50.549+0000"), 
+    "created" : ISODate("2017-08-14T07:57:50.549+0000")
+}
+{ 
+    "_id" : ObjectId("598aad0d9845f9754651ce33"), 
+    "user_id" : NumberInt(10000018), 
+    "from" : "", 
+    "unique_id" : "", 
+    "token" : {
+        "data" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDI5NjQ2NzQsInVzZXJpZCI6IjEwMDAwMDE4In0.uVFZNJDv9JKRB26RJ9-M4xBqkGp-Z2XC1bMuusUfb6o", 
+        "expire" : NumberLong(1502964674)
+    }, 
+    "refresh_token" : "566740b5-b570-4cbe-a8a7-e7b7a3c503d0", 
+    "updated" : ISODate("2017-08-10T10:11:14.901+0000"), 
+    "created" : ISODate("2017-08-10T10:11:14.901+0000")
+}
+{ 
+    "_id" : ObjectId("598ab35a9845f9754651f07c"), 
+    "user_id" : NumberInt(10000019), 
+    "from" : "jjjj", 
+    "unique_id" : "", 
+    "token" : {
+        "data" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDQ2Njk2ODIsInVzZXJpZCI6IjEwMDAwMDE5In0.dWDCuxktN8QFGcYQv6FtXqPXaq9SzrvVTkpDEhSMZJQ", 
+        "expire" : NumberLong(1504669682)
+    }, 
+    "refresh_token" : "db2dc546-547a-4241-bccc-5592f44f0ea0", 
+    "updated" : ISODate("2017-08-30T03:48:02.482+0000"), 
+    "created" : ISODate("2017-08-30T03:48:02.482+0000")
+}
+{ 
+    "_id" : ObjectId("598ac5709845f97546525076"), 
+    "user_id" : NumberInt(10000022), 
+    "from" : "jjjj", 
+    "unique_id" : "", 
+    "token" : {
+        "data" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDUwOTk1MTQsInVzZXJpZCI6IjEwMDAwMDIyIn0.xQa0BofpMBDsrwZFF3Q_ZhiqALCmzSkE5hjUqggWUXM", 
+        "expire" : NumberLong(1505099514)
+    }, 
+    "refresh_token" : "9fa18619-5136-4698-a423-a94c00472959", 
+    "updated" : ISODate("2017-09-04T03:11:54.856+0000"), 
+    "created" : ISODate("2017-09-04T03:11:54.856+0000")
+}
+{ 
+    "_id" : ObjectId("598bc7189845f9754657b453"), 
+    "user_id" : NumberInt(10000024), 
+    "from" : "jjjj", 
+    "unique_id" : "UniqueId", 
+    "token" : {
+        "data" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDU5OTIxMDUsInVzZXJpZCI6IjEwMDAwMDI0In0.HXg_x4Z9yUpocJ1VWk54-so-xYy1sZqykg0tvnQ8i54", 
+        "expire" : NumberLong(1505992105)
+    }, 
+    "refresh_token" : "045b8f3a-30d8-4159-a853-f6fa5e808c65", 
+    "updated" : ISODate("2017-09-14T11:08:25.084+0000"), 
+    "created" : ISODate("2017-09-14T11:08:25.084+0000")
+}
+{ 
+    "_id" : ObjectId("598bc82f9845f9754657ba24"), 
+    "user_id" : NumberInt(10000026), 
+    "from" : "jjjj", 
+    "unique_id" : "", 
+    "token" : {
+        "data" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDQ1MTI5MzksInVzZXJpZCI6IjEwMDAwMDI2In0.jyNTvHKRTkzAMcXcfmfeM8TiOQzrkQCwTuCAzAipeXU", 
+        "expire" : NumberLong(1504512939)
+    }, 
+    "refresh_token" : "4567497a-b2bf-4592-96ce-e9fd54b8ed78", 
+    "updated" : ISODate("2017-08-28T08:15:39.360+0000"), 
+    "created" : ISODate("2017-08-28T08:15:39.360+0000")
+}
+{ 
+    "_id" : ObjectId("598bc8e59845f9754657be01"), 
+    "user_id" : NumberInt(10000025), 
+    "from" : "", 
+    "unique_id" : "", 
+    "token" : {
+        "data" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDI5NTM2NTMsInVzZXJpZCI6IjEwMDAwMDI1In0.FGyqw5ts2I0xWx4T-b_MNZ3aRdPr4z6KHeRu1CGlLEE", 
+        "expire" : NumberLong(1502953653)
+    }, 
+    "refresh_token" : "fc5a59bb-522a-4644-88b4-193393638ff4", 
+    "updated" : ISODate("2017-08-10T07:07:33.631+0000"), 
+    "created" : ISODate("2017-08-10T07:07:33.631+0000")
+}
+{ 
+    "_id" : ObjectId("598bc9cf9845f9754657c2df"), 
+    "user_id" : NumberInt(10000027), 
+    "from" : "", 
+    "unique_id" : "", 
+    "token" : {
+        "data" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDQxNjE1MTUsInVzZXJpZCI6IjEwMDAwMDI3In0.dBZlcAVQIgx6tcy27lz4vo19VTnWIEycD11l7La9OqI", 
+        "expire" : NumberLong(1504161515)
+    }, 
+    "refresh_token" : "3c66100a-9dd6-42cc-860c-57a0fa7975f4", 
+    "updated" : ISODate("2017-08-24T06:38:35.400+0000"), 
+    "created" : ISODate("2017-08-24T06:38:35.400+0000")
+}
+{ 
+    "_id" : ObjectId("598bc9ea9845f9754657c380"), 
+    "user_id" : NumberInt(10000028), 
+    "from" : "ios-tbdb", 
+    "unique_id" : "", 
+    "token" : {
+        "data" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDQwNjA3NzAsInVzZXJpZCI6IjEwMDAwMDI4In0.GpMJaUL6qeS_zPY0N_9evs22suypTvfYA0oOIs-HgiA", 
+        "expire" : NumberLong(1504060770)
+    }, 
+    "refresh_token" : "e55bb2fd-4de1-4a81-ae76-7d8cdb14fbd9", 
+    "updated" : ISODate("2017-08-23T02:39:30.597+0000"), 
+    "created" : ISODate("2017-08-23T02:39:30.597+0000")
+}
+{ 
+    "_id" : ObjectId("598bcaf59845f9754657c91e"), 
+    "user_id" : NumberInt(10000020), 
+    "from" : "", 
+    "unique_id" : "", 
+    "token" : {
+        "data" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDI5NDAxMzksInVzZXJpZCI6IjEwMDAwMDIwIn0.YAlngG0Kl3JQQ2mQXAS8TuR-EADnEF8EQsClzra_WyI", 
+        "expire" : NumberLong(1502940139)
+    }, 
+    "refresh_token" : "09571765-dae4-4a30-9dee-7368c830761e", 
+    "updated" : ISODate("2017-08-10T03:22:19.254+0000"), 
+    "created" : ISODate("2017-08-10T03:22:19.254+0000")
+}
+{ 
+    "_id" : ObjectId("598bd1da9845f9754657ee25"), 
+    "user_id" : NumberInt(10000029), 
+    "from" : "ios-tbdb", 
+    "unique_id" : "", 
+    "token" : {
+        "data" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDQwNjA4MzQsInVzZXJpZCI6IjEwMDAwMDI5In0.63C1RMCGLY_4i3J0KmpyYO2v5hvMVKO_VjOsrK26Zg0", 
+        "expire" : NumberLong(1504060834)
+    }, 
+    "refresh_token" : "51cfd376-5c0f-4b1d-9793-385caa965c7a", 
+    "updated" : ISODate("2017-08-23T02:40:34.175+0000"), 
+    "created" : ISODate("2017-08-23T02:40:34.175+0000")
+}
+{ 
+    "_id" : ObjectId("598bd24f9845f9754657f095"), 
+    "user_id" : NumberInt(10000023), 
+    "from" : "", 
+    "unique_id" : "", 
+    "token" : {
+        "data" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDI5NjIyMTIsInVzZXJpZCI6IjEwMDAwMDIzIn0.tZTo9VdZwJHlvTV60BrQkUIcYN3vGEMd7Jtr_P3D-Eg", 
+        "expire" : NumberLong(1502962212)
+    }, 
+    "refresh_token" : "4df67e1d-2d17-43af-8f8e-204def9ea384", 
+    "updated" : ISODate("2017-08-10T09:30:12.363+0000"), 
+    "created" : ISODate("2017-08-10T09:30:12.363+0000")
+}
+{ 
+    "_id" : ObjectId("598bd2fe9845f9754657f445"), 
+    "user_id" : NumberInt(10000030), 
+    "from" : "jjjj", 
+    "unique_id" : "", 
+    "token" : {
+        "data" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDI5NjQyMDUsInVzZXJpZCI6IjEwMDAwMDMwIn0.32QCltl85i7RPBPTKQJjn72-DhYYW3tv_LcHmYehaXI", 
+        "expire" : NumberLong(1502964205)
+    }, 
+    "refresh_token" : "df3e56d8-e4a8-4eac-b76b-47c46bb4b96f", 
+    "updated" : ISODate("2017-08-10T10:03:25.425+0000"), 
+    "created" : ISODate("2017-08-10T10:03:25.425+0000")
+}
+{ 
+    "_id" : ObjectId("598c0d829845f97546592d87"), 
+    "user_id" : NumberInt(10000031), 
+    "from" : "", 
+    "unique_id" : "", 
+    "token" : {
+        "data" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDQwNjUxNTMsInVzZXJpZCI6IjEwMDAwMDMxIn0.CH3HSelGnvgzrLFDSDUlRimYUignbBJmmx_zm4Gcl04", 
+        "expire" : NumberLong(1504065153)
+    }, 
+    "refresh_token" : "49ffd349-cda6-4a68-a0e0-b0abe6a94d83", 
+    "updated" : ISODate("2017-08-23T03:52:33.105+0000"), 
+    "created" : ISODate("2017-08-23T03:52:33.105+0000")
+}
+{ 
+    "_id" : ObjectId("598c0e0a9845f9754659305d"), 
+    "user_id" : NumberInt(10000032), 
+    "from" : "ios-tbdb", 
+    "unique_id" : "", 
+    "token" : {
+        "data" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDQwOTQ0MDYsInVzZXJpZCI6IjEwMDAwMDMyIn0.-7bUaGk4FF6vOpgMorJc_mgi5aX2GFhFM5RBGcuvHro", 
+        "expire" : NumberLong(1504094406)
+    }, 
+    "refresh_token" : "e48a3134-8f00-46ce-8710-8c59bec08f13", 
+    "updated" : ISODate("2017-08-23T12:00:06.673+0000"), 
+    "created" : ISODate("2017-08-23T12:00:06.673+0000")
+}
+{ 
+    "_id" : ObjectId("598c0e809845f975465932e0"), 
+    "user_id" : NumberInt(10000033), 
+    "from" : "ios-tbdb", 
+    "unique_id" : "", 
+    "token" : {
+        "data" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDQwOTgzNzcsInVzZXJpZCI6IjEwMDAwMDMzIn0.DDUK0ksjKU460lOYaBHPCXbrZUk3AWmXLitE3bQTTSI", 
+        "expire" : NumberLong(1504098377)
+    }, 
+    "refresh_token" : "9ee0debf-7557-47af-a888-8e32b3c0f752", 
+    "updated" : ISODate("2017-08-23T13:06:17.424+0000"), 
+    "created" : ISODate("2017-08-23T13:06:17.424+0000")
+}
+{ 
+    "_id" : ObjectId("598c0f729845f975465937ec"), 
+    "user_id" : NumberInt(10000034), 
+    "from" : "ios-tbdb", 
+    "unique_id" : "", 
+    "token" : {
+        "data" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDQwOTk0ODYsInVzZXJpZCI6IjEwMDAwMDM0In0.p7vb-Hk4QXSrfTumCC0nE5sIwOxePjZwhKXWnLR8SNQ", 
+        "expire" : NumberLong(1504099486)
+    }, 
+    "refresh_token" : "5bf90751-412c-460e-a635-0a55752a00ef", 
+    "updated" : ISODate("2017-08-23T13:24:46.463+0000"), 
+    "created" : ISODate("2017-08-23T13:24:46.463+0000")
+}
+{ 
+    "_id" : ObjectId("598c0fef9845f97546593a95"), 
+    "user_id" : NumberInt(10000035), 
+    "from" : "ios-tbdb", 
+    "unique_id" : "", 
+    "token" : {
+        "data" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDQxNjE1MjQsInVzZXJpZCI6IjEwMDAwMDM1In0.3PrNK_PixJMp-yaWeC9TNyt69qgoTFSkBIJ4y_ttTnU", 
+        "expire" : NumberLong(1504161524)
+    }, 
+    "refresh_token" : "9e641b75-9941-4920-892f-5599aebf4f79", 
+    "updated" : ISODate("2017-08-24T06:38:44.910+0000"), 
+    "created" : ISODate("2017-08-24T06:38:44.910+0000")
+}
+{ 
+    "_id" : ObjectId("598c32cf9845f9754659f2b1"), 
+    "user_id" : NumberInt(10000036), 
+    "from" : "ios-tbdb", 
+    "unique_id" : "", 
+    "token" : {
+        "data" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDQyNTIyNTQsInVzZXJpZCI6IjEwMDAwMDM2In0.Wuebep60pZ0vXZ0cS0Eaj0_MPsiLyufGIBHdzRlsnoA", 
+        "expire" : NumberLong(1504252254)
+    }, 
+    "refresh_token" : "eba6ba57-1963-4120-9bf4-81596665b70f", 
+    "updated" : ISODate("2017-08-25T07:50:54.108+0000"), 
+    "created" : ISODate("2017-08-25T07:50:54.108+0000")
+}
+{ 
+    "_id" : ObjectId("598c33679845f9754659f5f1"), 
+    "user_id" : NumberInt(10000037), 
+    "from" : "jjjj", 
+    "unique_id" : "", 
+    "token" : {
+        "data" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDI5NjU1MTUsInVzZXJpZCI6IjEwMDAwMDM3In0.ZcL2hUXaJhjaqjMboRp8R_9oSs_-8Y0kY-Ox3TWpCFo", 
+        "expire" : NumberLong(1502965515)
+    }, 
+    "refresh_token" : "3ce5eb93-aacc-4066-a0bb-c95625eda859", 
+    "updated" : ISODate("2017-08-10T10:25:15.224+0000"), 
+    "created" : ISODate("2017-08-10T10:25:15.224+0000")
+}
+{ 
+    "_id" : ObjectId("598d09f49845f975465e72f9"), 
+    "user_id" : NumberInt(10000000), 
+    "from" : "jjjj", 
+    "unique_id" : "", 
+    "token" : {
+        "data" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDMwMzgyMzQsInVzZXJpZCI6IjEwMDAwMDAwIn0.r6FIiLzAhklG2ITabQxI9hGsYz6N152uh_pTQp-vUJg", 
+        "expire" : NumberLong(1503038234)
+    }, 
+    "refresh_token" : "a7b6eb22-1206-4639-aa11-9cbe034192cf", 
+    "updated" : ISODate("2017-08-11T06:37:14.418+0000"), 
+    "created" : ISODate("2017-08-11T06:37:14.418+0000")
+}
+{ 
+    "_id" : ObjectId("598d0a799845f975465e75d3"), 
+    "user_id" : NumberInt(10000002), 
+    "from" : "ios-tbdb", 
+    "unique_id" : "serwe", 
+    "token" : {
+        "data" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDMwMjAyNzksInVzZXJpZCI6IjEwMDAwMDAyIn0.u6Z9JfpwLh2K-_PpQgFu7jc-03wUcmWKtsk4aXJoFXw", 
+        "expire" : NumberLong(1503020279)
+    }, 
+    "refresh_token" : "f98a65f0-2b7b-47a8-a36d-a13820c7adaf", 
+    "updated" : ISODate("2017-08-11T01:37:59.329+0000"), 
+    "created" : ISODate("2017-08-11T01:37:59.329+0000")
+}
+{ 
+    "_id" : ObjectId("598d127a9845f975465ea0d6"), 
+    "user_id" : NumberInt(10000005), 
+    "from" : "jjjj", 
+    "unique_id" : "", 
+    "token" : {
+        "data" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDQ1MTQwMDksInVzZXJpZCI6IjEwMDAwMDA1In0.9-hfn7-fGeT2Zglojnch0Kto1UKHYV38RziPmiohmHY", 
+        "expire" : NumberLong(1504514009)
+    }, 
+    "refresh_token" : "33243f7f-b63c-46ec-825d-6e7e27ce263b", 
+    "updated" : ISODate("2017-08-28T08:33:29.057+0000"), 
+    "created" : ISODate("2017-08-28T08:33:29.057+0000")
+}
+{ 
+    "_id" : ObjectId("598d19c09845f975465ec7f8"), 
+    "user_id" : NumberInt(10000004), 
+    "from" : "jjjj", 
+    "unique_id" : "", 
+    "token" : {
+        "data" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDMwMjQxOTAsInVzZXJpZCI6IjEwMDAwMDA0In0.EIdSiu8j95eSFCKSAG6ijQypp-LF7OwUTDacIP1ejl0", 
+        "expire" : NumberLong(1503024190)
+    }, 
+    "refresh_token" : "3eefd97d-5c31-4f50-8f16-d562df55408c", 
+    "updated" : ISODate("2017-08-11T02:43:10.115+0000"), 
+    "created" : ISODate("2017-08-11T02:43:10.115+0000")
+}
+{ 
+    "_id" : ObjectId("598d19e19845f975465ec8b6"), 
+    "user_id" : NumberInt(10000003), 
+    "from" : "jjjj", 
+    "unique_id" : "", 
+    "token" : {
+        "data" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDU3MDY3NDcsInVzZXJpZCI6IjEwMDAwMDAzIn0.wq0AcYk8ByiR-tk6rMneEsPrwU80_EuR8MWBjMa0sFk", 
+        "expire" : NumberLong(1505706747)
+    }, 
+    "refresh_token" : "ea18d1fd-6184-46bd-9ca8-50a65dc74c9d", 
+    "updated" : ISODate("2017-09-11T03:52:27.792+0000"), 
+    "created" : ISODate("2017-09-11T03:52:27.792+0000")
+}
+{ 
+    "_id" : ObjectId("598d19f59845f975465ec927"), 
+    "user_id" : NumberInt(10000007), 
+    "from" : "ios-tbdb", 
+    "unique_id" : "serwe", 
+    "token" : {
+        "data" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDMwMjQyNDMsInVzZXJpZCI6IjEwMDAwMDA3In0.7Kbn9Svz9tdRSOucnzulfbBnJx1U9xsqdGUAfuRNpZo", 
+        "expire" : NumberLong(1503024243)
+    }, 
+    "refresh_token" : "d86ae300-bdb6-445a-ad1b-c3b32ff16d77", 
+    "updated" : ISODate("2017-08-11T02:44:03.325+0000"), 
+    "created" : ISODate("2017-08-11T02:44:03.325+0000")
+}
+{ 
+    "_id" : ObjectId("598d1ad29845f975465ecdd9"), 
+    "user_id" : NumberInt(10000008), 
+    "from" : "jjjj", 
+    "unique_id" : "", 
+    "token" : {
+        "data" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDUyNzE2MTUsInVzZXJpZCI6IjEwMDAwMDA4In0.HBcj4Dic8Bcyf_igzpshE624H5qi6NSROmawk-dyGYE", 
+        "expire" : NumberLong(1505271615)
+    }, 
+    "refresh_token" : "b4dba619-c239-4885-a6d8-11ec4b8246ca", 
+    "updated" : ISODate("2017-09-06T03:00:15.058+0000"), 
+    "created" : ISODate("2017-09-06T03:00:15.058+0000")
+}
+{ 
+    "_id" : ObjectId("598d1baa9845f975465ed281"), 
+    "user_id" : NumberInt(10000010), 
+    "from" : "jjjj", 
+    "unique_id" : "", 
+    "token" : {
+        "data" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDUxODEyMDEsInVzZXJpZCI6IjEwMDAwMDEwIn0.PzQHmPrsrNkRvhT_JU9_Nv9_BxT8v6W0pz232BaEvEk", 
+        "expire" : NumberLong(1505181201)
+    }, 
+    "refresh_token" : "1849a492-b103-43cf-b6a0-8a6791b593d0", 
+    "updated" : ISODate("2017-09-05T01:53:21.065+0000"), 
+    "created" : ISODate("2017-09-05T01:53:21.065+0000")
+}
+{ 
+    "_id" : ObjectId("598d25c69845f975465f09cf"), 
+    "user_id" : NumberInt(10000009), 
+    "from" : "jjjj", 
+    "unique_id" : "", 
+    "token" : {
+        "data" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDUxODEwOTAsInVzZXJpZCI6IjEwMDAwMDA5In0.dbQ2W5yKVmxmE4uhOXc6MQZknEbHMo9do_s88dpVM9A", 
+        "expire" : NumberLong(1505181090)
+    }, 
+    "refresh_token" : "588778eb-81a2-465e-be45-b13a4c276b00", 
+    "updated" : ISODate("2017-09-05T01:51:30.923+0000"), 
+    "created" : ISODate("2017-09-05T01:51:30.923+0000")
+}
+{ 
+    "_id" : ObjectId("598d28069845f975465f1624"), 
+    "user_id" : NumberInt(10000011), 
+    "from" : "jjjj", 
+    "unique_id" : "", 
+    "token" : {
+        "data" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDMwMzQ2NzgsInVzZXJpZCI6IjEwMDAwMDExIn0.znU2HHGBvoZ-DG9zY39emcHFWWVPNzU1yCc3-PxqYso", 
+        "expire" : NumberLong(1503034678)
+    }, 
+    "refresh_token" : "724c0511-c650-4454-ae8c-a2b3b8fa9fb9", 
+    "updated" : ISODate("2017-08-11T05:37:58.253+0000"), 
+    "created" : ISODate("2017-08-11T05:37:58.253+0000")
+}
+{ 
+    "_id" : ObjectId("598d46529845f975465fbb63"), 
+    "user_id" : NumberInt(10000012), 
+    "from" : "jjjj", 
+    "unique_id" : "", 
+    "token" : {
+        "data" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDQ3NzEwMjcsInVzZXJpZCI6IjEwMDAwMDEyIn0.gFK7Ocrsm858X0Qc7ruPc-ii1ungsE22vLznBWjFdYA", 
+        "expire" : NumberLong(1504771027)
+    }, 
+    "refresh_token" : "72b17290-0b97-4ff0-b48b-6a42b64668de", 
+    "updated" : ISODate("2017-08-31T07:57:07.923+0000"), 
+    "created" : ISODate("2017-08-31T07:57:07.923+0000")
+}
+{ 
+    "_id" : ObjectId("598d6d479845f97546608d6e"), 
+    "user_id" : NumberInt(10000013), 
+    "from" : "ios-tbdb", 
+    "unique_id" : "serwe", 
+    "token" : {
+        "data" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDMwNDU1NzIsInVzZXJpZCI6IjEwMDAwMDEzIn0.CDIzAUblVgf8gNE7-IztNjveWk4XHjwJfLujaSaVugw", 
+        "expire" : NumberLong(1503045572)
+    }, 
+    "refresh_token" : "f9f9b0ab-0fd4-4372-bd68-4e1747cdfb22", 
+    "updated" : ISODate("2017-08-11T08:39:32.845+0000"), 
+    "created" : ISODate("2017-08-11T08:39:32.845+0000")
+}
+{ 
+    "_id" : ObjectId("599fd75a9845f97546c6041c"), 
+    "user_id" : NumberInt(10000038), 
+    "from" : "", 
+    "unique_id" : "", 
+    "token" : {
+        "data" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDQyNTY0NzAsInVzZXJpZCI6IjEwMDAwMDM4In0.-Q8Vd68_aFUDX4NDYUnECwuUTF5ZgXsWFwv9vaj3uIs", 
+        "expire" : NumberLong(1504256470)
+    }, 
+    "refresh_token" : "068b970c-472c-4753-ad8e-71b1dffacf2b", 
+    "updated" : ISODate("2017-08-25T09:01:10.921+0000"), 
+    "created" : ISODate("2017-08-25T09:01:10.921+0000")
+}
+{ 
+    "_id" : ObjectId("59a376009845f97546db64f5"), 
+    "user_id" : NumberInt(10000039), 
+    "from" : "ios-tbdb", 
+    "unique_id" : "", 
+    "token" : {
+        "data" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDQ0ODk1ODYsInVzZXJpZCI6IjEwMDAwMDM5In0.pQZLqgmGu7-DTEg6nzwjC49CbBkiI14mw4PVAEaOUKQ", 
+        "expire" : NumberLong(1504489586)
+    }, 
+    "refresh_token" : "8884ce4c-8a49-455b-b1fc-ea63b7381d89", 
+    "updated" : ISODate("2017-08-28T01:46:26.042+0000"), 
+    "created" : ISODate("2017-08-28T01:46:26.042+0000")
+}
+{ 
+    "_id" : ObjectId("59a376349845f97546db6622"), 
+    "user_id" : NumberInt(10000040), 
+    "from" : "ios-tbdb", 
+    "unique_id" : "", 
+    "token" : {
+        "data" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDQ0ODk2MzcsInVzZXJpZCI6IjEwMDAwMDQwIn0.clXNcD4t2CMAtvyzlUR1QbJ5SoXqBp4XQbBW8mMqX2c", 
+        "expire" : NumberLong(1504489637)
+    }, 
+    "refresh_token" : "9a69ad48-c965-4369-b6a8-84740b8a6054", 
+    "updated" : ISODate("2017-08-28T01:47:17.903+0000"), 
+    "created" : ISODate("2017-08-28T01:47:17.903+0000")
+}
+{ 
+    "_id" : ObjectId("59a376399845f97546db6643"), 
+    "user_id" : NumberInt(10000041), 
+    "from" : "ios-tbdb", 
+    "unique_id" : "", 
+    "token" : {
+        "data" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDQ0ODk2NDIsInVzZXJpZCI6IjEwMDAwMDQxIn0.2hxxKWdv_aYEAnqpPvTTTrCL3ceDCaI4meek3aDIeg0", 
+        "expire" : NumberLong(1504489642)
+    }, 
+    "refresh_token" : "82ca1cd2-b1e3-4e92-89c9-972daf877850", 
+    "updated" : ISODate("2017-08-28T01:47:22.875+0000"), 
+    "created" : ISODate("2017-08-28T01:47:22.875+0000")
+}
+{ 
+    "_id" : ObjectId("59a376419845f97546db667e"), 
+    "user_id" : NumberInt(10000042), 
+    "from" : "ios-tbdb", 
+    "unique_id" : "", 
+    "token" : {
+        "data" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDQ0ODk2NTEsInVzZXJpZCI6IjEwMDAwMDQyIn0.7WgESVMdRRIN4YmmHMfYqyUtb2hEzDINscOu_3nw-Zc", 
+        "expire" : NumberLong(1504489651)
+    }, 
+    "refresh_token" : "33b1f35e-0676-48ac-bca5-6b52a7ef6f3d", 
+    "updated" : ISODate("2017-08-28T01:47:31.147+0000"), 
+    "created" : ISODate("2017-08-28T01:47:31.147+0000")
+}
+{ 
+    "_id" : ObjectId("59a376469845f97546db669e"), 
+    "user_id" : NumberInt(10000043), 
+    "from" : "ios-tbdb", 
+    "unique_id" : "", 
+    "token" : {
+        "data" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDQ0ODk2NTUsInVzZXJpZCI6IjEwMDAwMDQzIn0.VL50fTSQ_0ndTrYztI2QUa0ESBO3xAzNZ7Arnu-Wx-w", 
+        "expire" : NumberLong(1504489655)
+    }, 
+    "refresh_token" : "9097140a-9680-4065-ab3b-125b2453f36c", 
+    "updated" : ISODate("2017-08-28T01:47:35.655+0000"), 
+    "created" : ISODate("2017-08-28T01:47:35.655+0000")
+}
+{ 
+    "_id" : ObjectId("59a3764a9845f97546db66bc"), 
+    "user_id" : NumberInt(10000044), 
+    "from" : "ios-tbdb", 
+    "unique_id" : "", 
+    "token" : {
+        "data" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDQ0ODk2NTksInVzZXJpZCI6IjEwMDAwMDQ0In0.KIJMP3UpoCCKlzYFghK-92fxPfDyydYplvYLODE7s1Q", 
+        "expire" : NumberLong(1504489659)
+    }, 
+    "refresh_token" : "b8022ea4-2289-47ea-94e8-d82345d53e2b", 
+    "updated" : ISODate("2017-08-28T01:47:39.771+0000"), 
+    "created" : ISODate("2017-08-28T01:47:39.771+0000")
+}
+{ 
+    "_id" : ObjectId("59a3764d9845f97546db66df"), 
+    "user_id" : NumberInt(10000045), 
+    "from" : "ios-tbdb", 
+    "unique_id" : "", 
+    "token" : {
+        "data" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDQ0ODk2NjMsInVzZXJpZCI6IjEwMDAwMDQ1In0.BrZXT1xX4leOshSR7JR0hcxfu2-Z1zoLnuY5lrOjuTk", 
+        "expire" : NumberLong(1504489663)
+    }, 
+    "refresh_token" : "1f373364-fc8c-496e-bfc3-41a1153a5ebf", 
+    "updated" : ISODate("2017-08-28T01:47:43.562+0000"), 
+    "created" : ISODate("2017-08-28T01:47:43.562+0000")
+}
+{ 
+    "_id" : ObjectId("59a376529845f97546db66ee"), 
+    "user_id" : NumberInt(10000046), 
+    "from" : "ios-tbdb", 
+    "unique_id" : "", 
+    "token" : {
+        "data" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDQ0ODk2NjgsInVzZXJpZCI6IjEwMDAwMDQ2In0.PWGHHCpoEI0qZqv29FG3MqFzbl_k-5-B3uO62ed-q7M", 
+        "expire" : NumberLong(1504489668)
+    }, 
+    "refresh_token" : "3cafba74-e2e0-4426-9652-d6319ead0834", 
+    "updated" : ISODate("2017-08-28T01:47:48.270+0000"), 
+    "created" : ISODate("2017-08-28T01:47:48.270+0000")
+}
+{ 
+    "_id" : ObjectId("59a376579845f97546db670d"), 
+    "user_id" : NumberInt(10000047), 
+    "from" : "ios-tbdb", 
+    "unique_id" : "", 
+    "token" : {
+        "data" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDQ0ODk2NzIsInVzZXJpZCI6IjEwMDAwMDQ3In0.lsDm0gh3cjNR6OAgqLR0VOlVaVfLaESfnLIwj4gRA_E", 
+        "expire" : NumberLong(1504489672)
+    }, 
+    "refresh_token" : "25149386-005a-469f-aac4-0b6d1d1034bc", 
+    "updated" : ISODate("2017-08-28T01:47:52.705+0000"), 
+    "created" : ISODate("2017-08-28T01:47:52.705+0000")
+}
+{ 
+    "_id" : ObjectId("59a376db9845f97546db6a24"), 
+    "user_id" : NumberInt(10000048), 
+    "from" : "", 
+    "unique_id" : "", 
+    "token" : {
+        "data" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDU5MDAxMjQsInVzZXJpZCI6IjEwMDAwMDQ4In0.9phOjsIe3f9EoVyVNLikQpdFTVHCtz51aajSx5-2T3E", 
+        "expire" : NumberLong(1505900124)
+    }, 
+    "refresh_token" : "5d994ec2-0b5a-4088-98ae-1d95b3fa988f", 
+    "updated" : ISODate("2017-09-13T09:35:24.902+0000"), 
+    "created" : ISODate("2017-09-13T09:35:24.902+0000")
+}
+{ 
+    "_id" : ObjectId("59a3d15d9845f97546df40a1"), 
+    "user_id" : NumberInt(10000049), 
+    "from" : "jjjj", 
+    "unique_id" : "", 
+    "token" : {
+        "data" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDQ1MTQwMzYsInVzZXJpZCI6IjEwMDAwMDQ5In0.kV68pFkOXF1EFsqxsXAg7qlFFqUncv3uvDHOmTCp4_M", 
+        "expire" : NumberLong(1504514036)
+    }, 
+    "refresh_token" : "c7b89344-0b09-4f0e-80c6-a44afc70a5a0", 
+    "updated" : ISODate("2017-08-28T08:33:56.642+0000"), 
+    "created" : ISODate("2017-08-28T08:33:56.642+0000")
+}
+{ 
+    "_id" : ObjectId("59a3d1769845f97546df4133"), 
+    "user_id" : NumberInt(10000050), 
+    "from" : "jjjj", 
+    "unique_id" : "", 
+    "token" : {
+        "data" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDQ1MTQ2NjgsInVzZXJpZCI6IjEwMDAwMDUwIn0.sDcixRINwlIjADcvIArvAL3Ngu6TJ7LJukRaGERZ5-E", 
+        "expire" : NumberLong(1504514668)
+    }, 
+    "refresh_token" : "d7ab19a8-a946-469e-a95b-8dfa3b1e7b64", 
+    "updated" : ISODate("2017-08-28T08:44:28.423+0000"), 
+    "created" : ISODate("2017-08-28T08:44:28.423+0000")
+}
+{ 
+    "_id" : ObjectId("59a3d83b9845f97546e0a8ff"), 
+    "user_id" : NumberInt(10000051), 
+    "from" : "jjjj", 
+    "unique_id" : "", 
+    "token" : {
+        "data" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDUzNTM4MzQsInVzZXJpZCI6IjEwMDAwMDUxIn0.2qC4v7nkkwTrfjPzk4c9C1A781N9oYefanVKx6-63-0", 
+        "expire" : NumberLong(1505353834)
+    }, 
+    "refresh_token" : "96840190-c6be-409a-95ad-d97ffa78335c", 
+    "updated" : ISODate("2017-09-07T01:50:34.605+0000"), 
+    "created" : ISODate("2017-09-07T01:50:34.605+0000")
+}
+{ 
+    "_id" : ObjectId("59a3d8769845f97546e0af89"), 
+    "user_id" : NumberInt(10000052), 
+    "from" : "ios-tbdb", 
+    "unique_id" : "serwe", 
+    "token" : {
+        "data" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDQ1MTQ3OTEsInVzZXJpZCI6IjEwMDAwMDUyIn0.drIQSikza8J7j3_hN7peQpIdug4E1OZyFumionlzcbY", 
+        "expire" : NumberLong(1504514791)
+    }, 
+    "refresh_token" : "bb1126f6-741e-4b4c-ac12-78b63bf3e3e6", 
+    "updated" : ISODate("2017-08-28T08:46:31.325+0000"), 
+    "created" : ISODate("2017-08-28T08:46:31.325+0000")
+}
+{ 
+    "_id" : ObjectId("59a4d6059845f97546e67bbb"), 
+    "user_id" : NumberInt(10000053), 
+    "from" : "jjjj", 
+    "unique_id" : "", 
+    "token" : {
+        "data" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDU4MDM2OTcsInVzZXJpZCI6IjEwMDAwMDUzIn0.LYdG5LrZFnx3R5GBa3qR9o3jv1MJAk9XJMdxIFU0ybA", 
+        "expire" : NumberLong(1505803697)
+    }, 
+    "refresh_token" : "42479e3f-0870-495b-b5a7-84f2aef7c35e", 
+    "updated" : ISODate("2017-09-12T06:48:17.061+0000"), 
+    "created" : ISODate("2017-09-12T06:48:17.061+0000")
+}
+{ 
+    "_id" : ObjectId("59a52c2a9845f97546e864cb"), 
+    "user_id" : NumberInt(10000054), 
+    "from" : "ios-tbdb", 
+    "unique_id" : "serwe", 
+    "token" : {
+        "data" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDQ2MDE3NTEsInVzZXJpZCI6IjEwMDAwMDU0In0.Gi8d2XPc2tQUzCn3Z-G2UoZJkb2mBK9UrPy9d8VNJIA", 
+        "expire" : NumberLong(1504601751)
+    }, 
+    "refresh_token" : "65dd7dd5-4b5c-40b1-95f6-735349d6e860", 
+    "updated" : ISODate("2017-08-29T08:55:51.687+0000"), 
+    "created" : ISODate("2017-08-29T08:55:51.687+0000")
+}
+{ 
+    "_id" : ObjectId("59a542549845f97546e8e27e"), 
+    "user_id" : NumberInt(10000055), 
+    "from" : "jjjj", 
+    "unique_id" : "", 
+    "token" : {
+        "data" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDQ2OTE3NDIsInVzZXJpZCI6IjEwMDAwMDU1In0.hW9wcanI172Rj15lEg3k6G2a7U7KdlfyixFXrJAsgvs", 
+        "expire" : NumberLong(1504691742)
+    }, 
+    "refresh_token" : "91997cfb-4cb7-4961-aa96-c2ebdb40ab7b", 
+    "updated" : ISODate("2017-08-30T09:55:42.077+0000"), 
+    "created" : ISODate("2017-08-30T09:55:42.077+0000")
+}
+{ 
+    "_id" : ObjectId("59a7c3c19845f97546f74275"), 
+    "user_id" : NumberInt(10000056), 
+    "from" : "jjjj", 
+    "unique_id" : "", 
+    "token" : {
+        "data" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDU5ODk2OTIsInVzZXJpZCI6IjEwMDAwMDU2In0.JAiJuMgKfRQJhYpMd7JpFU3p21JoiL9Ing-US4uinBc", 
+        "expire" : NumberLong(1505989692)
+    }, 
+    "refresh_token" : "bb7d4533-f9c6-47ea-9205-f464bb45ad82", 
+    "updated" : ISODate("2017-09-14T10:28:12.175+0000"), 
+    "created" : ISODate("2017-09-14T10:28:12.175+0000")
+}
+{ 
+    "_id" : ObjectId("59acf8659845f9754614fe29"), 
+    "user_id" : NumberInt(10000057), 
+    "from" : "ios-tbdb", 
+    "unique_id" : "serwe", 
+    "token" : {
+        "data" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDUxMTI3NjgsInVzZXJpZCI6IjEwMDAwMDU3In0.iT91ErFXv6oTC6MW-X3a_oEJiTfeXCMLTWM6ngnSvAc", 
+        "expire" : NumberLong(1505112768)
+    }, 
+    "refresh_token" : "50d7c745-7086-41f1-9fd6-febf5293319a", 
+    "updated" : ISODate("2017-09-04T06:52:48.244+0000"), 
+    "created" : ISODate("2017-09-04T06:52:48.244+0000")
+}
+{ 
+    "_id" : ObjectId("59acf9579845f9754615038e"), 
+    "user_id" : NumberInt(10000058), 
+    "from" : "ios-tbdb", 
+    "unique_id" : "serwe", 
+    "token" : {
+        "data" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDUxMTMwMDksInVzZXJpZCI6IjEwMDAwMDU4In0.Y6Zv_OSquUGVCNCFgp05LehZknBcUTpv-KGZjxRs138", 
+        "expire" : NumberLong(1505113009)
+    }, 
+    "refresh_token" : "fa8d94bf-55d4-47c4-88df-14944b07b188", 
+    "updated" : ISODate("2017-09-04T06:56:49.745+0000"), 
+    "created" : ISODate("2017-09-04T06:56:49.745+0000")
+}
+{ 
+    "_id" : ObjectId("59acf99b9845f97546150523"), 
+    "user_id" : NumberInt(10000059), 
+    "from" : "ios-tbdb", 
+    "unique_id" : "serwe", 
+    "token" : {
+        "data" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDUxMTMwNzgsInVzZXJpZCI6IjEwMDAwMDU5In0.pmSfJ8GC8ppAggYMctiFSaObmbr_GH-39KGCni0QVFs", 
+        "expire" : NumberLong(1505113078)
+    }, 
+    "refresh_token" : "e1bc7dfe-24fc-48a7-a0c3-c9088547bf63", 
+    "updated" : ISODate("2017-09-04T06:57:58.316+0000"), 
+    "created" : ISODate("2017-09-04T06:57:58.316+0000")
+}
+{ 
+    "_id" : ObjectId("59acf9d59845f9754615067d"), 
+    "user_id" : NumberInt(10000060), 
+    "from" : "ios-tbdb", 
+    "unique_id" : "serwe", 
+    "token" : {
+        "data" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDUxMTMxMzUsInVzZXJpZCI6IjEwMDAwMDYwIn0.pDQknLsNIVvITTRjoVvKlqaVnDtOh6CJtrMGLRxG9-8", 
+        "expire" : NumberLong(1505113135)
+    }, 
+    "refresh_token" : "5c7705c0-5f56-4d07-8e4c-83213c12380a", 
+    "updated" : ISODate("2017-09-04T06:58:55.895+0000"), 
+    "created" : ISODate("2017-09-04T06:58:55.895+0000")
+}
+{ 
+    "_id" : ObjectId("59acfadf9845f97546150c84"), 
+    "user_id" : NumberInt(10000061), 
+    "from" : "ios-tbdb", 
+    "unique_id" : "serwe", 
+    "token" : {
+        "data" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDUxMTM0MDIsInVzZXJpZCI6IjEwMDAwMDYxIn0.TF0TneZXcx_HM8vFrCqp5P2tReIfoUJ2ReV7g2SpegU", 
+        "expire" : NumberLong(1505113402)
+    }, 
+    "refresh_token" : "03d2c893-fb24-4338-9097-ac6ddd10af3d", 
+    "updated" : ISODate("2017-09-04T07:03:22.372+0000"), 
+    "created" : ISODate("2017-09-04T07:03:22.372+0000")
+}
+{ 
+    "_id" : ObjectId("59acfb439845f97546150eca"), 
+    "user_id" : NumberInt(10000062), 
+    "from" : "ios-tbdb", 
+    "unique_id" : "serwe", 
+    "token" : {
+        "data" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDUxMTM1MDIsInVzZXJpZCI6IjEwMDAwMDYyIn0.FT0lg0LY75IqjYGB0yfTg9oIl3WFxd5w-Kh-qhoLPYY", 
+        "expire" : NumberLong(1505113502)
+    }, 
+    "refresh_token" : "3b8cd0a6-22cd-41ef-b3c6-fdb8b66bd417", 
+    "updated" : ISODate("2017-09-04T07:05:02.833+0000"), 
+    "created" : ISODate("2017-09-04T07:05:02.833+0000")
+}
+{ 
+    "_id" : ObjectId("59ad09589845f97546156180"), 
+    "user_id" : NumberInt(10000063), 
+    "from" : "ios-tbdb", 
+    "unique_id" : "serwe", 
+    "token" : {
+        "data" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDUxMTcxMDksInVzZXJpZCI6IjEwMDAwMDYzIn0.qlRZdK2Uz2I1rQZOuKFjR0_E9kHo22SBDpUKfiLDNvM", 
+        "expire" : NumberLong(1505117109)
+    }, 
+    "refresh_token" : "c448fd62-9a9a-4ea3-b89b-b4c1a2f921df", 
+    "updated" : ISODate("2017-09-04T08:05:09.795+0000"), 
+    "created" : ISODate("2017-09-04T08:05:09.795+0000")
+}
+{ 
+    "_id" : ObjectId("59ad0c1b9845f975461571ea"), 
+    "user_id" : NumberInt(10000064), 
+    "from" : "ios-tbdb", 
+    "unique_id" : "serwe", 
+    "token" : {
+        "data" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDUxMTc4MTYsInVzZXJpZCI6IjEwMDAwMDY0In0.f04KfgCMNzM6fjJ2-rXGDrPeFcHR-2ViH0dJ0U732CU", 
+        "expire" : NumberLong(1505117816)
+    }, 
+    "refresh_token" : "718bb919-966b-450a-b650-cc761426cd34", 
+    "updated" : ISODate("2017-09-04T08:16:56.909+0000"), 
+    "created" : ISODate("2017-09-04T08:16:56.909+0000")
+}
+{ 
+    "_id" : ObjectId("59ae03c89845f975461b1ea9"), 
+    "user_id" : NumberInt(10000065), 
+    "from" : "jjjj", 
+    "unique_id" : "", 
+    "token" : {
+        "data" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDUxODEzMDksInVzZXJpZCI6IjEwMDAwMDY1In0.6b2TqqUtuGcp_VIAFcw3msaELKhqR7syOhB68sjKZPM", 
+        "expire" : NumberLong(1505181309)
+    }, 
+    "refresh_token" : "cd6fef71-8ad4-47ff-b334-8591f6e55624", 
+    "updated" : ISODate("2017-09-05T01:55:09.033+0000"), 
+    "created" : ISODate("2017-09-05T01:55:09.033+0000")
+}
+{ 
+    "_id" : ObjectId("59ae11e49845f975461b79f4"), 
+    "user_id" : NumberInt(10000066), 
+    "from" : "ios-tbdb", 
+    "unique_id" : "serwe", 
+    "token" : {
+        "data" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDUxODQ4NzksInVzZXJpZCI6IjEwMDAwMDY2In0.sZdV6Hrsh-kQcqJ1F_5_SQbIOVfYPwbGrGj-uTrFoV0", 
+        "expire" : NumberLong(1505184879)
+    }, 
+    "refresh_token" : "90b9decb-33e7-4b7f-9e8e-aeaf19a606dd", 
+    "updated" : ISODate("2017-09-05T02:54:39.476+0000"), 
+    "created" : ISODate("2017-09-05T02:54:39.476+0000")
+}
+{ 
+    "_id" : ObjectId("59af64989845f9754622e47f"), 
+    "user_id" : NumberInt(10000067), 
+    "from" : "jjjj", 
+    "unique_id" : "UniqueId", 
+    "token" : {
+        "data" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDUyNzE2NDYsInVzZXJpZCI6IjEwMDAwMDY3In0.hddtEDFNjVze1o6Kd3jZXE8CxfwJLypPHsxh-mBaXhw", 
+        "expire" : NumberLong(1505271646)
+    }, 
+    "refresh_token" : "f4d3c86e-01ca-46fd-9d0b-7c64bcfa8dc3", 
+    "updated" : ISODate("2017-09-06T03:00:46.101+0000"), 
+    "created" : ISODate("2017-09-06T03:00:46.101+0000")
+}
+{ 
+    "_id" : ObjectId("59af64b99845f9754622e7b3"), 
+    "user_id" : NumberInt(10000068), 
+    "from" : "jjjj", 
+    "unique_id" : "", 
+    "token" : {
+        "data" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDUyNzE3NjAsInVzZXJpZCI6IjEwMDAwMDY4In0.KQfU4ox3CABUJxB6oV5PtLoL-N58uEZ2mBYlyp5D_jw", 
+        "expire" : NumberLong(1505271760)
+    }, 
+    "refresh_token" : "48888618-70cb-418d-8ba1-5430bfe43175", 
+    "updated" : ISODate("2017-09-06T03:02:40.617+0000"), 
+    "created" : ISODate("2017-09-06T03:02:40.617+0000")
+}
+{ 
+    "_id" : ObjectId("59b0a71d9845f975462acb2f"), 
+    "user_id" : NumberInt(10000069), 
+    "from" : "ios-tbdb", 
+    "unique_id" : "serwe", 
+    "token" : {
+        "data" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDUzNTQyNjcsInVzZXJpZCI6IjEwMDAwMDY5In0.d31NnPXXSPg-UWoK21DQ1335joUkfJ1NMU5NNZfhTiw", 
+        "expire" : NumberLong(1505354267)
+    }, 
+    "refresh_token" : "302e4c17-2f00-4551-8719-bb53fd94d06e", 
+    "updated" : ISODate("2017-09-07T01:57:47.790+0000"), 
+    "created" : ISODate("2017-09-07T01:57:47.790+0000")
+}
+{ 
+    "_id" : ObjectId("59b0a8b49845f975462ad3ae"), 
+    "user_id" : NumberInt(10000070), 
+    "from" : "ios-tbdb", 
+    "unique_id" : "serwe", 
+    "token" : {
+        "data" : "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1MDUzNTQ2NzQsInVzZXJpZCI6IjEwMDAwMDcwIn0.OF4yjMNB5taj8DCmbzq9YW9SSvB3CB30cydKy5nhXbI", 
+        "expire" : NumberLong(1505354674)
+    }, 
+    "refresh_token" : "7a6a9aa8-cbaa-4681-8254-8d188f488d13", 
+    "updated" : ISODate("2017-09-07T02:04:34.979+0000"), 
+    "created" : ISODate("2017-09-07T02:04:34.979+0000")
+}
