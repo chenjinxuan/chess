@@ -26,3 +26,5 @@ bin
 .godeps
 .cache
 CHAT.DAT
+
+.env
