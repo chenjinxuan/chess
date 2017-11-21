@@ -1,2 +1,2 @@
 # chess
-# chess
+基于gonet2框架开发的德州扑克,在此感谢xtaci大大提供的框架,SongLiangChen大大提供的德扑算法
