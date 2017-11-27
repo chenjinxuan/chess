@@ -21,14 +21,14 @@
 1.  构建docker镜像并推送到私有仓库
     
     ```bash
-    $ docker build -t docker.airdroid.com/lanziliang/room:v_20170831 .
-    $ docker push docker.airdroid.com/lanziliang/room:v_20170831
+    $ docker build -t $imageName:v_20170831 .
+    $ docker push $imageName:v_20170831
     ```
     
 2.    服务器上拉取最新镜像
     
     ```bash
-    $ docker pull docker.airdroid.com/lanziliang/room:v_20170831
+    $ docker pull $imageName:v_20170831
     ```
     
 3.  创建.env文件，写入consul配置
