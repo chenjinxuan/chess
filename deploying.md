@@ -34,7 +34,7 @@
 3.  创建.env文件，写入consul配置
 
     ```aidl
-    CONSUL_ADDRESS=59.57.13.156:8510
+    CONSUL_ADDRESS=$address:8510
     CONSUL_DATACENTER=dev
     CONSUL_TOKEN=
     CONSUL_PROXY=
@@ -49,8 +49,8 @@
         --env-file /path/to/.env \
         -p 14001:14001 -p 14101:14101 \
         --name room01 \
-        docker.airdroid.com/lanziliang/room:$TAG \
-        --address 59.57.13.156 \ 
+        $imageName:$TAG \
+        --address $address \
         --port 14001 \
         --check-port 14101 \
         --service-id room01 \
@@ -79,7 +79,7 @@
         --env-file /path/to/.env \
         -p 8898:8898 -p 8899:8899 \
         --name agent01 \
-        docker.airdroid.com/lanziliang/agent:$TAG \
+       $imageName:$TAG \
         --tcp-listen :8898 \
         --ws-listen :8899 \
         --services room \
@@ -95,8 +95,8 @@
 		--env-file /path/to/.env \
 		-p 11008:11008 \
 		--name api01 \
-		docker.airdroid.com/lanziliang/api:$TAG \
-		--address 59.57.13.156 \
+		$imageName:$TAG \
+		--address $address \
 		--http-port 11008 \
 		--service-id api01
 	```
@@ -110,8 +110,8 @@
         --env-file /path/to/.env \
         -p 11001:11001 -p 11101:11101 \
         --name auth01 \
-        docker.airdroid.com/lanziliang/auth:$TAG \
-        --address 59.57.13.156 \
+        $imageName:$TAG \
+        --address $address \
         --port 11001 \
         --check-port 11101 \
         --service-id auth01
@@ -126,8 +126,8 @@
         --env-file /path/to/.env \
         -p 12001:12001 -p 12101:12101 \
         --name centre01 \
-        docker.airdroid.com/lanziliang/centre:$TAG \
-        --address 59.57.13.156 \
+       $imageName:$TAG \
+        --address $address \
         --port 12001 \
         --check-port 12101 \
         --service-id centre01
@@ -143,10 +143,10 @@
         -v /data:/data \
         -p 13001:13001 -p 13101:13101 \
         --name chat01 \
-        docker.airdroid.com/lanziliang/chat:$TAG \
-        --kafka-brokers 59.57.13.156:9092 \
+        $imageName:$TAG \
+        --kafka-brokers $address:9092 \
         --boltdb /data/CHAT.DAT \
-        --address 59.57.13.156 \
+        --address $address \
         --port 13001 \
         --check-port 13101 \
         --service-id chat01
@@ -161,8 +161,8 @@
         --env-file /path/to/.env \
         -p 14001:14001 -p 14101:14101 \
         --name room01 \
-        docker.airdroid.com/lanziliang/room:$TAG \
-        --address 59.57.13.156 \
+        $imageName:$TAG \
+        --address $address \
         --port 14001 \
         --check-port 14101 \
         --service-id room01 \
@@ -181,8 +181,8 @@
         --env-file /path/to/.env \
         -p 15001:15001 -p 15101:15101 \
         --name task01 \
-        docker.airdroid.com/lanziliang/task:$TAG \
-        --address 59.57.13.156 \
+        $imageName:$TAG \
+        --address $address \
         --port 15001 \
         --check-port 15101 \
         --service-id task01
@@ -198,9 +198,9 @@
         --env-file /path/to/.env \
         -p 16001:16001 -p 16101:16101 \
         --name sts01 \
-        docker.airdroid.com/lanziliang/sts:$TAG \
-        --address 59.57.13.156 \
+        $imageName:$TAG \
+        --address $address \
         --port 16001 \
         --check-port 16101 \
         --service-id sts01
-    ```       
+    ```
