@@ -1,5 +1,0 @@
-.git
-pkg
-bin
-.godeps/pkg
-.godeps/bin
