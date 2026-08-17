@@ -1,3 +1,5 @@
+
+
 # chess
 # demo版
 基于gonet2框架开发的德州扑克,在此感谢xtaci大大提供的框架,SongLiangChen大大提供的德扑算法
@@ -70,6 +72,7 @@
 --address       注册到consul的外部服务访问ip
 --port          注册到consul的外部服务访问端口（服务监听端口）
 --check-port    consul健康检查端口
+--http-port     HTTP服务监听端口
 --services      使用到服务，用于consul服务发现
 ```
 
